@@ -202,6 +202,46 @@
                         </span>
                       </button>
                     </div>
+                    <div class="btn-group" ng-repeat="workflow in workflows | filterTemplateWorkflow:template as result">
+                      <button class="btn btn-sm" tooltip-placement="bottom" ng-style="{'background-color': workflowElementSelected[workflow.id + '_' + template.id] ? 'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')' : 'whitesmoke', 'color': workflowElementSelected[workflow.id + '_' + template.id] ? workflow.color.font : 'black'}" uib-tooltip-html="workflow.description" ng-click="selectWorkflowPartElement(workflow.id + '_' + template.id, template)">
+                        <span ng-if="workflow.workflow_type_id == 1">
+                          <span class="fa fa-microphone"></span> {{ _T["i5tk31xb"] }}
+                        </span>
+                        <span ng-if="workflow.workflow_type_id == 2">
+                          <span class="fa fa-archive"></span> {{ _T["z20ge21k"] }}
+                        </span>
+                        <span ng-if="workflow.workflow_type_id == 3">
+                          <span class="fa fa-briefcase"></span> {{ _T["1egq4x9k"] }}
+                        </span>
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.prod_version}}
+                        </span>
+                      </button>
+                    </div>
                     <span class="template-no-workflow" ng-if="result.length === 0" style="">
                       {{ _T["dzw50ed3"] }}
                     </span>

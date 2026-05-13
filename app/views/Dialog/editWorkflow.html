@@ -534,6 +534,31 @@
             </table>
         </div>
       </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ _T["eo1uaq9w"] }}</h3>
+            </div>
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <th>{{ _T["1dfnp6ae"] }}</th>
+                    <th></th>
+                </thead>
+                <tbody class="listProject" ng-repeat="product in subproject_workflow.ownProduct| orderBy:'episode_number'">
+                    <tr >
+                        <td>
+                            <label for="selectProd{{product.id}}" style="cursor:pointer">
+                                <span ng-if="subproject_workflow.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+                                <span ng-if="subproject_workflow.nature.name != 'serie' && subproject_workflow.nature.name == 'film'">{{product.description.value}}</span>
+                                <span ng-if="subproject_workflow.nature.name != 'serie' && subproject_workflow.nature.name != 'film'">{{product.description_text}}</span>
+                            </label>
+                        </td>
+                        <td><input type="checkbox" id="selectProd{{product.id}}" ng-model="product.selected" ng-change="updateProductWorkflow(product)"/> <label for="selectProd{{product.id}}"></label></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div class="container-fluid footer-dialog vertical-align">

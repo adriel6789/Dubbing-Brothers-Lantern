@@ -541,6 +541,39 @@ Lantern.controller('EditWorkflowDialogCtrl', ['$rootScope', '$scope', '$cookies'
                 });
             };
 
+            $scope.updateProductWorkflowPart = function (product) {
+                $scope.isCheckingExistRequest = true; // lock the buttons update workflow or delete workflow until the action of checking an existing requestis done
+                if (product.selected == false) {
+                    var filters = [
+                        {
+                            "name": "product_id",
+                            "value": product.id
+                        },
+                        {
+                            "name": "workflow_id",
+                            "value": $scope.workflowToEdit.id
+                        }
+                    ];
+
+                    Request.getRequestsBy({filters: [filters]}, function (requests) {
+                        if (requests.length != 0) {
+                            swal({
+                                title: $rootScope._T["je3ce42j"],
+                                text: $rootScope._T["lh0ycosz"],
+                                type: "error",
+                                confirmButtonText: $rootScope._T["n682c0uh"],
+                                closeOnConfirm: true
+                            });
+                            product.selected = true;
+                        }
+                        $scope.isCheckingExistRequest = false;
+
+                    });
+                }else{
+                    $scope.isCheckingExistRequest = false; // si produit est selectionné on en reactive le bouton
+                }
+            };
+
             $scope.deleteWorkflow = function() {
                 var productsSelected = $filter('filter')($scope.subproject_workflow.ownProduct, {'selected':true});
                 var count = 0; size = productsSelected.length; is_request = false;

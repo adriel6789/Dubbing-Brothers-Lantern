@@ -31,6 +31,17 @@ Lantern.controller('CreateCustomTemplateCtrl', ['$scope', '$timeout', '$rootScop
       rest.getTemplates();
     }();
 
+    $scope.selectWorkflowPartElement = function(id, element) {
+      $scope.workflowPartElementSelected[id] = !$scope.workflowPartElementSelected[id];
+      if ($scope.workflowPartElementSelected[id]) {
+        element.nbpCol++;
+        $scope.totalSelected++;
+      } else {
+        element.nbpCol--;
+        $scope.totalSelected--;
+      }
+    }
+
     $scope.save = function(templateSelected) {
       var count = 0;
 
