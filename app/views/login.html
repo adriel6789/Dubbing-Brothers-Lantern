@@ -1,0 +1,98 @@
+<div class="maskLogin"></div>
+
+<div class="login">
+    <div id="loginForm" class="account-wall">
+
+        <div class="pull-right">
+            <a title="Français" ng-click="setLang('fr')" class="clickable" ng-class="{flagSelected: getLang() == 'fr', flagUnselected: getLang() != 'fr'}"><img src="img/flags/france.png" height="24px"></a>
+            <a title="English" ng-click="setLang('en')" class="clickable" ng-class="{flagSelected: getLang() == 'en', flagUnselected: getLang() != 'en'}"><img src="img/flags/usa.png" height="24px"></a>
+            <a title="Deutsch" ng-click="setLang('de')" class="clickable" ng-class="{flagSelected: getLang() == 'de', flagUnselected: getLang() != 'de'}"><img src="img/flags/germany.png" height="24px"></a>
+            <a title="Italiano" ng-click="setLang('it')" class="clickable" ng-class="{flagSelected: getLang() == 'it', flagUnselected: getLang() != 'it'}"><img src="img/flags/italy.png" height="24px"></a>
+        </div>
+
+        <div class="lanternStats">
+            <h1>
+                <span ng-if="!$root.aprilFoolsDay">Lantern</span><span ng-if="$root.aprilFoolsDay">Bougie</span> <br>
+                <small>{{ _T["crbwmglk"] }} {{year}} {{ _T["u8z1axjw"] }}</small>
+            </h1>
+
+            <p>
+                <span class="number">{{requestsCount | number}}</span>
+                <span class="description">{{ _T["uyk7hh6u"] }}</span>
+
+                <span class="number">{{projectsCount | number}}</span>
+                <span class="description">{{ _T["9roaju8l"] }}</span>
+
+                <span class="number">{{notifsCount | number}}</span>
+                <span class="description">{{ _T["bjf8sm8r"] }}</span>
+
+                <span class="number">{{farmersCount | number}}</span>
+                <span class="description">{{ _T["pi5b8z4g"] }}</span>
+            </p>
+        </div>
+        <div class="loginForm">
+            <!--object ng-if="!$root.aprilFoolsDay" class="logo" type="image/svg+xml" data="img/logo-b.svg">Lantern</object-->
+            <object ng-if="!$root.aprilFoolsDay" class="logo" type="image/svg+xml" data="img/logo-b.svg">Lantern</object>
+            <img ng-if="$root.aprilFoolsDay" class="logo" src="img/bougie.gif" />
+            <h1 class="text-center">
+                {{ _T["ohktw5xn"] }}
+            </h1>
+            <form class="form-signin" ng-submit="(login_without ? login() : loginViaSaloon())">
+                <div ng-if="login_without">
+                    <p class="indicator-input">
+                        {{ _T["4fmalole"] }}
+                    </p>
+                    <input type="text" class="form-control" id="email" placeholder="{{ _T['wp7pza1a'] }}" required autofocus ng-model="global.email">
+                    <p class="indicator-input">
+                        {{ _T["d2kwngge"] }}
+                    </p>
+                    <input type="password" class="form-control" id="pass" placeholder="{{ _T['z9b5qjq2'] }}" autocomplete="off" required ng-model="global.pass">
+                    <br/>
+                </div>
+                <button class="btn btn-lg btn-text-primary btn-light-shadow btn-block" type="submit">
+                    {{ _T["56rx43g5"] }}
+                </button>
+                <div class="text-danger" ng-show="errorAuth">
+                    <strong>{{ _T["8iy4raaf"] }}</strong><br> {{ _T["esw6ctrz"] }}
+                </div>
+            </form>
+        </div>
+
+        <div class="axis-message"
+             style="width:calc(100% + 100px);margin:50px -50px;background:white;border-radius: 5px;"
+        >
+            <iframe src="https://axis.dubbing-brothers.com/about/embed"
+                    frameborder="0"
+                    style="width:100%"
+            ></iframe>
+            <script>
+                window.onmessage = function(e) {
+                    if (e.data === 'openAxis') {
+                        window.open('https://axis.dubbing-brothers.com/about');
+                    }
+                };
+            </script>
+        </div>
+
+<!--        <div class="logoDB">-->
+<!--            <img src="./././img/DUBBINGBROTHERS-logo_white.png">-->
+<!--        </div>-->
+    </div>
+
+
+    <!--<div class="container">-->
+        <!--<div class="row">-->
+            <!--<div class="col-md-4 col-md-offset-4">-->
+                <!--<div class="alert alert-success" role="alert" ng-show="successAuth">-->
+                    <!--<strong>OK !</strong> Vous êtes maintenant authentifié.-->
+                <!--</div>-->
+
+
+                <!--<div  >-->
+                    <!---->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+</div>

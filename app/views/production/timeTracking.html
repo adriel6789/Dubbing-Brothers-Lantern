@@ -1,0 +1,369 @@
+<header style="margin-bottom:10px">
+	<div class="container-fluid container-fixed-nav-aside">
+		<div class="col-sm-12">
+			<p>
+				{{ _T["z9br1r8r"] }} {{::project.name}}
+			</p>
+		</div>
+	</div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+	<div class="row" ng-show="!showFilter">
+    <div class="col-md-12">
+      <div class="col-md-12 panel panel-default pt-10 pb-10">
+        <div class="col-md-12" style="margin-bottom:5px">
+    			<span ng-show="filter.subproject != null">
+    				<div class="btn btn-danger btn-sm btn-outline" style="margin-bottom:5px">
+    					{{(filter.subproject.season != null) && _T["6vwtywcc"] + ' ' + filter.subproject.season || filter.subproject.nature.value}}
+    				</div>
+    			</span>
+    			<span ng-repeat="product in filter.subproject.ownProduct">
+    				<div class="btn btn-primary btn-sm btn-outline" ng-if="product.selectByFilter" style="margin-bottom:5px">
+    					{{(product.episode_number != null) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + ' ' + product.episode_number || product.description.value || product.description_text}}
+    				</div>
+    			</span>
+  				<div class="btn btn-warning btn-sm btn-outline" ng-if="filter.workflow != null" style="margin-bottom:5px">
+  					<div class="">
+  							{{filter.workflow.workflow_type.value}}
+  						<span ng-if="filter.workflow.doublage_type.value != null && filter.workflow.workflow_type_id == 1">
+  							{{filter.workflow.doublage_type.value}}
+  						</span>
+  						<span ng-if="filter.workflow.language.value != null && filter.workflow.workflow_type_id == 1">
+  							- {{filter.workflow.language.value}}
+  						</span>
+  						<span ng-if="filter.workflow.norme_mix.value != null && filter.workflow.workflow_type_id == 1">
+  							- {{filter.workflow.norme_mix.value}}
+  						</span>
+  						<span ng-if="filter.workflow.servicing_type.value != null && filter.workflow.workflow_type_id == 3">
+  							- {{filter.workflow.servicing_type.value}}
+  						</span>
+  						<span ng-if="filter.workflow.resolution.value != null && filter.workflow.workflow_type_id == 3">
+  							- {{filter.workflow.resolution.value}}
+  						</span>
+  						<span ng-if="filter.workflow.diffuseur.name != null && filter.workflow.workflow_type_id == 3">
+  							- {{filter.workflow.diffuseur.name}}
+  						</span>
+  					</div>
+  				</div>
+    		</div>
+        <div class="col-md-12" ng-repeat="etape in filter.etapes" style="margin-bottom:5px">
+  				<div class="btn btn-success btn-sm btn-outline" style="margin-bottom:5px">
+  					{{etape.value}}
+  				</div>
+          <span ng-repeat="action in filter.actions[etape.id]" >
+    				<div class="btn btn-info btn-sm btn-outline" style="margin-bottom:5px">
+    					{{action.value}}
+    				</div>
+    			</span>
+    		</div>
+        <div class="col-md-12">
+          <div class="btn btn-success btn-sm" ng-show="!showFilter" ng-click="showFilter = !showFilter" style="margin-top:-5px">
+            <i class="fa fa-edit"></i> {{ _T["0u4gu3n5"] }}
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+
+  <div class="row" ng-show="showFilter">
+    <div class="col-md-12">
+      <div class="col-md-12 panel panel-default pt-10 pb-10">
+        <h2 ng-show="isFilterValid() != true" class="col-md-12 text-info">
+    			{{isFilterValid()}}
+    		</h2>
+    		<div class="col-md-12" style="margin-bottom:5px">
+    			<span ng-repeat="subproject in project.ownSubproject" ng-click="addSubprojectFilter(subproject)">
+    				<div class="btn btn-danger btn-sm" ng-class="{'btn-outline': filter.subproject.id != subproject.id}">
+    					{{(subproject.season != null) && _T["6vwtywcc"] + ' ' + subproject.season || subproject.nature.value}}
+    				</div>
+    			</span>
+    		</div>
+    		<div class="col-md-12" ng-if="filter.subproject != null" style="margin-bottom:5px">
+    			<span ng-repeat="product in filter.subproject.ownProduct" ng-click="addProductFilter(product)">
+    				<div class="btn btn-primary btn-sm" ng-class="{'btn-outline': !product.selectByFilter}">
+    					{{(product.episode_number != null) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + ' ' + product.episode_number || product.description.value || product.description_text}}
+    				</div>
+    			</span>
+    		</div>
+    		<div class="col-md-12" style="margin-bottom:5px">
+    			<span ng-repeat="workflow in workflowsForFilter" ng-click="addWorkflowFilter(workflow)">
+    				<div class="btn btn-warning btn-sm btn-outline" ng-if="workflow != null" ng-class="{'btn-outline': !workflow.selectByFilter}" >
+    					{{workflow.workflow_type.value}}
+    					<span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+    						{{workflow.doublage_type.value}}
+    					</span>
+    					<span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+    						- {{workflow.language.value}}
+    					</span>
+    					<span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+    						- {{workflow.norme_mix.value}}
+    					</span>
+    					<span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+    						- {{workflow.servicing_type.value}}
+    					</span>
+    					<span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+    						- {{workflow.resolution.value}}
+    					</span>
+    					<span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+    						- {{workflow.diffuseur.name}}
+    					</span>
+              <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                - {{workflow.speed.value}}
+              </span>
+              <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                - {{workflow.resolution.value}}
+              </span>
+              <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                - {{workflow.prod_version}}
+              </span>
+    				</div>
+    			</span>
+    		</div>
+    		<div class="col-md-12" style="margin-bottom:5px">
+    			<span ng-repeat="etape in etapesForFilter" ng-click="addEtapeFilter(etape)">
+    				<div class="btn btn-sm btn-success" ng-class="{'btn-outline': !etape.selectByFilter}">
+    					{{etape.value}}
+    				</div>
+    			</span>
+    		</div>
+    		<div ng-repeat="etape in filter.etapes" class="col-md-12" style="margin-bottom:5px">
+    			<span ng-repeat="action in etape.actions" ng-click="addActionFilter(action, false, etape)">
+    				<div class="btn btn-sm btn-info" ng-class="{'btn-outline': !action.selectByFilter}" ng-if="action.planning == 'farmer'">
+    						{{action.value}}
+    				</div>
+    			</span>
+    		</div>
+    		<div class="col-md-12 text-center" >
+    			<div class="btn btn-success btn-sm" ng-show="showFilter && isFilterValid() == true" ng-click="generateTimeTracking(); showFilter = !showFilter">
+    				<i class="fa fa-check"></i> {{ _T["0l2phx3h"] }}
+    			</div>
+    		</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" ng-show="!showFilter">
+		<div class="col-md-12 mb-10">
+			<button class="btn btn-primary pull-right mr-15" ng-click="exportSeances()">
+				<span><i class="fa fa-file-excel-o"></i> {{ _T["r8ybr1dj"] }}</span>
+			</button>
+		</div>
+		<div ng-repeat="etape in filter.etapes" class="col-md-12">
+			<div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="f-22">{{etape.value}}</span>
+          <button class="btn btn-link pull-right" ng-click="hideBody = !hideBody">
+            <i class="fa fa-compress f-22" ng-show="!hideBody"></i>
+            <i class="fa fa-expand f-22" ng-show="hideBody"></i>
+          </button>
+        </div>
+        <div class="panel-body p-0" ng-hide="hideBody">
+          <h3 class="f-18 col-md-12">{{ _T["zij0e671"] }}</h3>
+          <div id="" class="col-md-6">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="text-center" colspan="5">
+                      {{project.name}} - {{(filter.subproject.season != null) && _T["6vwtywcc"] + ' ' + filter.subproject.season || filter.subproject.nature.value}} |
+
+                      {{filter.workflow.workflow_type.value}}
+                    <span ng-if="filter.workflow.doublage_type.value != null && filter.workflow.workflow_type_id == 1">
+                      {{filter.workflow.doublage_type.value}}
+                    </span>
+                    <span ng-if="filter.workflow.language.value != null && filter.workflow.workflow_type_id == 1">
+                      - {{filter.workflow.language.value}}
+                    </span>
+                    <span ng-if="filter.workflow.norme_mix.value != null && filter.workflow.workflow_type_id == 1">
+                      - {{filter.workflow.norme_mix.value}}
+                    </span>
+                    <span ng-if="filter.workflow.servicing_type.value != null && filter.workflow.workflow_type_id == 3">
+                      - {{filter.workflow.servicing_type.value}}
+                    </span>
+                    <span ng-if="filter.workflow.resolution.value != null && filter.workflow.workflow_type_id == 3">
+                      - {{filter.workflow.resolution.value}}
+                    </span>
+                    <span ng-if="filter.workflow.diffuseur.name != null && filter.workflow.workflow_type_id == 3">
+                      - {{filter.workflow.diffuseur.name}}
+                    </span>
+                  </th>
+                </tr>
+                <tr>
+                  <th>{{ _T["06djaui5"] }}</th>
+                  <th>{{ _T["h6jj63br"] }}</th>
+                  <th>{{ _T["994zv55k"] }}</th>
+                  <th>{{ _T["y0qnsjhg"] }}</th>
+                  <th>{{ _T["agwqbccp"] }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="farmer in allFarmers[etape.id] | orderBy:'day':true">
+                  <td>
+                    {{farmer.request.product.episode_number && (farmer.request.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + farmer.request.product.episode_number || farmer.request.product.description.value && farmer.request.product.description.value || farmer.request.product.description_text && farmer.request.product.description_text}}
+                  </td>
+                  <td>
+                      <a href="#/requests/detail/{{farmer.request_id}}">{{farmer.request.action_type.etape_type.value}} <br> {{farmer.request.action_type.value}} </a>
+                  </td>
+                  <td>
+                      {{farmer.tech_writer_user.person.firstname}} {{farmer.tech_writer_user.person.lastname}}
+                  </td>
+                  <td>
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    {{ _T["z0t6p7pd"] }}
+                    {{farmer.day | asDate | date:"dd MMMM yyyy"}}
+                    <br>
+                    <i class="fa fa-ticket"></i>
+                    {{farmer.audit}}
+                    [{{farmer.working_time_start| asDate | date:'HH:mm'}}
+                    -
+                    {{farmer.working_time_end| asDate | date:'HH:mm'}}]
+                    <br/>
+                    <i class="fa fa-cutlery"></i>
+                    {{ _T["7efqgpfl"] }} : {{farmer.break_time|| "0"}} min
+                  </td>
+                  <td>
+                    <span ng-if="timeCountOne(farmer, 'hours') != 'Séance non terminée'">
+                      {{formatDate(timeCountOne(farmer, 'minutes')).hours}} - ({{formatDate(timeCountOne(farmer, 'minutes')).minutes}})
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <th colspan="3">
+                </th>
+                <th>
+                  {{ _T["v4mmnz0p"] }} :
+                </th>
+                <th>
+                  {{formatDate((timeCountAll[etape.id].toFixed(2) * 60).toFixed(0), true).hours}} - ({{formatDate( (timeCountAll[etape.id].toFixed(2) * 60).toFixed(0) , true).minutes}})
+                </th>
+              </tfoot>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <nvd3 options='options' data='data[etape.id]'></nvd3>
+          </div>
+
+          <h3 class="f-18 col-md-12">{{ _T["twuzdhvs"] }}</h3>
+          <div class="col-md-12">
+            <table class="table">
+              <thead>
+                <th>
+                  {{ _T["06djaui5"] }}
+                </th>
+                <th ng-repeat="action in filter.actions[etape.id]">
+                    {{action.value}}
+                </th>
+                <th>
+                  {{ _T["rt9xzirt"] }}
+                </th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="product in filter.products">
+                  <td>
+                    {{(product.episode_number != null) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + ' ' + product.episode_number || product.description.value || product.description_text}}
+                  </td>
+                  <td ng-repeat="action in filter.actions[etape.id]">
+                    {{formatDate(countByAction(product, action.name, 'minutes', etape)).hours}} -
+                    ({{formatDate(countByAction(product, action.name, 'minutes', etape)).minutes}})
+                  </td>
+                  <td>
+                    {{formatDate(timeCountProduct(product, 'minutes', etape)).hours}} - ({{formatDate(timeCountProduct(product, 'minutes', etape)).minutes}})
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+		</div>
+	</div>
+
+
+  <div class="row" id="exportable" ng-show="false">
+    <table class="table table-bordered" ng-repeat="etape in filter.etapes">
+      <thead>
+        <tr>
+          <th class="text-center" colspan="8">
+              {{project.name}} - {{(filter.subproject.season != null) && _T["6vwtywcc"] + ' ' + filter.subproject.season || filter.subproject.nature.value}} |
+              {{filter.workflow.workflow_type.value}}
+            <span ng-if="filter.workflow.doublage_type.value != null && filter.workflow.workflow_type_id == 1">
+              {{filter.workflow.doublage_type.value}}
+            </span>
+            <span ng-if="filter.workflow.language.value != null && filter.workflow.workflow_type_id == 1">
+              - {{filter.workflow.language.value}}
+            </span>
+            <span ng-if="filter.workflow.norme_mix.value != null && filter.workflow.workflow_type_id == 1">
+              - {{filter.workflow.norme_mix.value}}
+            </span>
+            <span ng-if="filter.workflow.servicing_type.value != null && filter.workflow.workflow_type_id == 3">
+              - {{filter.workflow.servicing_type.value}}
+            </span>
+            <span ng-if="filter.workflow.resolution.value != null && filter.workflow.workflow_type_id == 3">
+              - {{filter.workflow.resolution.value}}
+            </span>
+            <span ng-if="filter.workflow.diffuseur.name != null && filter.workflow.workflow_type_id == 3">
+              - {{filter.workflow.diffuseur.name}}
+            </span>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ _T["06djaui5"] }}</th>
+          <th>{{ _T["aelw8o95"] }}</th>
+          <th>{{ _T["994zv55k"] }}</th>
+          <th>{{ _T["y0qnsjhg"] }}</th>
+          <th>{{ _T["h9ox64fe"] }}</th>
+          <th>{{ _T["agwqbccp"] }}</th>
+          <th>{{ _T["kup2m5xn"] }}</th>
+          <th>{{ _T["1z1tg8a5"] }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="farmer in allFarmers[etape.id] | orderBy:'day':true">
+          <td>
+            {{farmer.request.product.episode_number && (farmer.request.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + farmer.request.product.episode_number || farmer.request.product.description.value && farmer.request.product.description.value || farmer.request.product.description_text && farmer.request.product.description_text}}
+          </td>
+          <td>
+            {{farmer.request.action_type.etape_type.value}} - {{farmer.request.action_type.value}}
+          </td>
+          <td>
+            {{farmer.tech_writer_user.person.firstname}} {{farmer.tech_writer_user.person.lastname}}
+          </td>
+          <td>
+            {{ _T["z0t6p7pd"] }} {{farmer.day | asDate | date:"dd MMMM yyyy"}}
+          </td>
+          <td>
+            {{farmer.audit}}
+            [{{farmer.working_time_start| asDate | date:'HH:mm'}}
+            -
+            {{farmer.working_time_end| asDate | date:'HH:mm'}}] -
+            {{ _T["7efqgpfl"] }} : {{farmer.break_time|| "0"}} min
+          </td>
+          <td>
+            <span ng-if="timeCountOne(farmer, 'hours') != 'Séance non terminée'">
+              {{formatDate(timeCountOne(farmer, 'minutes')).hours}} - ({{formatDate(timeCountOne(farmer, 'minutes')).minutes}})
+            </span>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <th colspan="4">
+        </th>
+        <th>
+          {{ _T["v4mmnz0p"] }} :
+        </th>
+        <th>
+          {{formatDate((timeCountAll[etape.id].toFixed(2) * 60).toFixed(0), true).hours}} - ({{formatDate( (timeCountAll[etape.id].toFixed(2) * 60).toFixed(0) , true).minutes}})
+        </th>
+        <th></th>
+        <th></th>
+      </tfoot>
+      <tr></tr>
+      <tr></tr>
+      <tr></tr>
+    </table>
+  </div>
+
+</div>

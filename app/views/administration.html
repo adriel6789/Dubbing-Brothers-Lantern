@@ -1,0 +1,520 @@
+<header>
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["u2fcy4oj"] }} 😋
+            </p>
+        </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside header-input-text">
+        <form class="col-sm-12" ng-submit="search()">
+            <div class="form-group col-sm-8 search-form">
+                <input type="text"
+                       class="form-control input-search"
+                       aria-label="ID du {{searchType}} recherchée"
+                       placeholder="ID {{ _T['mc051ilq'] }} {{searchType}} {{ _T['sa6ga7oh'] }}"
+                       ng-model="id_search">
+            </div>
+            <div class="form-group col-sm-4 btn-group btn-group-justified" ng-init="searchType = 'request'">
+              <div class="btn-group" role="group">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="searchType = 'request'"
+                      ng-class="{'btn-success': searchType === 'request'}"
+                      style="height:41px"
+              >{{ _T["ym8ug09i"] }}</button>
+              </div>
+              <div class="btn-group" role="group">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="searchType = 'project'"
+                      ng-class="{'btn-success': searchType === 'project'}"
+                      style="height:41px"
+              >{{ _T["ovna6ycs"] }}</button>
+              </div>
+            </div>
+        </form>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+
+  <div class="row" ng-if="searchType === 'request'">
+    <div class="col-md-12 text-center">
+      <h1 ng-show="request == null && !error">{{ _T["fiyl8kxx"] }}</h1>
+      <h1 class="text-danger" ng-show="error">{{ _T["tfjqabmz"] }}</h1>
+      <h1 ng-show="request != null && !error">{{request.product.human_description}}</h1>
+      <h1 ng-show="request != null && !error">{{ _T["8wk4rg65"] }} #{{request.id}} : {{request.action_type.value}} - {{request.action_type.etape_type.value}}
+        <small>
+          <span class="label label-danger" ng-if="request.is_canceled == 1"><i class="fa fa-ban" aria-hidden="true"></i> {{ _T["fotidtc6"] }}</span>
+          <span class="label label-primary" ng-if="request.is_done != 1 && request.is_done != 1 && request.is_not_done != 1 && request.is_sent_back != 1 && request.is_in_progress != 1 && request.is_partial != 1 && request.is_validated_for_tech != 1 && request.is_planned != 1">{{ _T["5j1nv2tu"] }}</span>
+          <span class="label label-success" ng-if="request.is_done == 1">{{ _T["46z910du"] }}</span>
+          <span class="label label-info" ng-if="request.is_planned == 1 && !(request.is_done == 1 || request.is_in_progress == 1 || request.is_not_done == 1)">{{ _T["5dd4lerz"] }}</span>
+          <span class="label label-primary" ng-if="request.is_in_progress == 1">{{ _T["xvyyayrz"] }}</span>
+          <span class="label label-warning" ng-if="request.is_not_done == 1">{{ _T["yxdfq1zn"] }}</span>
+          <span class="label label-danger" ng-if="request.important == 1">{{ _T["4orz1fdr"] }}</span>
+          <span class="label label-blue" ng-if="request.on_hold == 1"><i class="fa fa-pause" aria-hidden="true"></i>{{ _T["2ctuc541"] }}</span>
+        </small>
+      </h1>
+    </div>
+    <div class="col-md-12" ng-if="request != null && !error">
+      <div class="text-center">
+        <div class="btn-group btn-group-sm">
+          <a href="#/requests/detail/{{request.id}}" class="btn btn-default">
+            {{ _T["4sdbhlga"] }}
+          </a>
+          <a href="#/requests/detail/{{request.id}}" class="btn btn-default">
+            {{ _T["t6bwmn60"] }}
+          </a>
+          <a href="#/requestsTech/{{request.id}}" class="btn btn-default">
+            {{ _T["vmsy04ck"] }}
+          </a>
+        </div>
+      </div>
+      <div class="text-center">
+        <h3>{{ _T["1sk7eqop"] }} #{{request.id}}</h3>
+        <div class="btn-group btn-group-lg">
+          <button type="button" class="btn btn-default" ng-click="changeRequestStatus('unplanned')">
+            {{ _T["5j1nv2tu"] }}
+          </button>
+          <button type="button" class="btn btn-info" ng-click="changeRequestStatus('planned')">
+            {{ _T["5dd4lerz"] }}
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="changeRequestStatus('in_progress')">
+            {{ _T["xvyyayrz"] }}
+          </button>
+          <button type="button" class="btn btn-warning" ng-click="changeRequestStatus('replan')">
+            {{ _T["2iefi8y6"] }}
+          </button>
+          <button type="button" class="btn btn-success" ng-click="changeRequestStatus('finished')">
+            {{ _T["46z910du"] }}
+          </button>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h3>{{ _T["pi1c4ewr"] }} #{{request.id}}</h3>
+      </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>{{ _T["fzoj39gu"] }}</th>
+              <th>{{ _T["h9ox64fe"] }}</th>
+              <th style="width:200px">{{ _T["qj8qzya5"] }}</th>
+              <th style="width:200px">{{ _T["vbqcuou4"] }}</th>
+              <th style="width:100px">{{ _T["vmawf9bg"] }}</th>
+              <th>{{ _T["h7n5ijhv"] }}</th>
+              <th>{{ _T["htkwu633"] }}</th>
+              <th style="width:10px"></th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="farmer in request.ownFarmerbookings | orderBy:'day'" ng-show="farmer.remove != 1">
+            <tr>
+              <td>
+                <i class="glyphicon glyphicon-fire"></i> <br>
+                {{farmer.id}}
+              </td>
+              <td>
+                <i class="glyphicon glyphicon-calendar"></i> {{farmer.day}}<br>
+                <i class="glyphicon glyphicon-time"></i> {{farmer.start_time}} à {{farmer.end_time}}
+              </td>
+              <td>
+                {{farmer.audit}}
+              </td>
+              <td>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-wrench"></i></span>
+                  <input type="text" style="width:100% !important; min-width:150px" class="form-control input-sm" placeholder="2016-06-02 06:30:00" ng-model="farmer.working_time_start">
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-wrench"></i></span>
+                  <input type="text" style="width:100% !important; min-width:150px" class="form-control input-sm" placeholder="2016-06-02 07:00:00" ng-model="farmer.working_time_end">
+                </div>
+              </td>
+              <td>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-glass"></i></span>
+                  <input type="text" style="width:100% !important; min-width:50px" class="form-control input-sm" placeholder="0" ng-model="farmer.break_time">
+                </div>
+              </td>
+              <td>
+                <h4><span class="label label-default" ng-class="{'farmer-done' : farmer.is_finished == 1 && farmer.is_done == 1 && farmer.is_partial != 1, 'farmer-not-done' : farmer.is_finished == 1 && farmer.is_not_done == 1, 'farmer-done-partial': farmer.is_finished == 1 && farmer.is_done == 1 && farmer.is_partial == 1, 'farmer-not-finished' : farmer.is_finished != 1 && farmer.is_selected == 1}">
+                <span ng-if="farmer.is_finished == 1">
+                    {{ _T["k7su5zvx"] }}
+                    <span ng-if="farmer.is_partial == 1">
+                        {{ _T["jguzo1fd"] }}.</span>
+                    <span ng-if="farmer.is_done == 1 && farmer.is_partial != 1">
+                        {{ _T["dbkkkv1w"] }}.</span>
+                    <span ng-if="farmer.is_not_done == 1">
+                        {{ _T["pt07sq7v"] }}.</span>
+                </span>
+                <span ng-if="farmer.is_selected == 1 && farmer.is_finished != 1">
+                    {{ _T["5gppcnr3"] }}
+                </span>
+                <span ng-if="farmer.booking_id != null && farmer.is_selected != 1">
+                    {{ _T["3ypyvgp4"] }}
+                </span>
+                <span ng-if="farmer.booking_id == null">
+                    {{ _T["nqhxwwa7"] }}
+                </span>
+                </span>
+                <span class="label label-success" ng-if="farmer.is_wish == 1">{{ _T["kjuc5qc5"] }}</span>
+                <span class="label label-danger" ng-if="farmer.is_wish == 0">{{ _T["9fijwg2m"] }}</span>
+                <span class="label label-warning" ng-if="farmer.is_wish == null">{{ _T["ursm5mhl"] }}</span>
+                <!--<span class="label label-info" ng-if="farmer.is_not_farmer == 1">{{ _T["goiys7qp"] }}</span>-->
+                </h4>
+              </td>
+              <td>
+                <select class="form-control input-sm" ng-model="farmer.status">
+                  <option value="finishedR">{{ _T["twgalzko"] }}</option>
+                  <option value="finishedNR">{{ _T["q6dcapq9"] }}</option>
+                  <option value="unfinishedR">{{ _T["w9zwn3z7"] }}</option>
+                  <option value="unfinishedNR">{{ _T["4w1oew2a"] }}</option>
+                  <option value="notDoneR">{{ _T["3tchawq8"] }}</option>
+                  <option value="notDoneNR">{{ _T["ltl02tqs"] }}</option>
+                  <option value="unTraiteR">{{ _T["cmj0ifup"] }}</option>
+                  <option value="unTraiteNR">{{ _T["5yyacgrq"] }}</option>
+                </select>
+              </td>
+              <td>
+                <div class="btn-group-vertical btn-group-xs">
+                  <button type="button" class="btn btn-warning btn-outline btn-xs" ng-click="updateFarmer(farmer)">
+                    {{ _T["qmljcoan"] }}
+                  </button>
+                  <button type="button" class="btn btn-danger btn-outline btn-xs" ng-click="deleteFarmer(farmer)">
+                    {{ _T["tc6j8t46"] }}
+                  </button>
+                </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+  <div class="row text-center" ng-if="searchType === 'request'">
+    <hr>
+    <img src="img/rambo.jpg" alt="" ng-show="error" style="width:30%; height:30%"/>
+    <img src="img/rambo1.png" alt="" ng-show="request && !error"  style="width:30%; height:30%"/>
+    <img src="img/rambo2.jpg" alt="" ng-show="!request && !error" style="width:30%; height:30%" />
+  </div>
+
+<div class="row" ng-if="searchType === 'request'">
+  <form class="col-sm-12" ng-submit="listRequestStatusToCheck(number_days)">
+    <h2>{{ _T["aav6xn6r"] }}</h2>
+    <div class="form-group col-sm-8">
+        <p><strong>{{ _T["nt00iyio"] }}</strong></p>
+        <input type="number"
+                class="form-control"
+                aria-label="{{ _T['m98h0ees'] }}"
+                placeholder="{{ _T['m98h0ees'] }}"
+                ng-model="number_days">
+    </div>
+  </form>
+   <div class="col-md-6" ng-if="contentRequest.length > 1">
+    <p><strong>{{ _T["sfg8umar"] }}</strong> {{ tableParams.count()}}</p>
+    <table ng-table="tableParams" class="table table-condensed table-bordered table-striped ">
+      <tr>
+          <th ng-repeat="column in columns"
+              class="text-center sortable" ng-class="{
+                  'sort-asc': tableParams.isSortBy(column, 'asc'),
+                  'sort-desc': tableParams.isSortBy(column, 'desc')
+                }"
+              ng-click="tableParams.sorting(column, tableParams.isSortBy(column, 'asc') ? 'desc' : 'asc')">
+              {{column}}
+          </th>
+      </tr>
+      <tr ng-repeat="row in data">
+          <td ng-repeat="column in columns" sortable="column">
+            <button ng-if="column =='Request_id'" type="button" class="btn btn-xs btn-block btn-primary"  clipboard text="row[column]" on-copied="" on-error="">
+                <i class="fa fa-edit"></i> {{row[column]}}
+            </button>
+            <span ng-if="column!='Request_id'">{{row[column]}}</span>
+              
+          </td>
+      </tr>
+    </table>
+  </div>
+</div>
+  <!--ADMINISTRATION PROJECT-->
+  <div class="row" ng-if="searchType === 'project'">
+    <div class="col-md-12" style="padding:0 32px;">
+      <h1 ng-show="project == null && !error">{{ _T["6uh1rn22"] }}</h1>
+      <h1 class="text-danger" ng-show="error">{{ _T["kx8rpwu2"] }}</h1>
+      <h1 ng-show="project != null && !error"
+          style="margin-bottom:20px;"
+      >
+        {{ _T["r82ct91x"] }} #{{project.id}} : <span class="text-primary">{{project.name}}</span>
+      </h1>
+
+      <div class="alert alert-danger col-md-4" role="alert" ng-if="switchErrors.length > 0">
+        <strong>{{ _T["qa7hrb7y"] }}</strong>
+        <ul>
+          <li ng-repeat="error in switchErrors">{{error}}</li>
+        </ul>
+      </div>
+
+      <!--ACTION BAR-->
+      <div class="row" ng-if="project != null && !error">
+
+        <!--BUTTONS-->
+        <div class="col-md-12">
+          <button class="btn btn-primary"
+                  ng-click="toggleImdbCard()"
+                  ng-if="!imdbCardOpen"
+                  ng-disabled="switchErrors.length > 0"
+          >
+            <i class="fa fa-pencil fa-fw"></i> {{ _T["fq5yrpwg"] }}
+          </button>
+        </div>
+
+        <!--IMDB FORM-->
+        <div class="col-md-12" ng-if="imdbCardOpen">
+          <div class="panel panel-primary">
+            <div class="panel-heading">{{ _T["fq5yrpwg"] }}</div>
+
+            <div class="panel-body">
+              <!--FORM-->
+              <form class="col-md-3">
+                <div class="form-group">
+                  <label for="imdb_id">{{ _T["dyswdqob"] }}</label>
+                  <input type="text"
+                         class="form-control"
+                         id="imdb_id"
+                         placeholder="tt......."
+                         ng-model="imdbIdSearchQuery"
+                  >
+                </div>
+                <button class="btn btn-default" ng-click="searchImdbId(imdbIdSearchQuery, (project.movie_id) ? 'movie' : 'tv')">{{ _T["dqw4e7aa"] }}</button>
+              </form>
+
+              <!--RESULT-->
+              <div class="col-md-9" ng-if="imdbLoading">
+                <h1 class="text-muted text-center"><i class="fa fa-2x fa-spinner fa-spin"></i></h1>
+              </div>
+              <div class="col-md-9" ng-if="!imdbLoading">
+                <div ng-if="newProject.name || newProject.original_name">
+
+                  <h2 class="text-primary">{{ _T["r82ct91x"] }}</h2>
+                  <table class="table table-bordered">
+                    <tr>
+                      <th>{{ _T["4u8blvi4"] }}</th>
+                      <th>{{ _T["ezi8ng1l"] }}</th>
+                      <th style="text-align:inherit">{{ _T["yxhodpof"] }}</th>
+                    </tr>
+                    <tr>
+                      <td>{{ _T["ty32y0q1"] }}</td>
+                      <td>
+                        <img ng-src="https://image.tmdb.org/t/p/w342{{project.poster}}"
+                             ng-if="project.poster"
+                             alt="Poster"
+                             style="width:80px"
+                        >
+                      </td>
+                      <td style="text-align:inherit">
+                        <img ng-src="https://image.tmdb.org/t/p/w342{{newProject.poster}}"
+                             ng-if="newProject.poster"
+                             alt="Poster"
+                             style="width:80px"
+                        >
+                      </td>
+                    </tr>
+                    <tr ng-repeat="(property, value) in newProject">
+                      <td>{{property}}</td>
+                      <td>{{project[property]}}</td>
+                      <td style="text-align:inherit">{{newProject[property]}}</td>
+                    </tr>
+                  </table>
+
+                  <h2 class="text-primary">{{ _T["jgxche4d"] }}</h2>
+                  <p>{{ _T["8ucrmvvt"] }}
+                  </p>
+                  <div ng-repeat="subProject in project.ownSubproject" ng-if="newProducts.length > 0">
+                    <h3 class="text-primary">{{ _T["6vwtywcc"] }} {{subProject.season}} (id: {{subProject.id}})</h3>
+                    <table class="table table-bordered">
+                      <tr>
+                        <th>{{ _T['wl2fw36q'] }}</th> 
+                        <th>{{ _T['ujzjgxq8'] }}</th>
+                        <th>{{ _T['g3w4yzrt'] }}</th>
+                        <th>{{ _T["j67kflpi"] }}</th>
+                        <th>{{ _T["ocav8a6o"] }}</th>
+                        <th>
+                          <button type="button" ng-class="!checkedAll[subProject.id] ? 'btn btn-warning':'btn btn-primary' "
+                            ng-click="checkedAll[subProject.id] = !checkedAll[subProject.id];toggleSelectionAllEpisodes(checkedAll[subProject.id],subProject.id); ">
+                            <span ng-if="!checkedAll[subProject.id]">
+                            {{ _T["mpy8xlm4"] }}
+                            </span>
+                            <span ng-if="checkedAll[subProject.id]">
+                            {{ _T["4s1pbe54"] }}
+                            </span>
+                          </button>
+                        </th>
+                        <th style="text-align:inherit">{{ _T["l4ment8t"] }}</th>
+                      </tr>
+                      <tr ng-repeat="product in subProject.ownProduct">
+                        <td>{{product.episode_number}}</td>
+                        <td>{{product.ep_number_tmdb }}</td>
+                        <td>{{product.id}}</td>
+                        <td>
+                          <a href="https://www.imdb.com/title/{{product.imdb_id}}" target="_blank">{{product.imdb_id}}</a>
+                        </td>
+                        <td style="text-align:inherit"
+                            ng-repeat="newProduct in newProducts | filter: {id:product.id}">
+                          <a href="https://www.imdb.com/title/{{newProduct.imdb_id}}" target="_blank">{{newProduct.imdb_id}}</a>
+                          <div class="form-group" > 
+                            <ui-select ng-model="new_imdb[product.id].selected" ng-change="changeEpisodeImdbId();" style="width: 100%" theme="bootstrap" required>
+                              <ui-select-match placeholder="{{ _T['wi9d7omp'] }}">
+                                S{{$select.selected.seasonNumber}}_EP{{$select.selected.episodeNumber}} ( imdb_id: {{$select.selected.tconst}})
+                              </ui-select-match>
+                              <ui-select-choices
+                                repeat="item in seasonEpisodesList | propsFilter: { seasonNumber: $select.search, episodeNumber: $select.search, tconst:$select.search} ">
+                                <div
+                                  ng-bind-html="('S'+ item.seasonNumber + '_EP' +item.episodeNumber + ' ( imdb_id: '+item.tconst +')') | highlight: $select.search">
+                                </div>
+                              </ui-select-choices>
+                            </ui-select>
+                          </div>
+                        </td>
+                        <td>
+                          <input id='checkbox_{{subProject.id}}_{{product.id}}' ng-model="selectedProductIds[subProject.id][product.id]" type="checkbox" ng-checked="checkedAll[subProject.id]" ng-change="checkEnableApplySeasonButton(subProject.id)"/>
+                          <label for='checkbox_{{subProject.id}}_{{product.id}}'></label>
+                        </td>
+                        <td>
+                          <i class="fa fa-fw fa-2x {{product.casting.id ? 'text-danger fa-check-circle' : ''}}"></i>
+                        </td>
+                      </tr>
+                    </table>
+                    <div class="panel-footer" style="text-align: right;">
+                      <button class="btn btn-primary" ng-disabled="(selectedProductIds[subProject.id] == undefined || (selectedProductIds[subProject.id] != undefined && !selectedProductIds[subProject.id][0])) ||( newProducts.length < 1 && !project.movie_id)"
+                        ng-click="applyChangesSeasonEpisodes(subProject.id)">{{ _T["qv34o8t1"] }}(id: {{subProject.id}})</button>
+                      <button class="btn btn-danger" ng-click="toggleImdbCard()">{{ _T["ficbz281"] }}</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-footer" style="text-align: right;">
+              <button class="btn btn-primary"
+                      ng-disabled="newProducts.length < 1 && !project.movie_id"
+                      ng-click="applyChanges()"
+              >{{ _T["qv34o8t1"] }}</button>
+              <button class="btn btn-danger"
+                      ng-click="toggleImdbCard()"
+              >{{ _T["ficbz281"] }}</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <br/>
+      <!--AFFICHAGE DU RESULTAT-->
+      <div ng-if="project != null && !error">
+        <!--INFORMATIONS DE BASE-->
+        <div class="row" style="margin:0;">
+          <div class="col-md-2" style="padding-left:0;" ng-if="project.poster">
+            <img ng-src="https://image.tmdb.org/t/p/w342{{project.poster}}"
+                 alt="Poster"
+                 style="width:100%"
+            >
+          </div>
+          <div class="col-md-5 " style="font-size:1.2em;">{{project.overview}}</div>
+          <div class="col-md-3 col-md-offset-2">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <th>{{ _T["tdhr09p1"] }}</th>
+                <td>{{itemType}}</td>
+              </tr>
+              <tr>
+                <th style="vertical-align: middle">{{ _T["mdj3gnlm"] }}</th>
+                <td>
+                  {{project.client.name}}
+                  <img ng-if="project.client.url"
+                       ng-src="{{project.client.url}}"
+                       style="max-width:80px;max-height:80px;"
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th>IMDB</th>
+                <td>
+                  <a target="_blank" href="https://www.imdb.com/title/{{project.imdb_id}}">{{project.imdb_id}}</a>
+
+                </td>
+              </tr>
+              <tr>
+                <th>{{ _T["2kquw5ig"] }}</th>
+                <td>{{project.owner.firstname}} {{project.owner.lastname}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!--INFORMATIONS SERIE-->
+        <div class="row" style="margin:0" ng-if="itemType === 'Serie'">
+          <hr>
+          <h2 class="text-primary">{{ _T["wlyuq58h"] }}</h2>
+
+          <!--Subproject-->
+          <div class="row" style="margin:0" ng-repeat="season in project.ownSubproject | orderBy:'season'">
+            <div class="col-md-12"style="padding:0;">
+              <h3>
+                {{ _T["jauwurs1"] }} #{{season.id}} :
+                <span class="text-primary" ng-if="season.season">{{ _T["6vwtywcc"] }} {{season.season}}</span>
+                <span class="text-danger" ng-if="!season.season">{{ _T["6vwtywcc"] }} ?</span>
+              </h3>
+              <table class="table table-bordered" style="margin-bottom:16px;">
+                <thead>
+                  <tr>
+                    <th>{{ _T["dtjsljff"] }}</th>
+                    <th>{{ _T["ss0nsjw5"] }}</th>
+                    <th>{{ _T["x8562wdg"] }}</th>
+                    <th>{{ _T["jyo57dm1"] }}</th>
+                    <th>TMDB</th>
+                    <th>IMDB</th>
+                    <th>{{ _T["yysmn2r8"] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="episode in season.ownProduct | orderBy:'episode_number'">
+                    <td>#{{episode.id}}</td>
+                    <td style="padding:0;">
+                      <img ng-src="https://image.tmdb.org/t/p/w185{{episode.still_path}}"
+                           ng-if="episode.still_path"
+                           style="width:120px;"
+                      >
+                    </td>
+                    <td style="white-space: nowrap">
+                      {{episode.title_vf||episode.title_vo}}<br/>
+                      <i class="text-muted" ng-if="episode.episode_number">#{{episode.episode_number}}</i></td>
+                    <td>{{episode.overview}}</td>
+                    <td>{{episode.tmdb_id}}</td>
+                    <td><a target="_blank" href="https://www.imdb.com/title/{{episode.imdb_id}}">{{episode.imdb_id}}</a></td>
+                    <td style="text-align:center;">
+                      <i class="fa fa-fw fa-2x {{episode.casting.id ? 'text-success fa-check-circle' : 'text-danger fa-times-circle'}}"></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row text-center" ng-if="searchType === 'project'">
+    <hr>
+    <img src="img/madmax_no_found.jpg" alt="" ng-show="error" />
+    <img src="img/madmax_found.jpg" alt="" ng-show="project && !error"  style="width:50%; height:50%"/>
+    <img src="img/madmax1.jpg" alt="" ng-show="!project && !error" />
+  </div>
+
+</div>

@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <span>{{ _T["bh4lbf6l"] }} :</span>
+
+        </div>
+        <div class="col-md-12">
+          <input class="form-control" id="datepicker" ng-model="date_desired"/>
+          <script>
+            $('#datepicker').datepicker({
+              format: "dd MM yyyy",
+              todayBtn: true,
+              language: $.cookie("language"),
+              multidate: true,
+              multidateSeparator: " - ",
+              calendarWeeks: true,
+              todayHighlight: true
+            });
+          </script>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-right" ng-click="saveChange('date_desired')">{{ _T["5ygcxbsu"] }}</button>
+        </div>
+    </div>
+</div>

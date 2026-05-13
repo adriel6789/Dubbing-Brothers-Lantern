@@ -1,0 +1,637 @@
+<div class="navbar navbar-inverse navbar-fixed-right" ng-show="!isMobile()" role="navigation">
+  <div class="navbar-header">
+    <a id="checkRole" class="navbar-brand" ui-sref="app.index" ng-if="!$root.canDisplay(784)">
+      <img ng-if="!$root.aprilFoolsDay" class="logo" src="img/logo-w.svg" alt="Logo Lantern" />
+      <img ng-if="$root.aprilFoolsDay" class="logo" src="img/bougie.gif" alt="Logo Lantern" />
+      <span ng-cloak ng-if="badge.homeCount > 0" class="badge badge-notification" style="top:45px" notification-badge="badge.homeCount">{{badge.homeCount}}</span>
+    </a>
+    <a id="checkRole" class="navbar-brand" ui-sref="app.requestsAutoTech" ng-if="$root.canDisplay(784)">
+      <img ng-if="!$root.aprilFoolsDay" class="logo" src="img/logo-w.svg" alt="Logo Lantern" />
+      <img ng-if="$root.aprilFoolsDay" class="logo" src="img/bougie.gif" alt="Logo Lantern" />
+    </a>
+  </div>
+  <ul class="nav navbar-nav menu">
+    <li class="nav-item" ng-if="$root.canDisplay(39)">
+      <a ui-sref="app.projects">
+        <i class="c-icon c-icon-projects"></i>
+        <p>{{ _T["ovna6ycs"] }}</p>
+      </a>
+      <div class="submenu">
+        <a ui-sref="app.projects">
+          <p>{{ _T["ovna6ycs"] }}</p>
+        </a>
+        <a ng-if="$root.canDisplay(1)" ui-sref="app.projectsDigi">
+          <p>{{ _T["ovna6ycs"] }} ({{ _T["ji2gzcsx"] }})</p>
+        </a>
+        <a ui-sref="app.returns">
+          <p>{{ _T["hmvhq73h"] }}</p>
+        </a>
+      </div>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(784)">
+      <a ui-sref="app.projectsDigi">
+        <i class="c-icon c-icon-projects"></i>
+        <p>{{ _T["ovna6ycs"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(128)">
+      <a ui-sref="app.projects">
+        <i class="c-icon c-icon-projects"></i>
+        <p>{{ _T["ovna6ycs"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(135)">
+      <a ui-sref="app.clients">
+        <i class="c-icon c-icon-clients"></i>
+        <p>{{ _T["fm3hd4h1"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(3)">
+      <a ui-sref="app.requestGroup">
+        <i class="c-icon c-icon-demandes"></i>
+        <p>{{ _T["ym8ug09i"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item parent-menu" ng-if="$root.canDisplay(7)">
+      <a ui-sref="app.requestGroupNonePlan">
+        <i class="c-icon c-icon-date"></i>
+        <p>{{ _T["ym8ug09i"] }}</p>
+      </a>
+      <div class="submenu">
+        <a ui-sref="app.requestGroupNonePlan" ng-if="$root.canDisplay(5)">
+          <p>{{ _T["jl34h8o9"] }}</p>
+        </a>
+        <a ui-sref="app.requestGroupPlanned" ng-if="$root.canDisplay(5)">
+          <p>{{ _T["oc61aez7"] }}</p>
+        </a>
+        <a ui-sref="app.records.manageTechRequests" ng-if="$root.canDisplay(5)">
+          <p>{{ _T["xag06kf0"] }}</p>
+        </a>
+      </div>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(9)">
+      <a ui-sref="app.requestsValidated">
+        <i class="c-icon c-icon-tech"></i>
+        <p>{{ _T["ym8ug09i"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(784)">
+      <a ui-sref="app.requestsAutoTech">
+        <i class="c-icon c-icon-tech"></i>
+        <p>{{ _T["ym8ug09i"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(37)">
+      <a ui-sref="app.compta">
+        <i class="glyphicon glyphicon-euro"></i>
+        <p>{{ _T["ve2bapbk"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(37)">
+      <a ui-sref="app.previsCompta">
+        <i class="glyphicon glyphicon-eye-open"></i>
+        <p>{{ _T["u74gy1tq"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(37)">
+      <a ui-sref="app.interco">
+        <i class="glyphicon glyphicon-eye-open"></i>
+        <p>Interco</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(65)">
+      <a ui-sref="app.security">
+        <i class="fa fa-shield"></i>
+        <p>{{ _T["4roslf2m"] }}</p>
+      </a>
+    </li>
+    <li class="nav-item" ng-if="$root.canDisplay(1)">
+      <a ui-sref="app.administration">
+        <i class="c-icon c-icon-infos"></i>
+        <p>Admin</p>
+      </a>
+      <div class="submenu">
+          <a ui-sref="app.administration" ng-if="$root.user_Permission">
+            <span class="glyphicon glyphicon-king"></span>
+            <p>{{ _T["f205uigy"] }}</p>
+          </a>
+          <a ui-sref="app.dashboard">
+            <span class="glyphicon glyphicon-list-alt"></span>
+            <p>Dashboard</p>
+          </a>
+      </div>
+    </li>
+
+
+  </ul>
+  <ul class="nav navbar-nav navbar-user">
+
+  <div ng-controller="UserBranchesCtrl">
+    <select ng-show="userBranches.length > 1" class="form-control" ng-options="branch.id as branch.name for branch in userBranches | orderBy: 'branch'" ng-model="userBranch.id" ng-change="setUserBranch()" style="padding: 0px;display: inline-block;min-height: 20px !important">
+    </select>
+    <div ng-if="userBranches.length == 1" class="branch" style="background-color:white">{{userBranches[0].name}}</div>
+  </div>
+
+    <div class="center-block">
+      <a title="Français" ng-click="setLang('fr')" class="clickable" ng-class="{flagSelected: getLang() == 'fr', flagUnselected: getLang() != 'fr'}"><img src="img/flags/france.png" width="20"></a>
+      <a title="English" ng-click="setLang('en')" class="clickable" ng-class="{flagSelected: getLang() == 'en', flagUnselected: getLang() != 'en'}"><img src="img/flags/usa.png" width="20"></a>
+      <a title="Deutsch" ng-click="setLang('de')" class="clickable" ng-class="{flagSelected: getLang() == 'de', flagUnselected: getLang() != 'de'}"><img src="img/flags/germany.png" width="20"></a>
+      <a title="Italiano" ng-click="setLang('it')" class="clickable" ng-class="{flagSelected: getLang() == 'it', flagUnselected: getLang() != 'it'}"><img src="img/flags/italy.png" width="20"></a>
+    </div>
+
+    <li class="nav-item" ng-show="permission()" style="height:2em;margin-top:10px;margin-bottom:10px">
+      <a id="dLabel" role="button" data-toggle="dropdown" ng-click="$root.showNotifSidebar = !$root.showNotifSidebar; clearNotif()" data-target="#" style="padding:0">
+        <p class="ng-cloak">
+          <i class="c-icon fa fa-globe" style="font-size:10pt"></i>
+          <span class="label label-info">{{$root.user_entity.firstname}} {{$root.user_entity.lastname[0].trunc(10,'.')}}</span>
+        </p>
+        <span ng-if="badge.main > 0" class="badge badge-notification ng-cloak" notification-badge="badge.main">{{badge.main}}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a ng-if="permission()" ng-click="openPanelSettings()" style="display:inline;cursor:pointer;">
+        <i class="c-icon c-icon-settings"></i>
+      </a>
+      <a ui-sref="app.logout" style="display:inline-block">
+        <i class="glyphicon glyphicon-log-out"></i>
+      </a>
+    </li>
+    <li>
+      <a class="btn btn-info" href="https://axis.dubbing-brothers.com/" title="Axis Portal" style="padding: 1px 6px;background-color: white;"><img src="img/axis.png" height="25px" /></a>
+    </li>
+  </ul>
+</div>
+<div class="ng-cloak" ng-cloak id="notifSidebar" pageslide ps-open="$root.showNotifSidebar" ng-click=""
+    ps-click-outside="false" ps-side="left" ps-size="450px" ps-push="true">
+    <div style="padding:0px 20px 20px 20px">
+        <div class="mb-5">
+            <h3 ng-if="$root.showNotifSidebar" class="mt-12" style="display:flex;">
+                <div style="width: 35%">{{ _T["j3u5ro6b"] }}</div>
+                <div class="ml-15 pull-right" style="width: 10%">
+                    <i  class="fa fa-filter" style="cursor: pointer" data-toggle="tooltip" ng-click="showNotifsFilter()"
+                        title="{{ _T['dx3dikbn'] }}" tooltip-placement="bottom"></i>
+                </div>
+                <div class="ml-15 pull-right" style="width: 10%">
+                  <i class="fa fa-refresh" style="cursor: pointer; color: #97919165;"  ng-click="reloadNotifications()" data-toggle="tooltip"  tooltip-placement="bottom" title="{{ _T['u7kye6n9'] }}"></i>     
+                </div>
+                <div class="ml-15 pull-right" style="width: 10%">
+                  <span ng-if="notificationsArrival">
+                    <i class="fa fa-globe" style="cursor: pointer;color: #dd1b1b; "  ng-click="seeNewNotifications()">
+                      <span class="badge badge-notification notification-badge" >{{notificationsArrivalNumber}}</span></i>
+                  </span>   
+                </div>
+            </h3>
+            <div class="mb-12" ng-if="showMainNotifsValue == 1" style="width: 100%; height: 4vh;">
+                <div ng-show="!showConfirmDelNotif" style="width: 100%;">
+                    <button
+                        class="btn btn-default btn-text-gray btn-light-shadow btn-s pull-left" style="width:70%; padding: 0 !important"
+                        ng-click="showConfirmDelNotif = true;">{{ _T["vqn42a3f"] }}
+                    </button>
+                </div>
+                <div ng-show="showConfirmDelNotif" style="width: 100%;">
+                    <button ng-show="showConfirmDelNotif" type="button" style="width: 46%" class="btn btn-danger btn-xs"
+                        name="button" ng-click="showConfirmDelNotif = false; archiveAllNotifications();">{{
+                        _T["qt7lnak9"] }}</button>
+                    <button ng-show="showConfirmDelNotif" type="button" style="width: 46%"
+                        class="btn btn-default btn-text-gray btn-xs" ng-click="showConfirmDelNotif = false;"
+                        name="button">{{ _T["ficbz281"] }}</button>
+                </div>
+            </div>
+            <div class="mb-12" ng-if="showArchivedNotifsValue == 1" style="width: 100%; height: 4vh;">
+              <div ng-show="!showConfirmArchivedDelNotif" style="width: 100%;">
+                  <button
+                      class="btn btn-default btn-text-gray btn-light-shadow btn-s pull-left"
+                      ng-click="showConfirmArchivedDelNotif = true;">{{ _T["7poguw71"] }}   
+                  </button>
+              </div>
+              <div ng-show="showConfirmArchivedDelNotif" style="width: 100%;">
+                  <button ng-show="showConfirmArchivedDelNotif" type="button" style="width: 46%" class="btn btn-danger btn-xs"
+                      name="button" ng-click="showConfirmArchivedDelNotif = false; deleteAllNotifications();"> {{ _T["tc6j8t46"] }}   </button>
+                  <button ng-show="showConfirmArchivedDelNotif" type="button" style="width: 46%"
+                      class="btn btn-default btn-text-gray btn-xs" ng-click="showConfirmArchivedDelNotif = false;"
+                      name="button">{{ _T["ficbz281"] }}</button>
+              </div>
+          </div>
+
+            <div class="mb-12" ng-if="isShowNotifsFilter">
+              <div  class="mb-12">
+                <i class="fa fa-minus-square" style="cursor: pointer; padding-left:5px" ng-click="changeDisplayNumber(-10)"> {{ _T["ws4k71io"] }}   </i>
+                <i class="fa fa-plus-square" style="cursor: pointer;" ng-click="changeDisplayNumber(10)">  {{ _T["5f910n2d"] }} </i>
+                <i class="fa fa-refresh" style="cursor: pointer; padding-left:5px" ng-click="changeDisplayNumber(0)"> reset</i>
+                <span style="padding-left:5px">{{nbNotifsByPage}}</span>
+              </div>
+
+
+                <div class="mb-12">
+                    <div class="form-group search-form mb-0" style="width: 100%">
+                        <input type="text" class="form-control input-search mb-0" style="padding-left: 60px;"
+                            placeholder="{{ _T['7kxj4n1f'] }}" ng-model="notifFilterText"
+                            ng-model-options='{ debounce: 1000 }'
+                            ng-change="setNotifFilterText(notifFilterText)">
+                        <span ng-click="notifFilterText = ''; setNotifFilterText(notifFilterText)"
+                            style="position: absolute; top: 0; right: 15px; width: 15px; height: 40px; cursor: pointer;">
+                            <i class="fa fa-times" style="margin-top: 0; margin-bottom: 0; line-height: 40px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-12">
+                  <span ng-if="planningsFound.length > 2">
+                    <ui-select  ng-model="currentPlanning" ng-change="filterByPlanning($select.selected)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                      <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                      <ui-select-choices repeat="planning in planningsFound track by $index">
+                      <div ng-bind-html="planning.name"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </span>
+                  <ui-select ng-model="currentTypeNotification" ng-change="filterByTypeNotifications($select.selected)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected}}</ui-select-match>
+                    <ui-select-choices repeat="typeNotification in notificationsTypesArray track by $index">
+                    <div ng-bind-html="typeNotification"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  
+                </div>
+                <div class="mb-12">
+                    <div style="display:flex; margin-top: 2%; margin-bottom: 2%;">
+                        <div ng-if="showArchivedNotifsValue == '0'" style="width: 50%;">
+                            <input type="checkbox" class='ios8-switch' id="importantNotifsFirstInput"
+                                ng-model="importantNotifsFirst"
+                                ng-click="setImportantNotifsFirst(importantNotifsFirst)" />
+                            <label class="f-13" style="padding: 0 0 0 45px; margin: 0;"
+                                for="importantNotifsFirstInput">{{ _T["69z3n8r3"] }}</label>
+                        </div>
+                        <div ng-if="showArchivedNotifsValue == '0'" style="width: 50%;">
+                            <input type="checkbox" class='ios8-switch' id="NotifsCreatedRequestInput"
+                                ng-model="showCreatedRequest"
+                                ng-click="setShowNotifsCreatedRequest(showCreatedRequest)" />
+                            <label class="f-13" for="NotifsCreatedRequestInput">{{ _T["jmtnce1x"] }}</label>
+                        </div>
+                    </div>
+                    <div class="text-center" style="display:flex; width: 100%; margin-top: 2%; margin-bottom: 2%;">
+                        <div>
+                            <i class="fa fa-calendar fa-2x"></i>
+                            <span ng-show="$root.rangeDateNotif.dateStart || $root.rangeDateNotif.dateEnd "
+                                ng-click="$root.rangeDateNotif.dateStart = ''; $root.rangeDateNotif.dateEnd =''">
+                                <i class="fa fa-times fa-x" style="cursor: pointer"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                </span> <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span>
+                                <input ng-model="$root.rangeDateNotif.dateStart"
+                                    style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text"
+                                    ng-disabled="$root.notifIsLoading" class="form-control calendar"
+                                    placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-addon"
+                                    id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span> <input
+                                    ng-model="$root.rangeDateNotif.dateEnd"
+                                    style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text"
+                                    class="form-control calendar" ng-disabled="$root.notifIsLoading"
+                                    placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-btn">
+                                </span>
+                            </div>
+                            <script>
+                                $('input.calendar').datepicker({
+                                    format: "dd-mm-yyyy",
+                                    todayBtn: true,
+                                    language: $.cookie("language"),
+                                    orientation: "top",
+                                    multidateSeparator: " - ",
+                                    calendarWeeks: true,
+                                    todayHighlight: true
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-0" style="display: inline-block; width: 100%;">
+                <ul class="nav nav-tabs p-0" role="tablist" style="width:100%">
+                    <li role="presentation" style="width: 33%; height: 40px; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" class="active">
+                        <a style="display:inline-block; padding: 5px;" target="_self" aria-controls="reception" role="tab" data-toggle="tab"
+                            ng-click="reloadMainNotif();"> 
+                            <span class="label label-danger" ng-if="badge.main > 0">{{badge.main}}</span>
+                            {{ _T["7xsj3530"] }}
+                            </a></li>
+                    <li role="presentation" style="width: 33%; height: 40px; cursor: pointer;">
+                        <a style="padding: 5px;" target="_self" aria-controls="postponed" role="tab" data-toggle="tab"
+                            ng-click="loadPostponedNotif();">{{ _T["1a3n85sz"] }}<span
+                                class="label label-primary">{{badge.postponed}}</span></a></li>
+                    <li role="presentation" style="width: 33%; height: 40px; cursor: pointer;">
+                        <a style="padding: 5px;" target="_self" aria-controls="archived" role="tab" data-toggle="tab"
+                            ng-click="loadArchivedNotif();">
+                            <span class="label label-danger" ng-if="badge.archived > 0">{{badge.archived}}</span>
+                            {{ _T["e3n4szmp"] }}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="alert alert-info text-center" ng-if="!showLoadMoreNotif && notifs.length == 0 && !notifIsLoading">
+            {{ _T["356sjeby"] }}
+        </div>
+        <div style="overflow-y:scroll; " ng-style="{height: layoutMainDivHeight + 'vh'}" ng-class="{'short-scroll': isShowNotifsFilter == true}">
+          
+            <ul class="list-group">
+                
+                <li class="list-group-item"
+                    style="padding-bottom:0px; margin-bottom:5px; border-radius:5px; border-color:#a6b5bc"
+                    ng-repeat="notif in notifs | magicFilterNotif:notifFilterText | orderNotifs:importantNotifsFirst | orderBy: date_creation" >
+                    <div class="row" style="margin-bottom:0px; padding:5px 0px" ng-class="{'new-notification':notif.new_notification == true, 'same-notification':((notif.request != null && id_request_notif == notif.request_id))}">
+                        <div class="col-md-2">
+                            <label class="label label-primary" ng-show="notif.new_notification == true">{{_T["8h61zgqt"] }}</label>
+                            <span ng-show="$root.canDisplay(7)">
+                                <span ng-show="!notif.requests">
+                                    <a
+                                        ng-click="goToRequestGroup(notif.request_id); notif.new_notification = false; changeRequestIdNotif(notif);">
+                                        
+                                        <img tooltip-placement="right" data-toggle="tooltip"
+                                            title="{{ _T['u5gb76mh'] }}" class="img img-circle pull-left" width=50
+                                            height=50
+                                            style="margin-right: 5px; border:1px black solid; cursor: pointer;"
+                                            ng-src="{{clientsLight[allProjectsNotifs[allRequestsNotifs[notif.request_id].project].client_id].url || '../app/img/no-customer.png'}}"
+                                            alt="" />
+                                    </a>
+                                </span>
+                                <span ng-show="notif.requests != null">
+                                    <a
+                                        ng-click="goToRequestGroup(notif.request_id); notif.new_notification = false; changeRequestIdNotif(notif);">
+                                        <img tooltip-placement="right" data-toggle="tooltip"
+                                            title="{{ _T['u5gb76mh'] }}" class="img img-circle pull-left" width=50
+                                            height=50
+                                            style="margin-right: 5px; border:1px black solid; cursor: pointer;"
+                                            ng-src="{{clientsLight[allProjectsNotifs[allRequestsNotifs[notif.request_id].project].client_id].url || '../app/img/no-customer.png'}}"
+                                            alt="" />
+                                    </a>
+                                </span>
+                            </span>
+                            <span ng-show="$root.canDisplay(24)">
+                                <a ng-show="notif.request != null" href="#/requestsTech/{{notif.request_id}}"
+                                    ng-click="notif.new_notification = false; changeRequestIdNotif(notif.request_id)">
+                                    <img tooltip-placement="right" data-toggle="tooltip" title="{{ _T['u5gb76mh'] }}"
+                                        class="img img-circle pull-left" width=50 height=50
+                                        style="margin-right: 5px; border:1px black solid;"
+                                        ng-src="{{clientsLight[allProjectsNotifs[allRequestsNotifs[notif.request_id].project].client_id].url || '../app/img/no-customer.png'}}"
+                                        alt="" />
+                                </a>
+                                <a ng-show="notif.request == null" href="#/requestsTech/{{notif.request_id}})"
+                                    ng-click="notif.new_notification = false; changeRequestIdNotif(notif.request_id); notif.showGroup = true">
+                                    <img tooltip-placement="right" data-toggle="tooltip" title="{{ _T['eu8ik0a0'] }}"
+                                        class="img img-circle pull-left" width=50 height=50
+                                        style="margin-right: 5px; border:1px black solid;"
+                                        ng-src="{{clientsLight[allProjectsNotifs[allRequestsNotifs[notif.request_id].project].client_id].url || '../app/img/no-customer.png'}}"
+                                        alt="" />
+                                </a>
+                            </span>
+                        </div>
+                        <div class="col-md-10">
+                            <span class="pull-right">
+                                <i ng-if="notif.archived == '0'" class="fa fa-times close" tooltip-placement="left"
+                                    data-toggle="tooltip" title="{{ _T['qt7lnak9'] }}"
+                                    ng-click="archiveNotification(notif);"></i>
+                                <i ng-if="notif.archived == '1'" class="fa fa-plus close" tooltip-placement="left"
+                                    data-toggle="tooltip" title="{{ _T['h093dp3c'] }}"
+                                    ng-click="unPostponeOrUnarchiveNotification(notif);"></i>    
+                                <i ng-if="notif.archived == 1 && canBeDeleted(notif, notif.date_creation)" class="fa fa-trash type type-danger close"
+                                    tooltip-placement="left" data-toggle="tooltip" title="{{ _T['tc6j8t46'] }}"  
+                                    ng-click="deleteNotification(notif, $index);"></i>
+                                <br>
+                                <i ng-if="notif.postponed == '0'" class="fa fa-arrow-circle-right close"
+                                    tooltip-placement="left" data-toggle="tooltip" title="{{ _T['we9ubyq6'] }}"
+                                    ng-click="postponeNotification(notif);"></i>
+                                <i ng-if="notif.postponed == '1'" class="fa fa-arrow-circle-left close"
+                                    tooltip-placement="left" data-toggle="tooltip" title="{{ _T['cq0h7k0a'] }}"
+                                    ng-click="unPostponeOrUnarchiveNotification(notif);"></i>
+
+                            </span>
+                            <!-- debug notif -->
+                            <div ng-if="$root.debug_notif">
+                                <span ng-show="notif.id">notif_id: {{notif.id}} __</span>
+                                <span ng-show="notif.request_id">request_id: {{notif.request_id}} __ </span>
+                                <span ng-show="notif.hash">hash: {{notif.hash}} __ </span>
+                                <span ng-show="notif.request_ids">request_ids: {{notif.request_ids}}</span>
+                                <br>
+                            </div>
+                            
+                            <strong ng-show="notif.origin_user_id != null">{{allUsersNotifs[notif.origin_user_id].firstname}}
+                                {{allUsersNotifs[notif.origin_user_id].lastname}}</strong>
+                            <strong ng-show="notif.origin_user_id == null">HAL 9000</strong>
+
+                            <span ng-show="notif.category == 'planification'">{{ _T["ms8rs9nf"] }}</span>
+                            <span ng-show="notif.category == 'send_farmer'">{{ _T["gaqfssfc"] }}</span>
+                            <span ng-show="notif.category == 'comment'">{{ _T["k079zw1s"] }}</span>
+                            <span ng-show="notif.category == 'send_back'">{{ _T["qpfz3cah"] }}</span>
+                            <span ng-show="notif.subject.split(' ')[0] == 'Modification'">{{ _T["q34dvvw8"] }}</span>
+                            <span ng-show="notif.subject.split(' ')[0] == 'Prise'">{{ _T["9y2538mq"] }}</span>
+                            <span ng-show="notif.category == 'date_wishes'">{{ _T["4102i68r"] }}</span>
+                            <span ng-show="notif.category == 'on_hold'">{{ _T["02pwuhf2"] }}</span>
+                            <span ng-show="notif.category == 'not_on_hold'">{{ _T["psvduu0e"] }}</span>
+                            <span ng-show="notif.subject.split(' ')[0] == 'Demande(s)'">{{ _T["zza8a2ph"] }}</span>
+                            <span ng-show="notif.category == 'creation'">{{ _T["jep9wv94"] }}</span>
+                            <span ng-show="notif.category == 'cancel'">{{ _T["5sv6gzg0"] }}</span>
+                            <span ng-show="notif.category == 'addReturns'">{{ _T["kviqp70x"] }}</span>
+                            <span ng-if="notif.requests == null">
+                                <br>
+                                <strong>{{notif.etape_action}}
+                                    <br />  {{notif.request.workflow.language.value}} -
+                                    {{notif.request.workflow.norme_mix.value}}
+                                </strong> {{ _T["jeepc9om"] }}
+                                <br>
+                                <strong>{{notif.product_desc}}</strong>
+                            </span>
+                            <span ng-if="notif.requests != null">
+                                {{ _T["t5at7w7u"] }}
+                                <strong>{{notif.etape_action}} - {{notif.request.workflow.language.value}} -
+                                    {{notif.request.workflow.norme_mix.value}}
+                                </strong> {{ _T["jeepc9om"] }}
+                                <strong> {{allProjectsNotifs[notif.request.project].name}} -
+                                    <span ng-if="notif.request.subproject_detail.nature_id == 2">{{
+                                        _T["6vwtywcc"] }} {{ allSubprojectsNotifs[notif.request.subproject].season}}</span>
+                                    <span
+                                        ng-if="notif.request.subproject_detail.nature_id != 2">{{notif.request.subproject_nature}}
+                                    </span>
+                                    <a href="" ng-click="notif.showGroup = !notif.showGroup" data-toggle="tooltip"
+                                        title="{{ _T['eu8ik0a0'] }}" ng-show="!notif.showGroup" style="color:#6200FF">
+                                        -
+                                        <span>{{notif.requests.length}} {{ _T["ba0heyvu"] }}</span>
+                                    </a>
+                                    <span ng-show="notif.showGroup">
+                                        <span
+                                            ng-repeat="request_id in notif.requests | orderBy:'product.human_description'">
+                                            <a ng-show="$root.canDisplay(3)" href="#/requests/detail/{{request_id}}"
+                                                style="color:#e81c4f; text-decoration:underline">
+                                                {{ (allProductsNotifs[allRequestsNotifs[request_id].product_id].episode_number != null && _T["m3iyfpjn"] + " " + allProductsNotifs[allRequestsNotifs[request_id].product_id].episode_number) 
+                                                || (allProductsNotifs[allRequestsNotifs[request_id].product_id].description_text != null && _T["06djaui5"] + " " + allProductsNotifs[allRequestsNotifs[request_id].product_id].description_text) 
+                                                || (_T["06djaui5"] + " " + aRequest.product.description.value) }}
+                                            </a>
+                                            <a ng-show="$root.canDisplay(4)" href="#/requests/detail/{{request_id}}"
+                                                style="color:#e81c4f; text-decoration:underline">
+                                                {{ (allProductsNotifs[allRequestsNotifs[request_id].product_id].episode_number != null && _T["m3iyfpjn"] + " " + allProductsNotifs[allRequestsNotifs[request_id].product_id].episode_number) 
+                                                || (allProductsNotifs[allRequestsNotifs[request_id].product_id].description_text != null && _T["06djaui5"] + " " + allProductsNotifs[allRequestsNotifs[request_id].product_id].description_text) 
+                                                || (_T["06djaui5"] + " " + aRequest.product.description.value) }}
+                                            </a>
+                                            <a ng-show="$root.canDisplay(8)" href="#/requestsTech/{{request_id}}"
+                                                style="color:#e81c4f; text-decoration:underline">
+                                                {{ (allProductsNotifs[allRequestsNotifs[request_id].product_id].episode_number != null && _T["m3iyfpjn"] + " " + allProductsNotifs[allRequestsNotifs[request_id].product_id].episode_number) 
+                                                || (allProductsNotifs[allRequestsNotifs[request_id].product_id].description_text != null && _T["06djaui5"] + " " + allProductsNotifs[allRequestsNotifs[request_id].product_id].description_text) 
+                                                || (_T["06djaui5"] + " " + aRequest.product.description.value) }}
+                                            </a>
+                                        </span>
+                                    </span>
+                                </strong>
+                            </span>
+                            <span ng-show="notif.category == 'date_wishes'"
+                                ng-bind-html="notif.description"></span>
+                        </div>
+                        <div class=" mb-0 mr-0">
+                            <div class="col-md-12" style="margin-left:0px">
+                                <div class="text-center">
+                                    <span ng-show="notif.category == 'planification'" class="text-center">
+                                      <i>{{notif.description.trunc(100)}}</i>
+                                    </span>
+                                    <span ng-show="notif.category == 'comment'">
+                                        « <i>{{notif.description.trunc(100)}}</i> »
+                                      </span>
+                                </div>
+
+                                <date-wish-reviewed hide="true" small="true"
+                                    requests="notif.request.farmers" farmers="notif.request.ownFarmers"></date-wish-reviewed>
+
+                                <span style="font-size:1.3em">
+                                    <span ng-show="notif.category == 'planification'">
+                                        <span class="c-icon c-icon-date text-primary"></span>
+                                    </span>
+                                    <span ng-show="notif.category == 'comment'">
+                                        <span class="c-icon c-icon-comment text-success"></span>
+                                    </span>
+                                    <span ng-show="notif.category == 'date_wishes'">
+                                        <span class="c-icon c-icon-dateWish text-primary"></span>
+                                    </span>
+                                    <span ng-show="notif.category == 'on_hold'">
+                                        <i class="fa fa-pause text-info"></i>
+                                    </span>
+                                    <span ng-show="notif.category == 'not_on_hold'">
+                                        <i class="fa fa-play text-info"></i>
+                                    </span>
+                                    <span ng-show="notif.category == 'replanification'">
+                                        <i class="fa fa-play text-warning"></i>
+                                    </span>
+                                    <span ng-show="notif.category == 'creation'">
+                                        <i class="fa fa-plus-square text-success"></i>
+                                    </span>
+                                    <span ng-show="notif.category == 'cancel'">
+                                        <i class="fa fa-ban text-danger"></i>
+                                    </span>
+                                    <span ng-show="notif.category == 'send_back'">
+                                        <i class="fa fa-check-square-o text-success"></i>
+                                    </span>
+                                    <span ng-show="notif.category == 'addReturns'">
+                                        <i class="fa fa-plus-square text-info"></i>
+                                    </span>
+                                </span>
+                                <small>{{notif.date_creation_moment.calendar()}}</small>
+                                <span
+                                    ng-show="notif.request.important == 1"
+                                    class="label label-danger"> important
+                                    <i class="fa fa-warning"></i> {{ _T["0aqrcc0y"] }}</span>
+                                <span
+                                    ng-show="notif.request.on_hold == 1"
+                                    class="label label-blue"> hold
+                                    <i class="fa fa-pause"></i> {{ _T["2ctuc541"] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="notification-footer text-center" style="overflow-y:scroll; height: 150px;">
+            <h4 style="margin:0px !important;">
+                <button ng-repeat="(page, list) in slicedNotifications" ng-style="currentPageNumber == page && {'background-color':'#32a86b'}" class="btn btn-default" ng-click="displayNotificationPage(page)">
+                  {{page}}
+                </button>
+            </h4>
+            <span ng-if="notifIsLoading">
+                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+            </span>
+        </div>
+        </ul>
+    </div>
+</div>
+<noscript>
+  <div class="jumbotron col-md-offset-3 col-md-6 text-center">
+    <h1 class="display-3">{{ _T["bc8r3t71"] }}</h1>
+    <p class="lead">
+      {{ _T["ae2ytia9"] }}
+    </p>
+    <hr class="m-y-2">
+    <p>
+      {{ _T["1s12d4of"] }}
+    </p>
+    <p class="lead">
+      <a class="btn btn-primary btn-lg" href="http://www.enable-javascript.com/fr/" target="_blank" role="button">{{ _T["t6l9lsr4"] }}</a>
+    </p>
+  </div>
+</noscript>
+<!--[if lte IE 10]>
+<div class="alert alert-danger text-center">
+  <h2>Vous utilisez actuellement Internet Explorer 10 ou moins.</h2>
+  <p>Lantern peut ne pas fonctionner correctement. Si possible, utilisez Mozilla Firefox ou Google Chrome. Sinon, veuillez contacter le service informatique.</p>
+</div>
+<![endif]-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">{{ _T["ebn3hj8t"] }}</h4>
+      </div>
+      <form>
+        <div class="form-group">
+          <div class="modal-body">
+            <div class="form-group has-success" ng-class="{'has-error': titleBroadcast == null}">
+              <label class="control-label" for="input1">{{ _T["jvycs5sa"] }}</label>
+              <input type="text" class="form-control" required id="input1" aria-describedby="helpBlock1" ng-model="titleBroadcast">
+              <span id="helpBlock1" class="help-block" ng-show="titleBroadcast == null && errorForm">{{ _T["yo8qab8a"] }}</span>
+            </div>
+            <div class="form-group  has-success" ng-class="{'has-error': contentBroadcast == null}">
+              <label class="control-label" for="input2">{{ _T["rsybhbpm"] }}</label>
+              <textarea class="form-control" id="input2" style="resize:vertical" required aria-describedby="helpBlock2" ng-model="contentBroadcast"
+                rows="8" cols="40"></textarea>
+              <span id="helpBlock2" class="help-block" ng-show="contentBroadcast == null && errorForm">{{ _T["yo8qab8a"] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="contentBroadcast = null; titleBroadcast = null; errorForm = false"
+            data-dismiss="modal">{{ _T["ficbz281"] }}</button>
+          <button type="submit" class="btn btn-primary" data-dismiss="modal" ng-click="sendBroadcast()">{{ _T["ge91ptak"] }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<section class="ng-cloak" style="position:fixed; top:70px; left:25%; z-index:10000; background-color: white;" ng-if="konamiEnter">
+  <img src="img/lantern.gif" width="200%" height="200%" />
+  <!-- <iframe  ng-if="konamiEnter" width="840" height="630" src="https://www.youtube.com/embed/SkzbKrR_xn0?autoplay=1" frameborder="0" allowfullscreen></iframe> -->
+</section>
+<div class="container-fluid">
+  <div class="row">
+    <div id='content' class="view-container" style="position:relative" ng-class="{'margin-mobile': isMobile()}">
+      <div ng-show="$root.loading" class="spinner-container spinner-container-layout">
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </div>
+      <toast></toast>
+      <div ng-show="!$root.loading">
+        <div ui-view class="view-frame"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div konami-code="activateKonami()"></div>
+<search-id-popup></search-id-popup>

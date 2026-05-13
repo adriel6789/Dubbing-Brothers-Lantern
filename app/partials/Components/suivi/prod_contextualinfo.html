@@ -1,0 +1,120 @@
+<div class="row mb-0 prod-contextualinfo">
+	<div ng-if="popoverTrick && $root.canDisplay(3)" class="col-md-2 col-md-offset-8 infobull" popover-placement="bottom" uib-popover-template="'popover-prod-contextualinfo.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['3xoocd81'] }}">
+		<i class="fa fa-pencil"></i>
+	</div>
+	<div ng-if="!popoverTrick && $root.canDisplay(3)" class="col-md-2 col-md-offset-8 infobull" popover-placement="bottom" uib-popover-template="'popover-prod-contextualinfo.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['3xoocd81'] }}">
+		<i class="fa fa-pencil"></i>
+	</div>
+</div>
+<div class="row mb-0">
+	<div class="col-md-12 f-23"
+		ng-if="$ctrl.cell.action.name == 'prod_servicing_diff_date' && returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value">
+		<i class="fa fa-calendar"></i> {{returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="hasContextInfo($ctrl.cell.action.name, 'due_date') && returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value">
+		<i class="fa fa-calendar"></i> {{returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-22 text-center" ng-if="hasContextInfo($ctrl.cell.action.name, 'ordre_diff') && returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value">
+		<i class="fa fa-hashtag"></i><b>{{returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value}}</b>
+	</div>
+	<div class="col-md-12 break-word" ng-if="hasContextInfo($ctrl.cell.action.name, 'title_vf') && returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 break-word" ng-if="hasContextInfo($ctrl.cell.action.name, 'title_vd') && returnContextInfo($ctrl.product, 'title_vd', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'title_vd', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 break-word" ng-if="hasContextInfo($ctrl.cell.action.name, 'title_vi') && returnContextInfo($ctrl.product, 'title_vi', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'title_vi', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 break-word" ng-if="hasContextInfo($ctrl.cell.action.name, 'note') &&  returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 break-word" ng-if="hasContextInfo($ctrl.cell.action.name, 'air_date') &&  returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'air_date', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="hasContextInfo($ctrl.cell.action.name, 'sortie_france') && returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value">
+		<i class="fa fa-calendar"></i> {{returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="hasContextInfo($ctrl.cell.action.name, 'sortie') && returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value">
+		<i class="fa fa-calendar"></i> {{returnContextInfo($ctrl.product, 'sortie', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-13" 
+		ng-if="(hasContextInfo($ctrl.cell.action.name, 'due_date') && !returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value) || 
+				(hasContextInfo($ctrl.cell.action.name, 'diff_date') && !returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value) || 
+				(hasContextInfo($ctrl.cell.action.name, 'ordre_diff') && !returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value) || 
+				(hasContextInfo($ctrl.cell.action.name, 'title_vf') && !returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value) || 
+				(hasContextInfo($ctrl.cell.action.name, 'title_vi') && !returnContextInfo($ctrl.product, 'title_vi', $ctrl.column.workflow).value) || 
+				(hasContextInfo($ctrl.cell.action.name, 'title_vd') && !returnContextInfo($ctrl.product, 'title_vd', $ctrl.column.workflow).value) || 
+				(hasContextInfo($ctrl.cell.action.name, 'sortie_france') && !returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value)" 
+		style="text-align: center;">
+		<span class="label label-info label-squared">{{ $root._T["fj98qsz4"] }}</span>
+	</div>
+</div>
+
+<script type="text/ng-template" id="popover-prod-contextualinfo.html">
+	<div class="row mr-0 ml-0 mb-5">
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'diff_date')" class="form-group form-group-small m-0">
+			<i class="fa fa-calendar ml-10"></i> {{ $root._T["d6i7c0np"] }}<br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value" href="#" onbeforesave="validateContextualDueDate($data, $ctrl.product, $ctrl.column.workflow)" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'diff_date')">
+				{{ returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'due_date')" class="form-group form-group-small m-0">
+			<i class="fa fa-calendar ml-10"></i> {{ $root._T["o84z3qlk"] }}<br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value" href="#" onbeforesave="validateContextualDueDate($data, $ctrl.product, $ctrl.column.workflow)" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'due_date')">
+				{{ returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'ordre_diff')" class="form-group form-group-small m-0">
+			<i class="fa fa-hashtag ml-10"></i> {{ $root._T["d9chzc6m"] }}<br>
+			<a class="ml-10" blur="ignore" editable-number="returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value" href="#" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'ordre_diff')">
+				{{ returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'title_vf')" class="form-group form-group-small m-0">
+			<span class="ml-10">{{ $root._T["s8ywk5cr"] }}</span><br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value" href="#" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'title_vf')">
+				{{ returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'title_vd')" class="form-group form-group-small m-0">
+			<span class="ml-10">Title</span><br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'title_vd', $ctrl.column.workflow).value" href="#" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'title_vd', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'title_vd')">
+				{{ returnContextInfo($ctrl.product, 'title_vd', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'title_vi')" class="form-group form-group-small m-0">
+			<span class="ml-10">Title</span><br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'title_vi', $ctrl.column.workflow).value" href="#" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'title_vi', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'title_vi')">
+				{{ returnContextInfo($ctrl.product, 'title_vi', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'note')" class="form-group form-group-small m-0">
+			<span class="ml-10">{{ $root._T["q6g3ttxk"] }}</span><br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value" href="#" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'note')">
+				{{ returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'air_date')" class="form-group form-group-small m-0">
+			<span class="ml-10">air date</span><br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'air_date', $ctrl.column.workflow).value" href="#" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'air_date', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'air_date')">
+				{{ returnContextInfo($ctrl.product, 'air_date', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'sortie_france')" class="form-group form-group-small m-0">
+			<i class="fa fa-calendar ml-10"></i> {{ $root._T["jinklegf"] }}<br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value" href="#" onbeforesave="validateContextualDueDate($data, $ctrl.product, $ctrl.column.workflow)" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'sortie_france')">
+				{{ returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div ng-if="hasContextInfo($ctrl.cell.action.name, 'sortie')" class="form-group form-group-small m-0">
+			<i class="fa fa-calendar ml-10"></i> release <br>
+			<a class="ml-10" blur="ignore" editable-text="returnContextInfo($ctrl.product, 'sortie', $ctrl.column.workflow).value" href="#" onbeforesave="validateContextualDueDate($data, $ctrl.product, $ctrl.column.workflow)" onaftersave="doneEditingContextual(returnContextInfo($ctrl.product, 'sortie', $ctrl.column.workflow), $ctrl.product, $ctrl.column.workflow, 'sortie')">
+				{{ returnContextInfo($ctrl.product, 'sortie', $ctrl.column.workflow).value || $root._T["fj98qsz4"] }}
+			</a>
+		</div>
+		<div style="margin: 10px 10px 0 10px;">
+			<button class="btn btn-block btn-default btn-xs" ng-click="closePopover()">{{ $root._T["y0tzlw7g"] }}</button>
+		</div>
+	</div>
+</script>

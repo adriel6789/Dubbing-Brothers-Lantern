@@ -1,0 +1,11 @@
+<div class="row mb-0">
+	<div class="col-md-8">
+		<span class="label label-success label-squared" ng-if="$ctrl.cell.checked_date && $ctrl.cell.checked == '1' || $ctrl.cell.checked_date && $ctrl.cell.checked == true" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['z0t6p7pd'] }} {{$ctrl.cell.checked_date | asDate | date : 'dd/MM/yyyy'}}">{{ $root._T["b829n158"] }}</span>
+	</div>
+</div>
+<div class="row mb-0">
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.reception_date">
+		{{$ctrl.cell.reception_date}}
+	</div>
+</div>
+

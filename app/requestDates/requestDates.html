@@ -1,0 +1,303 @@
+<div class="page-popup create-demand-dialog dragresize h-auto"  data-x=0 data-y=0 >
+  <div class="row"  >
+    <div class="col-md-2"></div>    
+    <div class="col-md-10">
+      <div class="header headWhiteText poignee">
+        {{ $root._T["z9vgo6hc"] }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-10" style="background: white; margin: 10px 10px;">
+    <div class="col-md-2">
+      <button class="btn btn-danger" ng-if="errorMessageFlag"><i class="fa fa-warning" aria-hidden="true"></i> {{errorMessage}} </button>
+      <span class="cursor-pointer" ng-click="handleResetDates()" ng-if="hasDateToUpdate()">Reset</span><br />
+      <div ng-if="extendedSchedulingAllowed && !canDisplay(5)">
+        ne pas planifier les demandes
+        <span style="cursor:pointer" class="onoffswitch">
+          <input type="checkbox" ng-model="scheduling" name="onoffswitch" class="ios8-switch" id="allowing">
+          <label class="onoffswitch-label cursor-pointer" for="allowing">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+          </label>
+        </span>                    
+      </div>
+      {{action_id}} {{actionType.etape_type.value}} {{actionType.value}}  
+      <br />
+      <div ng-bind-html="workflowHumanDisplay"></div>
+      <br />
+      {{messageDurationMaxAllowed}}
+      <br />
+      <span ng-if="!extendedSchedulingAllowed">Planification étendue non autorisée</span>
+      <br />
+      <span ng-if="tooShortTimeafterCurrentDate">Trop tôt pour planifier</span>
+    </div>
+
+    <div class="col-md-3 mb-10">
+      <div uib-datepicker datepicker-options="options" template-url='views/Vendor/multi-datepicker.tpl.html' style="color:black" ng-model="dt" show-weeks="true" starting-day="1" multi-select="selectedDates" ng-change="changeDay(dt)"></div>
+    </div>
+
+    <div class="col-md-4" style="overflow: auto; height: 200px;">
+      <dates-sessions dates="dateStartEndOriginal" request="firstRequest" hide="true" small="true"></dates-sessions>
+      <div class="btn-group-vertical btn-block">
+          <button type="button" class="btn btn-default btn-xs "
+                  ng-repeat="request in requests | orderBy:'product.human_description'"
+                  ng-click="manageSelection(request)">
+              <span class="type"  ng-class="{'type-success':request.isSelected, 'type-default': !request.isSelected}"></span>
+                 {{$ctrl.productName(request)}} <small><i>({{request.farmer_id}})</i></small>
+              <span class="type pull-right type-info"  ng-show="request.is_planned == '0'"></span>
+
+          </button>
+      </div>
+    </div>
+
+    <div class="col-md-3" style="overflow:auto; height: 200px;">
+      
+      <div ng-if="canDisplay(5)" ng-repeat="comment in comments">
+        <span>{{comment}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 10px 10px;" >
+    <div class="col-md-12 base h-500">
+      <div ng-show="dateStartEnd.length > 0" class="col-md-12 panel-popup" style="color: #2A2A2A;">
+        <div class="panel panel-default">
+          
+          <div ng-repeat="msg in checkRoomsMessage">
+            <span ng-class="msg.classMsg">{{msg.message}}</span>
+          </div>
+          <div ng-repeat="msg in checkTechMessage">
+            <span ng-class="msg.classMsg">{{msg.message}}</span>
+          </div>
+          <div class="panel-heading p-10 mb-0"  ng-if="selectedDates.length > 1">
+            <div class="row mb-0">
+              <div class="col-md-1" >
+                <label class="f-13">{{ $root._T["sw658azy"] }}</label>
+              </div>
+              <div class="col-md-2">
+                <div ng-if="presetArraySelected.length != 0" style="padding-right: 5px">  
+                  <div class="btn-group btn-group-xs" >
+                      <span ng-repeat="preset in presetArraySelected ">
+                        <button class="btn btn-default" ng-class="changeClassPresetGlobalTime($index) ? 'tsbingo' : 'btn-default'" style="padding-right: 2px" ng-click="handleSelectGlobalSlot(preset, $index)"> {{preset.name}} </button>
+                        <i class="fa fa-trash" ng-click="handleRemoveGlobalSlot(preset, $index)" aria-hidden="true"></i>
+                      </span>
+                  </div>
+                </div>
+                <br />
+                <div>
+                  {{ $root._T["xqbzsm8e"] }}  : ({{currentWeekNumber}})
+                  <button class="btn btn-default" ng-class="currentWeekNumber == 0 ? 'tsbingo' : ''" style="padding-right: 2px" ng-click="handleWeekNumber(0)">  {{ $root._T["d087pif1"] }} </button>
+                  <span ng-repeat="wn in getWeekNumbers() ">
+                    <button class="btn btn-default" ng-class="currentWeekNumber == wn ? 'tsbingo' : ''" style="padding-right: 2px" ng-click="handleWeekNumber(wn)"> {{wn}} </button>
+                  </span>
+                </div>              
+              </div>
+              <div class="col-md-2">
+                <ui-select  ng-disabled="canUpdateGlobalStage()" ng-model="selectedGlobal.stage" ng-change="handleNewGlobalStage($select.selected)" theme="bootstrap" >
+                  <ui-select-match placeholder="{{ $root._T['a2tucrf9'] }}" allow-clear="true">{{$select.selected.long_name ? $select.selected.long_name : $select.selected.name}} ({{$select.selected.place}})</ui-select-match>
+                  <ui-select-choices group-by="'place'" repeat="stage in globalStagesList() | propsFilter: {name: $select.search, used: $select.search} | orderBy: stage.order">
+                    <div ng-class="stage.statusClass" ng-bind-html="stage.long_name ? stage.long_name : stage.name + ' ' + stage.used + ' ' + stage.priority  | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-md-2">
+                <ui-select ng-disabled="canUpdateGlobalTech()" ng-change="handleNewGlobalWriter($select.selected)" ng-model="selectedGlobal.writer" theme="bootstrap" style="width: 100%;">
+                    <ui-select-match placeholder="{{ $root._T['peh5x5iu'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                    <ui-select-choices repeat="tech in getTechnicians()  | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.order">
+                        <div ng-class="tech.statusClass" ng-bind-html="tech.firstname + ' '+ tech.lastname + ' ' + tech.used | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-md-2">
+                <ui-select ng-disabled="canUpdateGlobalTech()" ng-change="handleNewGlobalReader($select.selected)" ng-model="selectedGlobal.reader" theme="bootstrap" style="width: 100%;">
+                    <ui-select-match  placeholder="{{ $root._T['npaxq3f4'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                    <ui-select-choices repeat="tech in getTechnicians()| propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.order">
+                        <div ng-class="tech.statusClass" ng-bind-html="tech.firstname + ' ' + tech.lastname + ' '  + tech.used | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+              </div>  
+              <div class="col-md-2" ng-if="canManageEditor() && canDisplayEditor">
+                <ui-select ng-disabled="canUpdateGlobalTech()" ng-change="handleNewGlobalEditor($select.selected)" ng-model="selectedGlobal.editor" theme="bootstrap" style="width: 100%;">
+                    <ui-select-match  placeholder="Editor" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                    <ui-select-choices repeat="tech in getEditors()  | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.order">
+                        <div ng-class="tech.statusClass" ng-bind-html="tech.firstname + ' ' + tech.lastname | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+              </div>       
+              <div class="col-md-9 col-md-offset-3">
+                <label class="f-13">{{ $root._T["1o3j35hq"] }}</label>
+                <ui-select close-on-select="true" ng-disabled="canUpdateGlobalTime()" ng-model="selectedGlobalTime.start" ng-change="handleGlobalTime('start', $select.selected)"  style="font-size:.9;  width:90px; display: inline-table;" theme="bootstrap">
+                    <ui-select-match placeholder="hour" allow-clear="true">{{$select.selected.i18nHour}}</ui-select-match>
+                    <ui-select-choices repeat="hour in selectHoursArray | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="hour.i18nHour | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <label class="f-13">{{ $root._T["tseq9spk"] }}</label> 
+                <ui-select close-on-select="true" ng-disabled="canUpdateGlobalTime()" ng-model="selectedGlobalTime.end" ng-click="handleGlobalTime('end', $select.selected)"  style="font-size:.9;  width:90px; display: inline-table;" theme="bootstrap">
+                    <ui-select-match placeholder="hour" allow-clear="true">{{$select.selected.i18nHour}}</ui-select-match>
+                    <ui-select-choices repeat="hour in selectHoursArray | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="hour.i18nHour | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <div class="btn-group btn-group-xs">
+                  <button ng-repeat="preset in presetArray" class="btn btn-default" style="padding-right: 2px" ng-click="handleGlobalTimeSlot(preset)"> {{preset.name}}</button>
+                  <button class="btn btn-default btn-xs" ng-click="handleRemoveAllTimeSlot()">{{ $root._T["f8exg9ee"] }}</button>
+                </div>
+
+                <i class="fa fa-chevron-up pull-right cursor-pointer"  data-toggle="tooltip" title="{{ $root._T['3ncefm3w'] }}" ng-if="isShowDatesDetails" ng-click="showDatesDetails()"></i>
+                <i class="fa fa-chevron-down pull-right cursor-pointer"  data-toggle="tooltip" title="{{ $root._T['2wzc2ovr'] }}" ng-if="!isShowDatesDetails" ng-click="showDatesDetails()"></i>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body p-10" ng-show="isShowDatesDetails">
+            <div class="row tsdistinct{{date.presetTimeId % 5}}" ng-class="{'mb-5' : !$last, 'mb-0' : $last, 'tsbingo' : date.highlighted }"
+                 ng-repeat="date in dateStartEnd   | orderBy:'datetime_start' track by $index "
+                 style="border-bottom: 1px solid grey">
+              <div class="col-md-2">
+                <date-session  request="firstRequest" hide="true" small="true" date="date"></date-session>
+                <i ng-if="date.is_planned" class="fa fa-info-circle" uib-tooltip-html="getTooltipPlanned()" tooltip-placement="right"></i>
+                <label class="f-13">{{ fullDateDisplay(date.datetime_start) }}</label>
+              </div>
+              <div class="col-md-1">
+                <span class="cursor-pointer" ng-click="handleSelectUniquePresetTime(date)">
+                  {{i18nHourDisplay(date.start_time)}} {{i18nHourDisplay(date.end_time)}}
+                </span>                  
+                <i class="fa fa-trash" ng-if="date.start_time" aria-hidden="true" ng-click="handleUniquePresetTime(date)"></i>
+                {{date.errorMessage}}
+              </div>
+              <div class="col-md-2">
+                <ui-select ng-disabled="canUpdateIndividualAudit(date)" ng-model="date.room" theme="bootstrap">
+                  <ui-select-match placeholder="{{ $root._T['a2tucrf9'] }}" allow-clear="true">{{ $select.selected.long_name ? $select.selected.long_name : $select.selected.name }}</ui-select-match>
+                  <ui-select-choices group-by="'place'" repeat="stage in stagesIndividualList(date) | propsFilter: {name: $select.search, id: $select.search} | orderBy: stage.orderRoom">
+                    <div ng-class="stage.statusClass" ng-bind-html="stage.long_name ? stage.long_name : stage.name + ' ' + stage.used  | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-md-2">
+                <ui-select ng-disabled="canUpdateTech(date)"  ng-model="date.writer" on-select="checkWriter($item, date, $index)" theme="bootstrap" style="width: 100%;">
+                  <ui-select-match placeholder="{{ $root._T['peh5x5iu'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                  <ui-select-choices repeat="tech in getIndividualTechnicians(date)  | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.order">
+                      <div ng-class="tech.statusClass" ng-bind-html="tech.firstname + ' '+ tech.lastname + ' ' + tech.used | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-md-2">
+                <ui-select ng-disabled="canUpdateTech(date)" ng-model="date.reader" on-select="checkReader($item, date)" theme="bootstrap" style="width: 100%;">
+                    <ui-select-match  placeholder="{{ $root._T['npaxq3f4'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                    <ui-select-choices repeat="tech in getIndividualTechnicians(date)  | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.order">
+                        <div ng-class="tech.statusClass" ng-bind-html="tech.firstname + ' ' + tech.lastname  + ' ' + tech.used | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-md-2"  ng-if="canManageEditor() && canDisplayEditor">
+                <ui-select ng-disabled="canUpdateTech(date)" ng-model="date.editor" on-select="checkWriter($item, date, $index)" theme="bootstrap" style="width: 100%;">
+                    <ui-select-match  placeholder="Editor" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                    <ui-select-choices repeat="tech in getIndividualEditors(date) | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.order">
+                        <div ng-class="tech.statusClass" ng-bind-html="tech.firstname + ' ' + tech.lastname | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="col-md-1">
+                <span class="btn btn-default btn-danger c-icon pointer" ng-click="handleRemoveUniqueDate(date)" >
+                  <i class="fa fa-times" aria-hidden="true" tooltip-placement="bottom" uib-tooltip-html="'Supprimer la séance'"></i>
+                </span>
+              </div>
+              <div class="col-md-9 col-md-offset-3">
+                <label class="f-13">{{ $root._T["1o3j35hq"] }}</label>
+                <ui-select close-on-select="true" ng-disabled="canUpdateTime()" ng-model="date.temporaryStartHour" ng-change="handleUniqueTime('start', date, $select.selected)"  style="font-size:.9;  width:90px; display: inline-table;" theme="bootstrap">
+                    <ui-select-match placeholder="hour" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="hour in selectHoursArray | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="hour.i18nHour | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <label class="f-13">{{ $root._T["tseq9spk"] }}</label> 
+                <ui-select close-on-select="true" ng-disabled="canUpdateTime()" ng-model="date.temporaryEndHour" ng-change="handleUniqueTime('end', date, $select.selected)"  style="font-size:.9;  width:90px; display: inline-table;" theme="bootstrap">
+                    <ui-select-match placeholder="hour" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="hour in selectHoursArray | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="hour.i18nHour | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>                        
+                <div class="btn-group btn-group-xs">
+                    <button  ng-repeat="preset in presetArray" class="btn btn-default" style="padding-right: 2px" ng-click="handleUniquePresetTime(date, preset)">{{preset.name}}</button>
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>   
+  <div class="row" style="margin: 10px 10px;">
+    <div class="col-md-12 details h-50">
+      <button class="btn btn-default btn-success c-icon pointer mt-7" ng-click="saveBookedDates()" >{{ $root._T["hvzykhtg"] }}</button>
+      <button class="btn btn-default btn-success c-icon pointer mt-7" ng-click="closeThisDialog('close')" >{{ $root._T["y0tzlw7g"]  }}</button> 
+    </div>  
+  </div>     
+</div>   
+
+<style>
+    .dragresize {
+      resize:both;
+      overflow: auto;
+      max-height: 1200px !important;
+      min-height: 400px !important;   
+      min-width: 400px !important;   
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);  
+    }
+    .headWhiteText {
+      color: white;
+      font-weight: bold;
+    }
+    .roomStatus1 {
+      color: blue;
+      background-color: white;
+    }
+    .roomStatus2 {
+      color: green;
+      background-color: white;
+    }
+    .roomStatus3 {
+      color: orange;
+      background-color: white;
+    }
+    .roomStatus4 {
+      color: red;
+      background-color: white;
+    }  
+    .roomStatusBase {
+      color: black;
+      background-color: white;
+    }     
+    .techStatus1 {
+      color: blue;
+      background-color: white;
+    }
+    .techStatus2 {
+      color: green;
+      background-color: white;
+    }
+    .techStatus3 {
+      color: orange;
+      background-color: white;
+    }
+    .techStatus4 {
+      color: red;
+      background-color: white;
+    }   
+    .techStatusBase {
+      color: black;
+      background-color: white;
+    }     
+    
+    
+</style>  
+<script>
+      let position = { x: 0, y: 0 }
+      let edges = { left: true, right: true,   bottom: true,  top: true }
+      let attributes = {x:'data-x',y:'data-y'}
+      let IJS = Object.create(interactJS);
+      IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+</script>

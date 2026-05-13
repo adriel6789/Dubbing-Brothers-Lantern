@@ -1,0 +1,112 @@
+<!---DEPRECATED 2021-03-05 acces de requestsValidatedList.html retiré-->
+<header style="margin-bottom:0px">
+  <div class="container-fluid">
+    <p>
+      {{ _T["jyseu0bt"] }}
+    </p>
+  </div>
+</header>
+<div class="container-fluid descrip-dialog">
+  <div class="col-sm-1">
+    <img class="img-responsive img-thumbnail pull-left" ng-src="{{selectedProject.client.url || '../app/img/no-customer.png'}}" style="max-width:60px; max-height:60px; font-size: 1.5em; margin-right: 20px" alt="{{selectedProject.client.name}}">
+  </div>
+  <div class="col-sm-11">
+    <div class="col-md-6">
+      <ui-select on-select="showSelectedProject($item,$model)" on-change="test($select)" ng-model="entity.project" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+        <ui-select-match placeholder="{{ _T['sejoco6a'] }}">
+          {{$select.selected.original_name}}
+          <i ng-if='$select.selected.code_name != ""'><small>({{$select.selected.code_name}})</small></i>
+          <i ng-if='$select.selected.code_name_2 != ""'><small>({{$select.selected.code_name_2}})</small></i>
+          <i ng-if='$select.selected.code_name_3 != ""'><small>({{$select.selected.code_name_3}})</small></i>
+        </ui-select-match>
+        <ui-select-choices repeat="project.id as project in projects | propsFilter: {original_name: $select.search, id: $select.search, code_name: $select.search, code_name_2: $select.search, code_name_3: $select.search}"
+        refresh="refreshProjects($select)" refresh-delay="100">
+        <span ng-bind-html="project.original_name | highlight: $select.search"></span>
+        <i ng-if='project.code_name != ""'><small>(<span ng-bind-html="project.code_name | highlight: $select.search"></span>)</small></i>
+        <i ng-if='project.code_name_2 != ""'><small>(<span ng-bind-html="project.code_name_2 | highlight: $select.search"></span>)</small></i>
+        <i ng-if='project.code_name_3 != ""'><small>(<span ng-bind-html="project.code_name_3 | highlight: $select.search"></span>)</small></i>
+      </ui-select-choices>
+    </ui-select>
+
+    <ui-select close-on-select="true" ng-if="showProducts" ng-model="entity.products" theme="bootstrap" on-select="showSelectedProduct($item)" ng-disabled="disabled" style="width: 100%;">
+      <ui-select-match placeholder="{{ _T['0zhjqv4q'] }}">{{$select.selected.episode_number}} <i ng-if="$select.selected.id != -1">{{$select.selected.subproject_name != null && "("+$select.selected.subproject_name+")" || "Produits série"}}</i></ui-select-match>
+      <ui-select-choices refresh="refreshProducts($select)" refresh-delay="100" repeat="product in products | orderBy: 'episode_number' | propsFilter: {episode_number: $select.search}">
+        <span ng-bind-html="product.episode_number | highlight: $select.search"></span>
+        <i ng-if="product.id != -1">({{product.subproject_name}})</i>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+
+
+</div>
+</div>
+
+<div class="container-fluid">
+  <div ng-show="selectedProduct != null">
+    <div class="separator">
+      <p class="separator-label">{{ _T["zgcqpbuv"] }}</p>
+      <hr>
+    </div>
+    <div ng-repeat="workflow in workflows">
+      <button type="button" ng-click="selectWorkflow(workflow);" class="btn btn-default btn-lg" style="font-size:1.2em; width:100%" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color':workflow.color.font}" tooltip-placement="bottom" uib-tooltip-html="workflow.description">
+        <span ng-if="workflow.workflow_type.value != null">
+          <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+          <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+          <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span>
+          {{workflow.workflow_type.value}}
+        </span>
+        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+          - {{workflow.doublage_type.value}}
+        </span>
+        <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+          - {{workflow.language.value}}
+        </span>
+        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+          - {{workflow.norme_mix.value}}
+        </span>
+        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+          - {{workflow.servicing_type.value}}
+        </span>
+        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+          - {{workflow.resolution.value}}
+        </span>
+        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+          - {{workflow.diffuseur.name}}
+        </span>
+        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+          - {{workflow.speed.value}}
+        </span>
+        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+          - {{workflow.resolution.value}}
+        </span>
+        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+          - {{workflow.prod_version}}
+        </span>
+        <span class="c-icon c-icon-checked fa-2x text-success pull-right" ng-if="selectedWorkflow.id == workflow.id"></span>
+      </button>
+    </div>
+  </div>
+  <div ng-show="selectedWorkflow != null">
+    <div class="separator">
+      <p class="separator-label">{{ _T["flv02t5h"] }}</p>
+      <hr>
+    </div>
+    <ui-select ng-model="action_type_main" on-select="selectAction($item)" style="width: 100%;" theme="bootstrap">
+      <ui-select-match placeholder="{{ _T['89nilim5'] }}">{{$select.selected.etape_value}} - {{$select.selected.value}}</ui-select-match>
+      <ui-select-choices group-by="'etape_value'" repeat="action in etapes_actions | propsFilter: {value: $select.search}">
+        <div ng-bind-html="action.value | highlight: $select.search"></div>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+</div>
+
+<div class="container-fluid footer-dialog vertical-align">
+  <div class="col-md-12 text-center" ng-show="selectedWorkflow != null && selectedAction != null">
+    <button ng-show="!saving" class="btn btn-success" ng-click="createTempRequest()">
+      <i class="c-icon c-icon-add"></i> {{ _T["jyseu0bt"] }}
+    </button>
+    <button ng-show="saving" class="btn btn-success disabled">
+      <i class="fa fa-spinner fa-pulse fa-fw"></i> {{ _T["44u4k2qa"] }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="page-popup page-custom-template dragresize" data-x=0 data-y=0>
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="template-h1 poignee">{{ _T["8vvlvbth"] }}
+      </h1>
+      <div class="step text-center">
+        <form>
+          <div class="col-md-6 col-md-offset-3">
+            <h2>{{ _T["1kjrlnl4"] }}</h2>
+            <hr style="border-color: rgba(53, 112, 225, 0.5);">
+          </div>
+          <div class="col-md-8 col-md-offset-2 body">
+            <table class="table table-striped table-cell-small">
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="icon calendar">
+                      <span class="month">{{helpMonth}}</span>
+                      <span class="day" style="left: 0;">{{helpDay}}</span>
+                    </div>
+                  </td>
+                  <td>{{ _T["t04ummnl"] }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="icon calendar strikethrough">
+                      <span class="month">{{helpMonth}}</span>
+                      <span class="day" style="left: 0;">{{helpDay}}</span>
+                    </div>
+                  </td>
+                  <td>{{ _T["ojsa6ga7"] }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="icon calendar date_is_plan_not_farmer">
+                      <span class="month">{{helpMonth}}</span>
+                      <span class="day" style="left: 0;">{{helpDay}}</span>
+                    </div>
+                  </td>
+                  <td>{{ _T["j6dg5mlf"] }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="icon calendar date_is_plan_not_farmer_not_wish">
+                      <span class="month">{{helpMonth}}</span>
+                      <span class="day" style="left: 0;">{{helpDay}}</span>
+                    </div>
+                  </td>
+                  <td>{{ _T["dkpf4x96"] }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="icon calendar strikethrough date_is_plan_not_farmer_not_wish">
+                      <span class="month">{{helpMonth}}</span>
+                      <span class="day" style="left: 0;">{{helpDay}}</span>
+                    </div>
+                  </td>
+                  <td>{{ _T["o7euxcp7"] }}</td>
+                </tr>
+                <tr>
+                  <td><div class="request_status_success" style="border: 1px solid #D8D8D8; width: 100px; height: 100px; display: inline-block;"></div></td>
+                  <td>{{ _T["6uafbmoa"] }}</td>
+                </tr>
+                <tr>
+                  <td><div class="request_status_warning" style="border: 1px solid #D8D8D8; width: 100px; height: 100px; display: inline-block;"></div></td>
+                  <td>{{ _T["n71y1jx6"] }}</td>
+                </tr>
+                <tr>
+                  <td><div class="request_status_error" style="border: 1px solid #D8D8D8; width: 100px; height: 100px; display: inline-block;"></div></td>
+                  <td>{{ _T["t2g5us6m"] }}</td>
+                </tr>
+                <tr>
+                  <td><div class="product_not_in_workflow" style="border: 1px solid #D8D8D8; width: 100px; height: 100px; display: inline-block;"></div></td>
+                  <td>{{ _T["g69si68d"] }}</td>
+                </tr>
+                <tr>
+                  <td><div class="user_color" style="border: 1px solid #DC143C; width: 100px; height: 100px; display: inline-block;"></div></td>
+                  <td>{{ _T["grgdngy8"] }}</td>
+                </tr>                
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .dragresize {
+    resize:both;
+    overflow: auto;
+    max-height: 900px !important;
+    min-height: 400px !important;   
+    min-width: 400px !important;   
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);  
+  }
+  </style>  
+  <script>
+    let position = { x: 0, y: 0 }
+    let edges = { left: true, right: true,   bottom: true,  top: true }
+    let attributes = {x:'data-x',y:'data-y'}
+    let IJS = Object.create(interactJS);
+    IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+   
+  </script>

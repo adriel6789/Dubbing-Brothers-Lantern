@@ -1,0 +1,133 @@
+<div class="page-requests-demands">
+  <!-- <div class="mask" ng-show="showMore"></div> -->
+  <header style="margin-bottom: 10px">
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>
+          {{ _T["xcpzld91"] }}
+          <span class="pull-right">
+          <a role="button" ng-click="launchWizard()" class="btn btn-default btn-text-primary btn-big-shadow"><i class="c-icon c-icon-add"></i> {{ _T["ipz2ujo1"] }} </a>
+        </span>
+        </p>
+      </div>
+    </div>
+  </header>
+  <div class="container-fluid container-fixed-nav-aside">
+    <form class="col-sm-12">
+      <div class="form-group search-form col-sm-5">
+        <input type="text" class="form-control input-search" aria-label="Rechercher parmi vos demandes" placeholder="{{ _T['0tz0lzyz'] }}"
+          ng-model="textFilter" ng-change="saveSearch(textFilter)">
+      </div>
+      <div class="form-group search-form col-sm-3">
+        <div class="btn-group btn-block">
+          <button type="button" class="btn btn-default btn-change">
+                        <span ng-if="!filterDate"> {{ _T["sw658azy"] }} </span>
+                        <span ng-if="filterDate > 0 && filterDate < 3">{{ _T["z0t6p7pd"] }} {{$parent.startDate}}</span>
+                        <span ng-if="filterDate >= 3">{{ _T["mc051ilq"] }} {{$parent.startDate}} {{ _T["f6vwmdfc"] }} {{$parent.endDate}}</span>
+                    </button>
+          <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="caret triangle"></span>
+                    </button>
+          <ul class="dropdown-menu btn-block">
+            <li><a ng-click="filterRequest('today')">{{ _T["ze7enx7x"] }}</a></li>
+            <li><a ng-click="filterRequest('tomorrow')">{{ _T["b3tjlldn"] }}</a></li>
+            <li><a ng-click="filterRequest('current')">{{ _T["jpr9s3av"] }}</a></li>
+            <li><a ng-click="filterRequest('previous')">{{ _T["fzsd04mb"] }}</a></li>
+            <li><a ng-click="filterRequest('next')">{{ _T["ppnm1h7r"] }}</a></li>
+            <li><a ng-click="filterRequest()">{{ _T["sw658azy"] }}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <input type="checkbox" class='ios8-switch' id="showMyRequests" ng-model="showOnlyMyRequests" ng-change="loadRequests(showOnlyMyRequests,hideOnHoldRequests)"
+        />
+        <label style="padding-bottom: 0px; margin-bottom: 5px" for="showMyRequests"> {{ _T["tjs7unxh"] }}</label>
+        <input type="checkbox" class='ios8-switch' id="hideOnHoldRequests" ng-model="hideOnHoldRequests" ng-change="loadRequests(showOnlyMyRequests,hideOnHoldRequests)"
+        />
+        <label for="hideOnHoldRequests"> {{ _T["4mpeh5x5"] }}</label>
+        <hr>
+      </div>
+    </form>
+  </div>
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="page page-requests-demands">
+      <div class="row">
+          <div class="col-md-12 text-center">
+            <ul uib-pagination ng-if="totalItems" previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="pageSize" total-items="filteredItems.length"
+              ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged(currentPage)"></ul>
+          </div>
+        </div>
+      <div class="row ">
+          <div class="col-md-12 parent equal">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 child" ng-repeat="(key, request) in (filteredItems = (requests | orderObjectBy:'date_order_project' | showGroupCardForDate:startTimestamp:endTimestamp | showGroupCard:textFilter | filter:query) | startFrom:current*pageSize | limitTo:pageSize)"
+          id="request{{key}}" ng-class="{'card-selected' : request.show_more}">
+          <div class="panel panel-default p-10 request-card" ng-class="{'panel-unselected' : elementSelected != key && $ctrl.cols == 12, 'more' : request.showMore, 'less' : !request.showMore}">
+            <div class="media">
+              <div class="media-left">
+                <a ui-sref="app.suiviProd({id : request.requests[0].product.subproject.id})"  data-toggle="tooltip" title="{{ _T['2bs5m6n6'] }}"> <img alt="64x64" class="media-object img-circle" ng-src="{{::request.requests[0].product.subproject.project.client.url || '../app/img/no-customer.png'}}"
+                    data-holder-rendered="true">
+                </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">{{request.project_name}}</h4>
+                <p>
+                  <span style="font-size:1.1em;" class="label label-default" ng-if="request.requests[0].product.subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] }} {{request.requests[0].product.subproject.season}}</span>
+                  <span style="font-size:1.1em;" class="label label-default" ng-if="request.requests[0].product.subproject.nature.name != 'serie'">{{request.subproject_name}}</span>
+                </p>
+              </div>
+            </div>
+            <hr>
+            <div class=" panel-body request-card-group" ng-class="{'more' : request.show_more, 'less' : !request.show_more}">
+              <div class="card" ng-repeat="aGroupRequest in filteredGroupRequest = (request.sortedRequests | orderObjectBy:'date_for_order' | filterGroupRequestByDate:startTimestamp:endTimestamp | magicFilterGroupRequest:textFilter)">
+                <div class="row group" ng-click="goToDetailRequest(aGroupRequest.requests[0].id)">
+                  <div class="col-md-12 text-center" style="overflow-x:auto">
+                      <span ng-repeat="aRequest in aGroupRequest.requests | orderBy: 'product.episode_number'" class="label label-default">
+                          {{aRequest.product.description_text || aRequest.product.episode_number != null && (aRequest.product.type == 0 ? _T["590wjx96"] : _T["h12xqsuf"]) + aRequest.product.episode_number || aRequest.product.description.value}}
+                      </span>
+                  </div>
+                  <div class="col-md-2">
+                    <span uib-tooltip-html="aGroupRequest.productsName" tooltip-class="tooltip-90p" tooltip-placement="bottom">
+                      <!-- <span class="badge" style="background: black;">{{aGroupRequest.requests.length}} dem</span> -->
+                      <span uib-tooltip-html="aGroupRequest.productsName" tooltip-class="tooltip-90p" tooltip-placement="bottom">
+                          <span class="badge" style="background: black;" ng-if="aGroupRequest.requests[0].is_planned == 1 && !(aGroupRequest.requests[0].is_done == 1 || aGroupRequest.requests[0].is_in_progress == 1 || aGroupRequest.requests[0].is_not_done == 1)">Plan</span>
+                          <span class="badge" style="background: black;" ng-if="aGroupRequest.requests[0].is_in_progress == 1">{{ _T["xvyyayrz"] }}</span>
+                          <span class="badge" style="background: black;" ng-if="aGroupRequest.requests[0].is_not_done == 1 ">{{ _T["f4jszmwp"] }}</span>
+                          <span class="badge" style="background: black;" ng-if="aGroupRequest.requests[0].is_planned == 0 ">{{ _T["l76bc05n"] }}</span>
+                        </span>
+                    </span>
+                    <div class="visual">
+                      <i ng-if="aGroupRequest.requests[0].on_hold == 1" class="fa fa-pause" aria-hidden="true"></i>
+                      <i ng-if="aGroupRequest.requests[0].important == 1" class="fa fa-exclamation-triangle"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-10">
+                    {{aGroupRequest.requests[0].action_type.etape_type.value }} - {{ aGroupRequest.requests[0].action_type.value}}
+                    <div style="margin-top: 5px; margin-bottom: 5px">
+                      <workflow data="aGroupRequest.requests[0].workflow"></workflow>
+                    </div>
+                      <date-wish ng-if="aGroupRequest.requests[0]" data="aGroupRequest.requests[0]" hide="true" small="true"></date-wish>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="panel-footer">
+                <span ng-click="changeState(request)" class="show-more">
+                    <span ng-show="!request.show_more">{{ _T["ny42m9kz"] }} ({{countRequest(filteredGroupRequest)}})</span>
+                    <span ng-show="request.show_more">{{ _T["1abmdxo2"] }} ({{countRequest(filteredGroupRequest)}})</span>
+                  </span>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+          <ul uib-pagination ng-if="totalItems" previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="pageSize" total-items="filteredItems.length"
+            ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged(currentPage)"></ul>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,24 @@
+<!-- Gestion des cas avec les request associées -->
+
+<div class="row md-12">
+		<div style="margin-bottom: 5px;"  ng-if="!popoverTrickUC" class="col-md-4 infobull pull-right" popover-trigger="'outsideClick'" 
+		popover-placement="left" uib-popover-template="'popover-user-color'" 
+		tooltip-placement="bottom" data-toggle="tooltip" title="{{$ctrl.cell.colored == 1 ? $ctrl.cell.colornote : $root._T['ry8xd1fz'] }}">
+			<i class="fa fa-user-plus"></i>
+		</div>
+		<div style="margin-bottom: 5px;" ng-if="popoverTrickUC" class="col-md-4 infobull pull-right" popover-trigger="'outsideClick'" 
+		popover-placement="left" uib-popover-template="'popover-user-color'" 
+		tooltip-placement="bottom" data-toggle="tooltip" title="{{$ctrl.cell.colored == 1 ? $ctrl.cell.colornote : $root._T['ry8xd1fz'] }}">
+				<i class="fa fa-user-plus"></i>
+		</div>	
+</div>
+
+<script type="text/ng-template" id="popover-user-color">
+	<div class="row mr-0 ml-0 mb-5">
+		<div class="form-group form-group-small m-0">
+			<input type="text" name="text" ng-model="$ctrl.cell.colornote" class="form-control form-control-small m-0" maxlength="250" placeholder="{{ $root._T['eq9spk3x'] }}" />
+		</div>
+	</div>
+	<button class="btn btn-inline btn-success btn-outline btn-xs" ng-click="saveUserColorComment($ctrl.cell,0)">{{ $root._T["tc6j8t46"] }}</button>
+	<button class="btn btn-inline btn-success btn-outline btn-xs" ng-click="saveUserColorComment($ctrl.cell,1)">{{ $root._T["hvzykhtg"] }}</button>
+</script>

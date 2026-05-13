@@ -1,0 +1,36 @@
+<div class="row mb-0" style="color: #2A2A2A;" ng-click="$event.stopPropagation()">
+    <div class="col-md-12 f-18">
+    <b>{{ _T["hpe6sy0x"] }}</b>
+    <hr class="mt-5 mb-5">
+    </div>
+    <div class="col-md-12">
+        <input type="checkbox" class="ios8-switch" id="show_in_metrics" ng-model="$parent.show_in_metrics" ng-change="saveMetricsProjectStatus()" />
+        <label for="show_in_metrics">{{ _T["q4102i68"] }}</label>
+    </div>
+    <div class="col-md-12">
+        <input type="checkbox" class="ios8-switch" id="edit_metrics_labels" ng-model="$parent.edit_metrics_labels" />
+        <label for="edit_metrics_labels">{{ _T["jh8yzl6k"] }}</label>
+    </div>
+    <div class="col-md-12 template-name">
+        <button editable-text="$parent.save_metrics_template_name" class="btn btn-default"
+        onbeforesave="" onaftersave="saveMetricsTemplate()">
+            {{ _T["7mgdd3z3"] }}
+        </button>
+    </div>
+    <div class="col-md-12">
+        <input type="checkbox" class="ios8-switch" id="metrics_templates_all_clients" 
+            ng-model="$parent.metrics_templates_all_clients" ng-change="loadMetricsTemplateList()" />
+        <label for="metrics_templates_all_clients">{{ _T["cwaw0y9q"] }}</label>
+    </div>
+    <div class="col-md-12 template-list">
+        <select class="form-control" ng-model="$parent.load_metrics_template_id" ng-change="loadMetricsTemplate()"
+            ng-options="template.id as template.name + ' (' + template.client_name + ')' for template in $parent.metrics_template_list_id_name">
+            <option value="" selected disabled>{{ _T["eshva3y6"] }}</option>
+        </select>
+    </div>
+    <div class="col-md-12 template-list">
+    <button ng-click="metrics_preview_dialog()" class="btn btn-default">
+        {{ _T["1h6jj63b"] }}
+    </button>
+    </div>
+</div>

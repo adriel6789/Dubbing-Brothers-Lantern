@@ -1,0 +1,34 @@
+<div>
+
+    <h2 style="border-bottom: 1px solid #bbb; padding-bottom: 10px;">{{ _T["f7aotmpm"] }}</h2>
+
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="btn btn-success btn-block" ng-class="{'btn-outline': !(currentFarmer.is_done == 1 && currentFarmer.is_partial != 1) }" ng-click="currentFarmer.is_done = 1; currentFarmer.is_partial = 0">{{ _T["ow51znba"] }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="btn btn-block btn-warning"  ng-class="{'btn-outline': currentFarmer.is_partial != 1}" ng-click="currentFarmer.is_done = 0; currentFarmer.is_partial = 1">{{ _T["xvyyayrz"] }}</div>
+      </div>
+    </div>
+
+    <h3>{{ _T["7zf7ah85"] }}</h3>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">{{ _T["jeepc9om"] }}</span>
+        <input class="form-control" style="width:100%" time-input="" maxlength="5" type="text" ng-model="currentFarmer.working_time_start" placeholder="09:00" pattern="\d{2}:\d{2}" aria-describedby="basic-addon1" />
+        <span class="input-group-addon" id="basic-addon2">À</span>
+        <input class="form-control" style="width:100%"  time-input="" maxlength="5" type="text" ng-model="currentFarmer.working_time_end" placeholder="18:00" pattern="\d{2}:\d{2}" aria-describedby="basic-addon2"/>
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon3">
+          <i class="glyphicon glyphicon-cutlery"></i>
+          {{ _T["7efqgpfl"] }}</span>
+        <input type="text" style="width:100%" class="form-control" ng-model="currentFarmer.break_time" maxlength="3" placeholder="15" aria-describedby="basic-addon3" pattern="\d{0,3}"/>
+        <span class="input-group-addon" id="basic-addon3">
+          {{ _T["m4llr5qq"] }}</span>
+      </div>
+      <br>
+    <button ng-show="showValidate()" ng-click="validate();" class="btn btn-primary btn-block"><i class="fa fa-check"></i> {{ _T["p8wzgt60"] }}</button>
+
+</div>

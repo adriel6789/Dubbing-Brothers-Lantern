@@ -1,0 +1,204 @@
+
+<div class="row" style="margin-bottom: 25px;">
+  <div class="col-md-12" style="margin-bottom: 5px;">
+    <div class="btn-group-vertical btn-block">
+      <div class="col-md-12" style="margin-bottom: 5px;">
+        <button ng-if="$root.canDisplay(5)" type="button" class="btn btn-xs btn-block btn-primary" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" clipboard text="$ctrl.getFarmersToCopy()" on-copied="$ctrl.setAlertCopy(false)" on-error="$ctrl.setAlertCopy(true)">
+            <i class="fa fa-edit"></i> {{ $root._T["9o5z6vth"] }}
+        </button>
+    </div>      
+      <button type="button" class="btn btn-default btn-xs "
+        ng-repeat="request in $ctrl.requests | orderBy:'product.human_description'"
+        ng-show="$ctrl.displayARequest(request)"
+        ng-click="$ctrl.manageSelection(request)">
+        <span class="type" ng-class="{'type-success':request.isSelected, 'type-default': !request.isSelected}"></span>
+          {{$ctrl.productName(request)}}
+        <span class="type pull-right type-info"  ng-show="request.is_planned == '0'"></span>
+      </button>       
+    </div>
+  </div>
+  <div ng-show="$ctrl.dateStartEnd.length > 0 && $ctrl.getSelectedRequests($ctrl.requests).length > 0" class="col-md-12 panel-popup" style="color: #2A2A2A;">
+    <div class="panel panel-default">
+      <div ng-repeat="msg in $ctrl.checkRoomsMessage">
+        <span ng-class="msg.classMsg">{{msg.message}}</span>
+      </div>
+      <div ng-repeat="msg in $ctrl.checkTechMessage">
+        <span ng-class="msg.classMsg">{{msg.message}}</span>
+      </div>
+      <div class="panel-heading p-10 mb-0" ng-if="$ctrl.dateStartEnd.length > 1">
+        <div class="row mb-0">
+          <div class="col-md-3">
+            <label class="f-13">{{ $root._T["sw658azy"] }}</label>
+          </div>
+          <div class="col-md-3">
+            <label class="f-13">{{ $root._T["1o3j35hq"] }}</label>&nbsp;
+            <ui-select ng-disabled="disabled" ng-model="$ctrl.allDates.start_time_h" ng-change="$ctrl.setAllTimes(1)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+              <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+              <ui-select-choices repeat="hour in $ctrl.HourOptions">
+              <div ng-bind-html="hour.title"></div>
+              </ui-select-choices>
+            </ui-select>
+            h
+            <input type="number" placeholder="--" ng-model="$ctrl.allDates.start_time_m" ng-change="$ctrl.setAllTimes(2)" min="0" max="45" step="15" style="width:40px">
+            <br />
+            <label class="f-13">{{ $root._T["tseq9spk"] }}</label>&nbsp; &nbsp; &nbsp; &nbsp;
+            <ui-select ng-disabled="disabled" ng-model="$ctrl.allDates.end_time_h" ng-change="$ctrl.setAllTimes(3)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+              <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+              <ui-select-choices repeat="hour in $ctrl.HourOptions">
+              <div ng-bind-html="hour.title"></div>
+              </ui-select-choices>
+            </ui-select>
+            h
+            <input type="number" placeholder="--" ng-model="$ctrl.allDates.end_time_m" ng-change="$ctrl.setAllTimes(4)" min="0" max="45" step="15" style="width:40px">
+          </div>
+          <div class="col-md-3">
+            <ui-select ng-model="$ctrl.allDates.audit" on-select="$ctrl.setAllStages()" theme="bootstrap" ng-change="$ctrl.checkGlobal($ctrl.allDates.audit)">
+              <ui-select-match placeholder="{{ $root._T['a2tucrf9'] }}">{{$select.selected.name}} ({{$select.selected.place}})</ui-select-match>
+              <ui-select-choices group-by="'place'" repeat="stage in $ctrl.getGlobalStages() | propsFilter: {name: $select.search, place: $select.search}">
+                <div ng-bind-html="stage.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>            
+          </div>
+          <div class="col-md-3">
+            <ui-select on-select="$ctrl.setAllWriters($item)" ng-model="$ctrl.writer_id" theme="bootstrap" ng-disabled="disabled" style="width: 100%;" ng-change="$ctrl.checkGlobalTech($ctrl.writer_id, 'writer')">
+                <ui-select-match placeholder="{{ $root._T['peh5x5iu'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                <ui-select-choices repeat="tech in $ctrl.contributors | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.lastname">
+                    <div ng-bind-html="tech.firstname + ' '+ tech.lastname | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+            <br/>
+            <ui-select on-select="$ctrl.setAllReaders($item)" ng-model="$ctrl.reader_id" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                <ui-select-match  placeholder="{{ $root._T['npaxq3f4'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                <ui-select-choices repeat="tech in $ctrl.contributors | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.lastname">
+                    <div ng-bind-html="tech.firstname + ' '+ tech.lastname | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+          </div>          
+          <div class="col-md-9 col-md-offset-3">
+            <div class="btn-group btn-group-xs">
+              <button  ng-repeat="(key, name) in $ctrl.getPresetTimes" class="btn btn-default" ng-click="$ctrl.setTime($ctrl.allDates, key)"> {{name}}</button>
+              <button class="btn btn-default btn-xs" ng-click="$ctrl.setTime($ctrl.allDates)">{{ $root._T["f8exg9ee"] }}</button>
+            </div>
+            <i class="fa fa-chevron-up pull-right cursor-pointer"  data-toggle="tooltip" title="{{ $root._T['3ncefm3w'] }}" ng-if="$ctrl.isShowDatesDetails" ng-click="$ctrl.showDatesDetails()"></i>
+            <i class="fa fa-chevron-down pull-right cursor-pointer"  data-toggle="tooltip" title="{{ $root._T['2wzc2ovr'] }}" ng-if="!$ctrl.isShowDatesDetails" ng-click="$ctrl.showDatesDetails()"></i>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body p-10" ng-show="$ctrl.isShowDatesDetails">
+        <div class="row" ng-class="{'mb-5' : !$last, 'mb-0' : $last}" ng-repeat="date in $ctrl.dateStartEnd | orderBy:'day' track by $index" style="border-bottom: 1px solid grey">
+          <div class="col-md-12" ng-if="!$first && $ctrl.isDifferentWeek(date.day, $ctrl.dateStartEnd[$index-1].day)">
+            <hr class="col-md-6 col-md-offset-3 mt-5 mb-10">
+          </div>
+          <div class="col-md-3">
+            <label class="f-13">{{ $root._T["sw658azy"] }}</label><br />
+            <input ng-if="!date.is_planned" id="date_{{date.id}}" ng-model="date.is_checked" type="checkbox" />
+            <label ng-if="!date.is_planned" for="date_{{date.id}}"></label>
+            <i ng-if="date.is_planned" class="fa fa-info-circle" uib-tooltip-html="$ctrl.getTooltipPlanned()" tooltip-placement="right"></i>
+            <label class="f-13">{{date.day | asDate | date:'EEE d MMM yyyy'}}</label>
+          </div>
+          <div class="col-md-3">
+            <label class="f-13">{{ $root._T["1o3j35hq"] }}</label> &nbsp;
+            <ui-select ng-disabled="disabled" ng-model="date.start_time_h" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+              <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+              <ui-select-choices repeat="hour in $ctrl.HourOptions">
+              <div ng-bind-html="hour.title"></div>
+              </ui-select-choices>
+            </ui-select>
+            h
+            <input type="number" placeholder="0" ng-model="date.start_time_m" min="0" max="45" step="15" style="width:40px" ng-disabled="!date.is_checked">
+            <br />
+            <label class="f-13">{{ $root._T["tseq9spk"] }}</label> &nbsp; &nbsp; &nbsp; &nbsp;
+            <ui-select ng-disabled="disabled" ng-model="date.end_time_h" style="font-size:.9; width:80px; display: inline-table" theme="bootstrap">
+              <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+              <ui-select-choices repeat="hour in $ctrl.HourOptions">
+              <div ng-bind-html="hour.title"></div>
+              </ui-select-choices>
+            </ui-select>
+            h
+            <input type="number" placeholder="0" ng-model="date.end_time_m" min="0" max="45" step="15" style="width:40px" ng-disabled="!date.is_checked">
+          </div>
+          <div class="col-md-3">
+            <ui-select ng-model="date.audit" theme="bootstrap" ng-disabled="!date.is_checked" ng-change="$ctrl.checkOneAudit(date.audit, date.day)">
+              <ui-select-match placeholder="{{ $root._T['a2tucrf9'] }}">{{$select.selected.name}} ({{$select.selected.place}}</ui-select-match>
+              <ui-select-choices group-by="'place'" repeat="stage in $ctrl.getStages() | propsFilter: {name: $select.search, place: $select.search} | limitTo: $root.size_dropdown_list">
+                <div ng-bind-html="$ctrl.checkOccupied(stage.name, date.day, date) | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>   
+          </div>
+          <div class="col-md-3">
+            <ui-select ng-model="date.tech_writer_id" on-select="$ctrl.checkWriter($item, date)" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+              <ui-select-match placeholder="{{ $root._T['peh5x5iu'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+              <ui-select-choices repeat="tech in $ctrl.contributors | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.lastname | limitTo: $root.size_dropdown_list">
+                  <div ng-bind-html="tech.firstname + ' '+ tech.lastname | highlight: $select.search"></div>
+              </ui-select-choices>
+          </ui-select>
+          <br/>
+          <ui-select ng-model="date.tech_reader_id" on-select="$ctrl.checkReader($item, date)" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+              <ui-select-match  placeholder="{{ $root._T['npaxq3f4'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+              <ui-select-choices repeat="tech in $ctrl.contributors | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.lastname | limitTo: $root.size_dropdown_list">
+                  <div ng-bind-html="tech.firstname + ' '+ tech.lastname | highlight: $select.search"></div>
+              </ui-select-choices>
+          </ui-select>
+          </div>
+          <div class="col-md-9 col-md-offset-3">
+            <div class="btn-group btn-group-xs">
+            <button  ng-repeat="(key, name) in $ctrl.getPresetTimes" class="btn btn-default" ng-click="$ctrl.setTime(date, key)" ng-disabled="!date.is_checked"> {{name}}</button>
+            <button class="btn btn-default btn-xs" ng-click="$ctrl.setTime(date)" ng-disabled="!date.is_checked">{{ $root._T["f8exg9ee"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="$ctrl.getSelectedRequests($ctrl.requests).length > 0" class="col-md-12 panel-popup" style="color: #2A2A2A;">
+    <div class="panel panel-default">
+      <div class="panel-body p-10">
+        <div class="row">
+          <div class="col-md-12">
+            <label>{{ $root._T["yjkafe6l"] }}</label>
+            <span class="f-11" style="color: gray; font-style: italic;">{{ $root._T["fnp6aeo8"] }}</span>
+          </div>
+          <div class="col-md-12">
+            <input ng-model="$ctrl.newDate" type="date">
+            <button class="btn btn-success" ng-disabled="$ctrl.disableNewDate()" ng-click="$ctrl.addDate()">{{ $root._T["11z5dv20"] }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12" ng-if="$root.canDisplay(5)" ng-show="$ctrl.getSelectedRequests($ctrl.requests).length > 0">
+    <button ng-show="$ctrl.RoomAlreadyOccupied" type="button" class="btn btn-md btn-block btn-warning"><div ng-bind-html="$ctrl.RoomAlreadyOccupied"></div></button>
+    <button ng-disabled="$ctrl.hasRequestToPlan()" type="button" class="btn btn-md btn-block btn-default btn-text-primary" ng-click="$ctrl.planRequests($ctrl.getSelectedRequests($ctrl.requests), false)">
+      <i class="fa fa-calendar-check-o"></i> {{ $root._T["moziucdb"] }}
+    </button>
+
+  </div>
+
+  <div class="col-md-12" style="margin-top: 15px;" ng-if="$root.canDisplay(5)" ng-show="$ctrl.displayProductsCanBeAdded2booking">
+    <h2>{{ $root._T["b97nfugm"] }}</h2>
+    <div class="btn-group-vertical btn-block">
+      <button type="button" class="btn btn-default btn-xs "
+        ng-repeat="request in $ctrl.requestsWithoutRoom | orderBy:'product.human_description'"
+        ng-click="request.isSelected = !request.isSelected;" ng-if="request.is_planned == 0">
+        <span class="type" ng-class="{'type-success':request.isSelected, 'type-default': !request.isSelected}"></span>
+          {{$ctrl.productName(request)}}
+        <span class="type pull-right type-info"  ng-show="request.is_planned == '0'"></span>
+      </button>
+      <button type="button" class="btn btn-md btn-block btn-default btn-text-primary" ng-click="$ctrl.addRequestsToAPlanifiedBooking($ctrl.getRequests2add($ctrl.requestsWithoutRoom))">
+        <i class="fa fa-calendar-check-o"></i>{{ $root._T["vunjuoc3"] }}
+      </button>          
+    </div>
+  </div>
+  <div class="col-md-12" ng-show="$ctrl.confirmRequest">
+    <button ng-disabled="$ctrl.hasRequestToPlan()" type="button" class="btn btn-md btn-block btn-default btn-text-primary" ng-click="$ctrl.planRequests($ctrl.getSelectedRequests($ctrl.requests), true)">
+      {{ $root._T["qvz3nupc"] }}<br />
+      {{ $root._T["hfp85g33"] }}
+    </button>
+  </div>
+  <div class="col-md-12" ng-show="$ctrl.saved">
+    <button type="button" class="btn btn-md btn-block btn-default btn-text-primary">{{ $root._T["7bgb3y1i"] }}
+    </button>
+  </div>  
+</div>

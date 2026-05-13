@@ -1,0 +1,192 @@
+<header class="header-with-tabs">
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <p>
+        
+        {{ _T["5hfgt956"] }}
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+  <div class="row">
+
+    <div ng-include="'views/partials/nav-requests.html'"></div>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active ml-10 mr-10" style="display: grid" id="">
+        <form style="margin-top: 20px">
+          <div class="form-group search-form search-form-tabs form-select col-sm-6">
+            <input type="text" class="form-control input-search input-search-tabs large-input" aria-label="Rechercher parmi les demandes" placeholder="{{ _T['wqfkzdw6'] }}" ng-model="textFilter" ng-change="textFilterChange();">
+          </div>
+          <div class="form-group search-form col-sm-3">
+            <div class="btn-group btn-block">
+              <button type="button" class="btn btn-default btn-change">
+                <span ng-if="!filterDate"> {{ _T["sw658azy"] }} </span>
+                <span ng-if="filterDate > 0 && filterDate < 3">{{ _T["z0t6p7pd"] }} {{$parent.startDate}}</span>
+                <span ng-if="filterDate >= 3">{{ _T["mc051ilq"] }} {{$parent.startDate}} {{ _T["f6vwmdfc"] }} {{$parent.endDate}}</span>
+              </button>
+              <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret triangle"></span>
+              </button>
+              <ul class="dropdown-menu btn-block">
+                <li><a ng-click="filterRequest('yesterday')">{{ _T["0axqi4w1"] }}</a></li>
+                <li><a ng-click="filterRequest('today')">{{ _T["ze7enx7x"] }}</a></li>
+                <li><a ng-click="filterRequest('tomorrow')">{{ _T["b3tjlldn"] }}</a></li>
+                <li><a ng-click="filterRequest('current')">{{ _T["jpr9s3av"] }}</a></li>
+                <li><a ng-click="filterRequest('previous')">{{ _T["fzsd04mb"] }}</a></li>
+                <li><a ng-click="filterRequest('next')">{{ _T["ppnm1h7r"] }}</a></li>
+                <li><a ng-click="filterRequest()">{{ _T["sw658azy"] }}</a></li>
+              </ul>
+            </div>
+            
+          </div>
+          <div class="col-sm-3">
+            <div class="mt-10">
+              <p class="f-16">{{_T["b1f20w55"]}}: <span class="f-22 bold icon-color-red" style="font-weight: bold">{{requestsNotInProgress}}</span></p>
+            </div>
+          </div>
+        </form>
+
+        <tabset type="pills" justified="true" style="margin-top:5px">
+          <tab ng-repeat="planning in plannings" heading="{{planning.name}} ({{countRequestPlanning(planning.requests)}})" active="planning.active">
+            <header>{{planning.name}} </header>
+            <div class="panel panel-default mr-0" ng-repeat="request in filteredRequests = (planning.requests | magicFilterRequest:textFilter | filterRequestTechByDate:startTimestamp:endTimestamp | orderBy:'firstSelectedDate')" ng-if="request.display == 1 && request.is_sent_back != 1" ng-class="{'request-taken-by-me':request.tech_writer_user != null && request.tech_writer_user.id == user_entity.id, 'request-taken-by-others':request.tech_writer_user != null && request.tech_writer_user.id != user_entity.id}">
+              <div class="panel-body p-10">
+                <div class="row">
+                  <div class="col-md-2">
+                    <img class="img img-circle" width=50 height=50 style="margin-right: 5px; border:1px black solid;" ng-src="{{clients[request.product.subproject.project.client.id].url || '../app/img/no-customer.png'}}">
+                    <span class="f-16 text-bold">
+                      <i class="c-icon c-icon-people"></i>
+                      <span>{{request.user.person.firstname}} {{request.user.person.lastname}}</span>
+                    </span>
+                  </div>
+                  <div class="col-md-7">
+                    <span class="f-16 text-bold">
+                      <i class="c-icon c-icon-format"></i>
+                      <span>
+                        <span>
+                          {{request.product.subproject.project.name}}
+                          -
+                        </span>
+                        <span ng-if="request.product.subproject.nature.name == 'serie'">
+                          {{ _T["6vwtywcc"] }} {{request.product.subproject.season}}
+                        </span>
+                        <span ng-if="request.product.subproject.nature.name != 'serie'">
+                          {{request.product.subproject.nature.value}}
+                        </span>
+                      </span>
+                    </span>
+                    <!--workflow data="request.workflow" style="display: inline-block;"></workflow-->
+                    <span class="f-16 text-bold mr-10 ml-10">
+                      <span ng-if="request.workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                      <span ng-if="request.workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                      <span ng-if="request.workflow.workflow_type.id == 3" class="fa fa-briefcase"></span>
+                      {{request.workflow.workflow_type.value}}
+                    </span>
+                    <span class="f-16 text-bold">
+                      <i class="fa fa-tags"></i>
+                      <span>
+                        {{::request.action_type.etape_type.value}} - {{::request.action_type.value}}
+                      </span>
+                      -
+                      <span>
+                        {{doublageTypes[request.workflow.doublage_type_id].value}}
+                      </span>
+                      -
+                      <span>
+                        {{$root.languagesById[request.workflow.language_id].value}}
+                      </span>
+                      -
+                      <span>
+                       {{formatMixageByid[request.workflow.format_mix_id].value}}
+                      </span>
+                      -
+                      <span>
+                        {{speedsById[request.workflow.speed_id].value}}
+                      </span>
+                    </span>
+                    <span class="" ng-class="{'label-group':(request.important == 1 && request.on_hold == 1)}">
+                      <span ng-if="request.important == 1"  class="label label-danger label-group-border">{{ _T["4orz1fdr"] }}</span>
+                      <span ng-if="request.on_hold == 1" class="label label-blue"><i class="fa fa-pause" aria-hidden="true"></i> {{ _T["2ctuc541"] }}</span>
+                    </span>
+                    <date-wish data="request" small="true" hide="true"></date-wish>
+                  </div>
+                  <div class="col-md-3">
+                    <button class="btn btn-primary pull-right" ng-click="addComment(request)">
+                        <span class="c-icon c-icon-comment"></span>
+                        {{ _T["9zpxg9s3"] }}
+                    </button>
+                    <div class="btn-group pull-right" ng-show="request.tech_writer_id == user_id">
+                      <button class="btn btn-success" ng-click="sendBack(request, true)">{{ _T["v5nihazh"] }}</button>
+                      <button class="btn btn-warning" ng-click="sendBack(request, false)">{{ _T["hsqsk7z1"] }}</button>
+                    </div>
+                    <button class="btn btn-primary pull-right" ng-click="takeRequests(request)" ng-show="request.tech_writer_id != user_id">
+                        <span class="c-icon c-icon-tech"></span>
+                        <span ng-if="request.tech_writer_id == null">{{ _T["60278yew"] }}</span><span ng-if="request.tech_writer_id != null">{{ _T["lflvmd1n"] }}</span> <span ng-if="request.from_group == null">{{ _T["9a8m8kbn"] }}</span><span ng-if="request.from_group != null">{{ _T["lxuubyjl"] }}</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="row mb-0">
+                  <div class="col-md-12">
+                    <a class="btn btn-default btn-sm btn-light-shadow mr-10 mb-5" ng-repeat="request in request.group.requests | orderBy:'product.human_description'" href="#/{{request.tech_writer_id == user_id ? 'requestsTech' : 'requests/detail' }}/{{request.id}}">
+                      <div >
+                        <span class="btn-circle fa fa-circle-o" ng-if="request.tech_writer_user == null"  data-toggle="tooltip" title="{{ _T['tigrfrd8'] }}" tooltip-placement="bottom"></span>
+                        <span class="btn-circle c-icon c-icon-tech" ng-if="request.tech_writer_user != null"  data-toggle="tooltip" title="{{ _T['d8njeebn'] }} {{request.tech_writer_user.person.firstname}} {{request.tech_writer_user.person.lastname}}" tooltip-placement="bottom"></span>
+                        <span ng-if="request.product.subproject.nature.name == 'serie'">{{ request.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{request.product.episode_number}}</span>
+                        <span ng-if="request.product.subproject.nature.name != 'serie' && request.product.subproject.nature.name == 'film'">{{request.product.description.value}}</span>
+                        <span ng-if="request.product.subproject.nature.name != 'serie' && request.product.subproject.nature.name != 'film'">{{request.product.description_text}}</span>
+                        <span ng-repeat="link in request.linked_requests">
+                          <label class="label label-success" ng-if="link.is_done == 1">{{ _T["wqmoauth"] }}</label>
+                          <label class="label label-info" ng-if="link.is_planned == 1 && !(link.is_done == 1 || link.is_in_progress == 1 || link.is_not_done == 1)">{{ _T["yfbuv1v3"] }}</label>
+                          <label class="label label-primary" ng-if="link.is_in_progress == 1">{{ _T["irp3u8i6"] }}</label>
+                          <label class="label label-warning" ng-if="link.is_not_done == 1">{{ _T["bii6w7gg"] }}</label>
+                          <label class="label label-primary" ng-if="link.is_done != 1 && link.is_done != 1 && link.is_not_done != 1 && link.is_sent_back != 1 && link.is_in_progress != 1 && link.is_partial != 1 && link.is_validated_for_tech != 1 && link.is_planned != 1">{{ _T["3eiuupgp"] }}</label>
+                        </span>
+                        
+                        <div>
+                          <span ng-if="request.own_request_comments_total >0" style="font-size: 10px;">
+                            (
+                              {{(request.own_request_comments[request.own_request_comments.length - 1].length > 10) ? (request.own_request_comments[request.own_request_comments.length - 1].slice(0, 10) + '...') : request.own_request_comments[request.own_request_comments.length - 1]}}
+                            )
+                          </span>
+                        </div>
+                      </div>                      
+                    </a>
+                    <a class="btn btn-default btn-sm btn-light-shadow mr-10 mb-5" ng-if="request.from_group == null" href="#/{{request.tech_writer_id == user_id ? 'requestsTech' : 'requests/detail' }}/{{request.id}}">
+                      <div >
+                        <span class="btn-circle fa fa-circle-o" ng-if="request.tech_writer_user == null"  data-toggle="tooltip" title="{{ _T['tigrfrd8'] }}" tooltip-placement="bottom"></span>
+                        <span class="btn-circle c-icon c-icon-tech" ng-if="request.tech_writer_user != null"  data-toggle="tooltip" title="{{ _T['d8njeebn'] }} {{request.tech_writer_user.person.firstname}} {{request.tech_writer_user.person.lastname}}" tooltip-placement="bottom"></span>
+                        <span ng-if="request.product.subproject.nature.name == 'serie'">{{ request.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{request.product.episode_number}}</span>
+                        <span ng-if="request.product.subproject.nature.name != 'serie' && request.product.subproject.nature.name == 'film'">{{request.product.description.value}}</span>
+                        <span ng-if="request.product.subproject.nature.name != 'serie' && request.product.subproject.nature.name != 'film'">{{request.product.description_text}}</span>
+                        <span ng-repeat="link in request.linked_requests">
+                          <label class="label label-success" ng-if="link.is_done == 1">{{ _T["wqmoauth"] }}</label>
+                          <label class="label label-info" ng-if="link.is_planned == 1 && !(link.is_done == 1 || link.is_in_progress == 1 || link.is_not_done == 1)">{{ _T["yfbuv1v3"] }}</label>
+                          <label class="label label-primary" ng-if="link.is_in_progress == 1">{{ _T["irp3u8i6"] }}</label>
+                          <label class="label label-warning" ng-if="link.is_not_done == 1">{{ _T["bii6w7gg"] }}</label>
+                          <label class="label label-primary" ng-if="link.is_done != 1 && link.is_done != 1 && link.is_not_done != 1 && link.is_sent_back != 1 && link.is_in_progress != 1 && link.is_partial != 1 && link.is_validated_for_tech != 1 && link.is_planned != 1">{{ _T["3eiuupgp"] }}</label>
+                        </span>
+                        <div>
+                          <span ng-if="request.totalComment >0" style="font-size: 10px;">
+                            (
+                              {{(request.ownComment[request.ownComment.length - 1].text.length > 10) ? (request.ownComment[request.ownComment.length - 1].text.slice(0, 10) + '...') : request.ownComment[request.ownComment.length - 1].text}}
+                            )
+                          </span>
+                        </div>
+                      </div>
+                      
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ng-if="!showLoading && (planning.requests.length <= 0 || filteredRequests <= 0)" class="no-data">
+              {{ _T["m7gveh8o"] }}
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>

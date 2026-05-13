@@ -1,0 +1,25 @@
+<div class="main">
+
+    <h2 class="sub-header">{{ _T["iwazshdx"] }}</h2>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+           
+            <th>{{ _T["0kckbj84"] }}</th>
+            <th>{{ _T["6vwtywcc"] }}</th>
+            <th>{{ _T["d5sogua1"] }}</th> 
+            </thead>
+            <tbody class="listProject" ng-repeat="projet in projets.ownSubproject">
+                <tr>
+                    
+                    <td><a href="#/subprojects/{{projet.id}}">{{projet.nature}}</a></td>                    
+                    <td>{{projet.saison}}</td>
+                    <td>{{projet.date_creation}}</td>
+					
+                </tr>
+            </tbody>
+        </table>
+    </div>
+	
+</div>

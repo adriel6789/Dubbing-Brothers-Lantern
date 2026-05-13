@@ -1,0 +1,12 @@
+<div>
+  <div class="icon calendar" ng-class="getClasses()"
+  ng-style="{'background-color':date.badge}" uib-tooltip-html="date.tooltip" tooltip-placement="bottom" id="{{request.id}}-{{date.farmer_id}}">
+    <span class="month">{{date.timestamp | date:"MMM"}}</span>
+    <span class="day">{{date.timestamp | date:"dd"}}</span>
+  </div>
+  <small ng-if="$root.canDisplay(5)" class="message">
+    <div ng-if="oneOrMoreDateAreFarmer && allFarmerDatesAreDone">
+      <i class="fa fa-check"></i> <i>{{ $root._T["d7jpgj46"] }}</i>
+    </div>
+  </small>
+</div>

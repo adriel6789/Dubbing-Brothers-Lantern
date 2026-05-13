@@ -1,0 +1,160 @@
+<section ng-if="!isMobile()">
+  <header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>
+          {{ _T["c71ynu5o"] }}
+        </p>
+      </div>
+    </div>
+  </header>
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+      <div ng-include="'views/partials/nav-requests.html'"></div>
+      <div class="tab-content" style="margin-top:10px">
+        <div role="tabpanel" class="tab-pane active" id="">
+          <div class="row">
+            <div class="col-lg-12">
+              <div ng-repeat="day in days" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <div  style="min-height:770px;background:#FFF; " class="panel panel-default " ng-style="$index == 0 && {'background-color':'#F0FFEB'} ">
+                  <h3 style=" " align=center >
+                  <span ng-if="$index == 0">{{ _T["ze7enx7x"] }}</span>
+                  <span ng-if="$index == 1">{{ _T["b3tjlldn"] }}</span>
+                  <span ng-if="$index == 2">{{ _T["iyeiy7is"] }}</span>
+                  <span ng-if="$index > 2">{{day.format("dddd").capitalizeFirstLetter()}}</span><br><small>{{day.format("DD MMMM YYYY")}}</small>
+                  </h3>
+                  <ul class="list-group" >
+                    <li class="list-group-item" style="border-top: black 1px solid;" ng-repeat="farmer in farmers | dateInWeekFarmer: day" ng-class="{'request-reader':user_entity.id == farmer.tech_reader_id}">
+                      <div style="text-align: center; border-bottom: 1px solid #DDD; padding-bottom:5px" style="">
+                        <strong>
+                        <i class="fa fa-ticket"></i>
+                        {{farmer.audit}}
+                        [{{transformHourInI18nFormat(farmer.start_time)}}
+                        -
+                        {{transformHourInI18nFormat(farmer.end_time)}}]
+                        </strong>
+                        <div>
+                          {{farmer.associated_request[0].product.subproject.project.name}} -
+                          {{farmer.associated_request[0].product.subproject.nature.name == 'serie' && _T["6vwtywcc"] + " " + farmer.associated_request[0].product.subproject.season || farmer.associated_request[0].product.subproject.nature.name != 'serie' && "" + farmer.associated_request[0].product.subproject.nature.value}} -
+                          <button type="button" class="btn btn-xs btn-link" ng-click="showRequest = !showRequest">
+                          {{farmer.associated_request.length}} <span ng-if="farmer.associated_request.length > 1">{{_T["ba0heyvu"]}}</span><span ng-if="farmer.associated_request.length = 1">{{_T["06djaui5"]}}</span>
+                          </button>
+                          <span ng-show="showRequest">
+                            <br>
+                            -
+                            <span ng-repeat="request in farmer.associated_request">
+                              {{ (request.product.episode_number != null && (request.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + request.product.episode_number) || (request.product.description != null && _T["06djaui5"] + " " + request.product.description.value) || _T["06djaui5"] + " " + request.product.description_text}}
+                              -
+                            </span>
+                          </span>
+                          <br/>
+                        </div>
+                        {{farmer.associated_request[0].action_type.etape_type.value}} - {{farmer.associated_request[0].action_type.value}}
+                      </div>
+                      <div ng-if="farmer.ingenieur != null">
+                        <span class="glyphicon glyphicon-cog"></span> {{ _T["0y1qimug"] }} : {{farmer.ingenieur}}
+                      </div>
+                      <div ng-if="farmer.recorder != null">
+                        <span class="glyphicon glyphicon-record"></span> {{ _T["82k00at3"] }} : {{farmer.recorder}}
+                      </div>
+                      <div ng-if="farmer.artistic_director_id != null">
+                        <!--<span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} :  directeur artistique-->
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="main" ng-if="isMobile()">
+  <h2 class="sub-header">{{ _T["fmpevuom"] }} <small>{{ _T["zn71kcrf"] }}</small></h2>
+  <div class="row">
+    <div class="col-lg-12">
+      <div ng-repeat="day in days" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <div  style="min-height:770px;background:#FFF; " class="panel panel-default " ng-style="$index == 0 && {'background-color':'#F0FFEB'} ">
+          <h3 style=" " align=center >
+          <span ng-if="$index == 0">{{ _T["ze7enx7x"] }}</span>
+          <span ng-if="$index == 1">{{ _T["b3tjlldn"] }}</span>
+          <span ng-if="$index == 2">{{ _T["iyeiy7is"] }}</span>
+          <span ng-if="$index > 2">{{day.format("dddd").capitalizeFirstLetter()}}</span><br><small>{{day.format("DD MMMM YYYY")}}</small>
+          </h3>
+          <ul class="list-group" >
+            <li class="list-group-item" style="border-top: black 1px solid;" ng-repeat="farmer in farmers | dateInWeekFarmer: day" ng-class="{'request-reader':user_entity.id == farmer.tech_reader_id}">
+              <div style="text-align: center; border-bottom: 1px solid #DDD; padding-bottom:5px" style="">
+                <strong>
+                <i class="fa fa-ticket"></i>
+                {{farmer.audit}}
+                [{{transformHourInI18nFormat(farmer.start_time)}}
+                -
+                {{transformHourInI18nFormat(farmer.end_time}}]
+                </strong>
+                <div>
+                  {{farmer.associated_request[0].product.subproject.project.name}} -
+                  {{
+                  farmer.associated_request[0].product.subproject.nature.name == 'serie' && _T["6vwtywcc"] + " " + farmer.associated_request[0].product.subproject.season ||
+                  farmer.associated_request[0].product.subproject.nature.name != 'serie' &&  farmer.associated_request[0].product.subproject.nature.value}} -
+                  <button type="button" class="btn btn-xs btn-link" ng-click="showRequest = !showRequest">
+                  {{farmer.associated_request.length}} <span ng-if="farmer.associated_request.length > 1">{{_T["ba0heyvu"]}}</span><span ng-if="farmer.associated_request.length = 1">{{_T["06djaui5"]}}</span>
+                  </button>
+                  <span ng-show="showRequest">
+                    <br>
+                    -
+                    <span ng-repeat="request in farmer.associated_request">
+                      {{ (request.product.episode_number != null && (request.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + request.product.episode_number) || (request.product.description != null && _T["06djaui5"] + " " + request.product.description.value) || _T["06djaui5"] + " " + request.product.description_text}}
+                      -
+                    </span>
+                  </span>
+                  <br/>
+                </div>
+                {{farmer.associated_request[0].action_type.etape_type.value}} - {{farmer.associated_request[0].action_type.value}}
+              </div>
+              <div ng-if="farmer.ingenieur != null">
+                <span class="glyphicon glyphicon-cog"></span> {{ _T["0y1qimug"] }} : {{farmer.ingenieur}}
+              </div>
+              <div ng-if="farmer.recorder != null">
+                <span class="glyphicon glyphicon-record"></span> {{ _T["82k00at3"] }} : {{farmer.recorder}}
+              </div>
+              <div ng-if="farmer.artistic_director_id != null">
+                <!--<span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} :  directeur artistique-->
+              </div>
+            </li>
+          </ul>
+          <!-- <div class="col-lg-12">
+            <div class="row">
+              <div class="panel panel-default " style="margin-bottom:5px" >
+                <div class="panel-heading text-center">
+                  <strong>
+                  <i class="fa fa-ticket"></i>
+                  {{farmer.audit}}
+                  [{{transformHourInI18nFormat(farmer.start_time)}}
+                  -
+                  {{transformHourInI18nFormat(farmer.end_time)}}]
+                  </strong>
+                </div>
+                <div class="panel-body">
+                  <div style="text-align: center; border-bottom: 1px solid #DDD; padding-bottom:5px" style="">
+                    <div>
+                      <span>{{farmer.request.product.human_description}}<br/></span>
+                    </div>
+                    {{farmer.request.action_type.etape_type.value}} - {{farmer.request.action_type.value}}
+                  </div>
+                  <br/>
+                  <span class="glyphicon glyphicon-cog"></span> Ingénieur : {{farmer.ingenieur}}
+                  <br/>
+                  <span class="glyphicon glyphicon-record"></span> Recorder : {{farmer.recorder}}
+                  <br/>
+                  <span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} : 
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

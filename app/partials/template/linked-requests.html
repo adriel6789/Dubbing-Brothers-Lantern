@@ -1,0 +1,64 @@
+<div class="linkRequests" ng-repeat="link in request.linked_requests">
+  <div class="col-md-4">
+    <span class="label label-squared label-info" ng-if="link.workflow.workflow_type.value != null" ng-style="{'background-color':'rgba('+link.workflow.color.r+', '+link.workflow.color.g+', '+link.workflow.color.b+', '+link.workflow.color.o+')', 'color': link.workflow.color.font}" tooltip-placement="bottom" uib-tooltip-html="link.workflow.description">
+      <span ng-if="link.workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+      <span ng-if="link.workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+      <span ng-if="link.workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{::link.workflow.workflow_type.value}} - {{::link.workflow.doublage_type.value}}
+    </span>
+  </div>
+  <div class="col-md-4">
+    <strong>{{link.action_type.etape_type.value}} - {{link.action_type.value}}</strong>
+  </div>
+  <div class="col-md-2">
+    <small>
+      <span class="label label-danger" ng-if="link.is_canceled == 1"><i class="fa fa-ban" aria-hidden="true"></i> {{ $root._T["fotidtc6"] }}</span>
+      <span class="label label-success" ng-if="link.is_done == 1">{{ $root._T["46z910du"] }}</span>
+      <span class="label label-info" ng-if="link.is_planned == 1 && !(link.is_done == 1 || link.is_in_progress == 1 || link.is_not_done == 1)">{{ $root._T["5dd4lerz"] }}</span>
+      <span class="label label-primary" ng-if="link.is_in_progress == 1">{{ $root._T["xvyyayrz"] }}</span>
+      <span class="label label-warning" ng-if="link.is_not_done == 1">{{ $root._T["yxdfq1zn"] }}</span>
+      <span class="label label-danger" ng-if="link.important == 1">{{ $root._T["4orz1fdr"] }}</span>
+      <span class="label label-blue" ng-if="link.on_hold == 1"><i class="fa fa-pause" aria-hidden="true"></i> {{ $root._T["2ctuc541"] }}</span>
+    </small>
+  </div>
+  <div class="col-md-2 text-right">
+    <a ng-if="!$root.canDisplay(8)" ui-sref="app.requestsDetail({id : link.id})" target="_blank" class="btn btn-xs">{{ $root._T["u5gb76mh"] }}</a>
+    <a ng-if="$root.canDisplay(8)" ui-sref="app.requestsTech({id : link.id})" target="_blank" class="btn btn-xs">{{ $root._T["u5gb76mh"] }}</a>
+  </div>
+  <div class="col-md-12">
+    <date-wish ng-if="link" data="link" small="true" hide="true"></date-wish>
+  </div>
+  <div class="col-md-12 mt-10" ng-if="link.itemsInRequest.length > 0 && request.action_type.etape_type.name == 'livraison' && link.action_type.etape_type.name == 'fabrication'">
+    <div class="panel panel-default mr-0 mb-10 cursor-pointer f-15" ng-repeat="item in link.itemsInRequest" clipboard text="item.path" on-copied="showNotifSuccess( $root._T['f2eum0r2'] )" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['yao0bcb4'] }}">
+      <div class="row">
+        <div class="col-md-12 pt-5 pl-20 pr-20">
+          <div class="label-group">
+            <span class="label label-info">{{item.nature}}</span>
+            <span class="label label-default label-group-border">{{item.origin}}</span>
+            <span class="label label-info">{{ (item.product.episode_number != null && (item.product.type == 0 ? $root._T["590wjx96"] : $root._T["h12xqsuf"]) + " " + item.product.episode_number) || (item.product.description != null && item.product.description) || item.product.description_text}}</span>
+          </div>
+          <span class="text-bold">{{item.support}} | </span>
+          <span>{{item.workflow}} | </span>
+          <span ng-show="item.nature == 'Audio'">
+            <small>{{ $root._T["8izp2is4"] }} : <b>{{item.layout || "..."}}</b></small> |
+          </span>
+          <span>
+            <small>{{ $root._T["50304nwz"] }} : <b>{{item.speed_reception || "..."}}</b></small> |
+          </span>
+          <span>
+            <small>{{ $root._T["y5bxfkuj"] }} : <b>{{item.speed || "..."}}</b></small>
+          </span>
+          <small class="pull-right"><i>{{item.date_creation | asDate | date:'dd MMM yyyy'}}</i></small>
+          <span class="infobull normal-infobull pull-right mr-5" style="margin-top: -6px; height: 20px;" ng-if="item.comment != null && item.comment != ''" tooltip-placement="bottom" uib-tooltip-html="item.comment">
+            <i class="c-icon c-icon-comment c-icon-shadow "></i><span class="infobull-text" style="top: 5px;">1</span>
+          </span>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-md-12">
+          <p class="text-primary text-bold mb-0 ml-10 mr-10" style="word-wrap: break-word; width:100%"><i class="fa fa-link"></i> {{item.path}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>

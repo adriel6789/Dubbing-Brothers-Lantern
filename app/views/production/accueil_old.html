@@ -1,0 +1,251 @@
+<div class="container-fluid">
+  <button type="button" class="btn btn-default" ng-click="openPanelSettings()">
+    <span class="glyphicon glyphicon-cog"></span>
+    {{ _T["o5l2ejoq"] }}
+  </button>
+  <div ng-if="noPlanningSelected == true" class="alert alert-danger text-center">
+    {{ _T["9q24h1kx"] }} <button type="button" class="btn btn-sm btn-default" ng-click="openPanelSettings()">
+      <span class="glyphicon glyphicon-cog"></span>
+      {{ _T["o5l2ejoq"] }}
+    </button> !
+  </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ _T["eysb3i6m"] }}</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="textFilter" placeholder="{{ _T['dx3dikbn'] }}">
+                    </div>
+                    <hr/>
+                    <div ng-repeat="notif in requests_all_ok| filter:textFilter | orderBy:'date_creation':true">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {{ _T["8wk4rg65"] }} <strong>{{notif.request.product.subproject.project.client.name}}</strong>
+
+                                        <div class="btn-group pull-right" role="group" aria-label="" >
+                                            <!--<button class="btn btn-success btn-sm" ng-click="go('/requests/' + request.id)"><i class="glyphicon glyphicon-eye-open"></i> Voir</button>-->
+
+                                            <button class="btn btn-success btn-sm" ng-click="dismissNotif(notif.id)"><i class="glyphicon glyphicon-trash"></i> {{ _T["gsj00v4b"] }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["06djaui5"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a href="#/products/{{notif.request.product.id}}">
+                                            {{notif.request.product.human_description}}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["2w7jtwr8"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.workflow.workflow_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["dfuet0tp"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a href="#/requests/detail/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["r48ex2km"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.action_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["sihz18dm"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <div ng-if="notif.request.ownObservation.length != 0"><a href='' ng-click='showObservations(notif.request)'>{{ _T["w7redrmn"] }}</a></div>
+                                        <div ng-if="notif.request.ownObservation.length == 0">{{ _T["adoyhyi2"] }}</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4" >
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ _T["8hyu87tc"] }}</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="returnsFilter" placeholder="{{ _T['dx3dikbn'] }}">
+                    </div>
+                    <hr/>
+                    <div ng-repeat="notif in requests_with_returns| filter:returnsFilter | orderBy:'date_creation':true">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {{ _T["8wk4rg65"] }} <strong>{{notif.request.product.subproject.project.client.name}}</strong>
+
+                                        <div class="btn-group pull-right" role="group" aria-label="" >
+                                            <!--                                            <button class="btn btn-danger btn-sm" ng-click="go('/requests/' + request.id)"><i class="glyphicon glyphicon-eye-open"></i> Voir</button>-->
+
+                                            <button ng-if="user_role == 'production'" class="btn btn-danger btn-sm" ng-click="goManageReturns(notif.request.product_id, notif.request.id)"><i class="glyphicon glyphicon-pencil"></i> {{ _T["zmmcm2k8"] }}</button>
+
+                                            <button class="btn btn-danger btn-sm" ng-click="dismissNotif(notif.id)"><i class="glyphicon glyphicon-trash"></i> {{ _T["gsj00v4b"] }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["06djaui5"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a href="#/products/{{notif.request.product.id}}">
+                                            {{notif.request.product.human_description}}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["2w7jtwr8"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.workflow.workflow_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["dfuet0tp"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a ng-if="user_role != 'planning'" href="#/requests/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                        <a ng-if="user_role == 'planning'" href="#/requests/detail/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["r48ex2km"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.action_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["sihz18dm"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <div ng-if="notif.request.ownObservation.length != 0"><a href='' ng-click='showObservations(notif.request)'>{{ _T["w7redrmn"] }}</a></div>
+                                        <div ng-if="notif.request.ownObservation.length == 0">{{ _T["adoyhyi2"] }}</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">{{ _T["sbaicecv"] }}</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="activityFilter" placeholder="{{ _T['dx3dikbn'] }}">
+                    </div>
+                    <hr/>
+                    <div ng-repeat="notif in requests_in_progress| filter:activityFilter | orderBy:'date_creation':true">
+                        <div ng-if="notif.in_progress == 1" class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {{ _T["vvijhgr1"] }} : <strong>{{notif.request.product.subproject.project.client.name}}</strong>
+
+                                        <div class="btn-group pull-right" role="group" aria-label="" >
+                                            <!--                                            <button class="btn btn-info btn-sm" ng-click="go('/requests/' + request.id)"><i class="glyphicon glyphicon-eye-open"></i> Voir</button>-->
+
+                                            <button class="btn btn-info btn-sm" ng-click="dismissNotif(notif.id)"><i class="glyphicon glyphicon-trash"></i> {{ _T["gsj00v4b"] }}</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["06djaui5"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a href="#/products/{{notif.request.product.id}}">
+                                            {{notif.request.product.human_description}}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["2w7jtwr8"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.workflow.workflow_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["dfuet0tp"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a ng-if="user_role != 'planning'" href="#/requests/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                        <a ng-if="user_role == 'planning'" href="#/requests/detail/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["r48ex2km"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.action_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["sihz18dm"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <div ng-if="notif.request.ownObservation.length != 0"><a href='' ng-click='showObservations(notif.request)'>{{ _T["w7redrmn"] }}</a></div>
+                                        <div ng-if="notif.request.ownObservation.length == 0">{{ _T["adoyhyi2"] }}</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="notif.replan" class="panel panel-warning">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {{ _T["6dkigy5e"] }} : <strong>{{notif.request.product.subproject.project.client.name}}</strong>
+
+                                        <div class="btn-group pull-right" role="group" aria-label="" >
+                                            <!--                                            <button class="btn btn-warning btn-sm" ng-click="go('/requests/' + request.id)"><i class="glyphicon glyphicon-eye-open"></i> Voir</button>-->
+                                            <button ng-if="user_role != 'planning'" class="btn btn-warning btn-sm" ng-click="dismissNotif(notif.id)"><i class="glyphicon glyphicon-trash"></i> {{ _T["gsj00v4b"] }}</button>
+                                            <button ng-if="user_role == 'planning'" class="btn btn-warning btn-sm" ng-click="replanRequest(notif, $index)"><i class="glyphicon glyphicon glyphicon-share-alt"></i> {{ _T["zcoz39qk"] }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["06djaui5"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a href="#/products/{{notif.request.product.id}}">
+                                            {{notif.request.product.human_description}}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["2w7jtwr8"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.workflow.workflow_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["dfuet0tp"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <a ng-if="user_role != 'planning'" href="#/requests/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                        <a ng-if="user_role == 'planning'" href="#/requests/detail/{{notif.request.id}}">{{notif.request.action_type.etape_type.value}}</a>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["r48ex2km"] }}:</div>
+                                    <div class="col-sm-9>">{{notif.request.action_type.value}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">{{ _T["sihz18dm"] }}:</div>
+                                    <div class="col-sm-9>">
+                                        <div ng-if="notif.request.ownObservation.length != 0"><a href='' ng-click='showObservations(notif.request)'>{{ _T["w7redrmn"] }}</a></div>
+                                        <div ng-if="notif.request.ownObservation.length == 0">{{ _T["adoyhyi2"] }}</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

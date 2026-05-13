@@ -1,0 +1,38 @@
+<!-- Choix des techniciens -->
+{{ $root._T["mdmqt2rp"] }}
+<div class="row" style="margin-bottom: 25px;">
+    <div class="col-md-12">
+        <strong style="color:white">{{ $root._T["peh5x5iu"] }} :</strong>
+        <br/>
+        <ui-select on-select="$ctrl.setSelectedTechnicians($item, 'writer')" ng-model="$ctrl.selectedTechnicians.writer" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+            <ui-select-match allow-clear="true" >{{$select.selected.fullname}}</ui-select-match>
+            <ui-select-choices repeat="tech in $ctrl.allTechs | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.fullname | limitTo: $root.size_dropdown_list">
+                <div ng-bind-html="tech.fullname | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+        <strong style="color:white">{{ $root._T["npaxq3f4"] }} :</strong>
+        <br/>
+        <ui-select on-select="$ctrl.setSelectedTechnicians($item, 'reader')" ng-model="$ctrl.selectedTechnicians.reader" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+            <ui-select-match allow-clear="true">{{$select.selected.fullname}}</ui-select-match>
+            <ui-select-choices repeat="tech in $ctrl.allTechs | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.fullname | limitTo: $root.size_dropdown_list">
+                <div ng-bind-html="tech.fullname | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+        <br />
+        <strong  ng-if="$ctrl.canDisplayEditor()" style="color:white">Editor :</strong>
+        <ui-select ng-if="$ctrl.canDisplayEditor()" on-select="$ctrl.setSelectedTechnicians($item, 'editor')" ng-model="$ctrl.selectedTechnicians.editor" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+            <ui-select-match allow-clear="true" >{{$select.selected.fullname}}</ui-select-match>
+            <ui-select-choices repeat="tech in $ctrl.allTechs | propsFilter: {fullname: $select.search, id: $select.search} | orderBy: tech.fullname | limitTo: $root.size_dropdown_list">
+                <div ng-bind-html="tech.fullname | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-md btn-block btn-default btn-text-primary" ng-disabled="$ctrl.isSendingNotifAvailable()" ng-click="$ctrl.sendBooking2Tech($ctrl.getSelectedRequests($ctrl.requests))">
+            <i class="fa fa-send-o"></i> {{ $root._T["3g9vueau"] }}
+        </button>
+    </div>
+    <div class="col-md-12" ng-if="false">
+        {{ $root._T["vqt9115r"] }}
+    </div>    
+</div>

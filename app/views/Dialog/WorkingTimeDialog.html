@@ -1,0 +1,15 @@
+<div>
+  <h3 style="border-bottom: 1px solid #bbb; padding-bottom: 10px;">{{ _T["yslfhb7k"] }}</h3>
+  <br/>
+  <label for='horairesStart' style='width:100px'>{{ _T["2lq5g7zj"] }}</label>
+  {{ _T["jeepc9om"] }} &nbsp; &nbsp;
+  <input maxlength="5" ng-model='farmerEdit.working_time_start' pattern="\d{2}:\d{2}" placeholder="09:00" style='width:85px' time-input="" type='text'/>
+  &nbsp; &nbsp; à &nbsp; &nbsp;
+  <input maxlength="5" ng-model='farmerEdit.working_time_end' pattern="\d{2}:\d{2}" placeholder="18:00" style='width:85px' time-input="" type='text'/>
+  <br/>
+  <br/>
+  <label for='pauseStart' style='width:100px'>{{ _T["7efqgpfl"] }}</label>
+  <input maxlength="3" ng-model='farmerEdit.break_time' placeholder="15" style='width:70px' type='text'/>
+  <br/><br/>
+  <input id='validate' name='validate' ng-click="validateTime();" style='bottom: 20px; position: absolute; right: 15px;' type='button' value="{{ _T['d32u2mga'] }}"/>
+</div>

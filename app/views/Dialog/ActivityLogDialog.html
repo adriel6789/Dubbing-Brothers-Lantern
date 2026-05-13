@@ -1,0 +1,85 @@
+<h3>{{ _T["qlr1dxpa"] }}</h3>
+<div class="">
+  <div class="" style="background-color:white; max-height:60vh; overflow-y:scroll">
+    <textarea class="form-control custom-control" rows="4" placeholder="{{ _T['yidb9lai'] }}" ng-model="mainRequest.newComment"></textarea>
+    <button class="col-md-4 btn btn-success btn-outline" ng-show="role != 'technicien'" ng-class="{'btn-warning': !show_tech}" data-placement="bottom" data-toggle="tooltip" title="{{ _T['x3a5ryxz'] }}" ng-click="show_tech = !show_tech">
+    <span ng-if="show_tech">
+      <i class="fa fa-users"></i>
+      {{ _T["4nb6u63i"] }}
+    </span>
+    <span ng-if="!show_tech">
+      <i class="fa fa-users"></i>
+      <i class="fa fa-ban text-danger"></i>
+      {{ _T["aza590it"] }}
+    </span>
+    <script>
+    $(function() {
+    $('[data-toggle="tooltip"]').tooltip({html: true})
+    });
+    </script>
+    </button>
+    <button class="col-md-4 btn btn-outline btn-primary" ng-click="showActivity = !showActivity" data-placement="bottom" data-toggle="tooltip" title="{{ _T['69o5dvna'] }}">
+    <span ng-if="showActivity">
+      <i class="fa fa-bell "></i>
+      {{ _T["4nb6u63i"] }}
+    </span>
+    <span ng-if="!showActivity">
+      <i class="fa fa-bell "></i>
+      <i class="fa fa-ban text-danger"></i>
+      {{ _T["aza590it"] }}
+    </span>
+    <script>
+    $(function() {
+    $('[data-toggle="tooltip"]').tooltip({html: true})
+    });
+    </script>
+    </button>
+    <button class="col-md-4 btn  btn-outline btn-primary" ng-click="addCommentOnRequest(mainRequest, show_tech)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['5q1ey6ek'] }}">
+    <i class="fa fa-comment "></i> {{ _T["5svsr8yp"] }}
+    <script>
+    $(function() {
+    $('[data-toggle="tooltip"]').tooltip({html: true})
+    });
+    </script>
+    </button>
+    <div class="">
+      <div title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}" class="col-md-12" ng-if="role != 'technicien' || role == 'technicien' && comment.show_tech == 1">
+        <section class="text-center from-activity" ng-if="comment.activity_log == true && showActivity"> <!-- Activité log -->
+        <small><small><strong class="primary-font"><i class="fa fa-bell-o" aria-hidden="true"></i>
+        {{comment.date_creation | asDate | date:"dd MMMM à HH\'h\'mm"}}</strong><br>
+        <div style="word-wrap: break-word;">{{comment.text}}
+          {{ _T["6qfau07l"] }} {{comment.user.person.firstname}}
+        {{comment.user.person.lastname}}</div>
+        <div style="word-wrap: break-word;">{{comment.old_value}} <i class="fa fa-arrow-circle-right" ng-if="comment.old_value != null && comment.new_value != null"></i> {{comment.new_value}}</div>
+        </small></small>
+      </section>
+      <section ng-if="comment.user.id == user_entity.id && !comment.activity_log"> <!-- Moi -->
+      <div class="from-me-text" ng-show="role != 'technicien'">
+        <span ng-if="comment.show_tech">{{ _T["4nb6u63i"] }}</span>
+        <span ng-if="comment.show_tech != true">{{ _T["aza590it"] }}</span>
+      </div>
+      <div class="bubbledRight">
+        {{comment.text}}
+        <br>
+        <span class="timeOfBubble">{{ _T["z0t6p7pd"] }} {{comment.date_creation | asDate | date:'dd/MM à HH\'h\'mm'}}</span>
+      </div>
+    </section>
+    <section ng-if="comment.user.id != user_entity.id && !comment.activity_log"> <!-- Eux -->
+    <div class="from-them-text">
+      {{comment.user.person.firstname}}
+      {{comment.user.person.lastname}}
+      <span ng-if="comment.show_tech && role != 'technicien'"> - {{ _T["4nb6u63i"] }}</span>
+      <span ng-if="comment.show_tech != true && role != 'technicien'"> - {{ _T["aza590it"] }}</span>
+    </div>
+    <div class="bubbledLeft">
+      {{comment.text}}
+      <br>
+      <span class="timeOfBubble">{{ _T["z0t6p7pd"] }} {{comment.date_creation | asDate | date:'dd/MM à HH\'h\'mm'}}</span>
+    </div>
+  </section>
+  <div class="clear">
+  </div>
+</div>
+</div>
+</div>
+</div>

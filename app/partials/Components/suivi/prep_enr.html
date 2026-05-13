@@ -1,0 +1,70 @@
+<!-- Gestion des cas avec les request associées -->
+<div class="row mb-0">
+	<div class="col-md-8">
+		<span class="label label-success label-squared" ng-if="$ctrl.cell.checked_date && $ctrl.cell.checked == '1' || $ctrl.cell.checked_date && $ctrl.cell.checked == true" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['z0t6p7pd'] }} {{$ctrl.cell.checked_date | asDate | date : 'dd/MM/yyyy'}}">{{ $root._T["b829n158"] }}</span>
+	</div>
+	<div ng-if="popoverTrick && $root.canDisplay(3)" class="col-md-2 infobull" popover-placement="bottom" uib-popover-template="'popover-prepa-enr.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['3xoocd81'] }}">
+		<i class="fa fa-pencil"></i>
+	</div>
+	<div ng-if="!popoverTrick && $root.canDisplay(3)" class="col-md-2 infobull" popover-placement="bottom" uib-popover-template="'popover-prepa-enr.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['3xoocd81'] }}">
+		<i class="fa fa-pencil"></i>
+	</div>
+</div>
+<div class="row mb-0">
+	<div class="col-md-12 f-13 break-word" ng-if="$ctrl.cell.plain_value">
+		<i class="fa fa-user"></i> {{$ctrl.cell.plain_value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.sent_date && !$ctrl.cell.reception_date">
+		<i class="fa fa-share"></i> {{$ctrl.cell.sent_date}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.reception_date">
+		<i class="fa fa-reply"></i> {{$ctrl.cell.reception_date}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.note">
+		<i class="fa fa-sticky-note"></i> {{$ctrl.cell.note}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.checked != '1' && $ctrl.cell.checked != true && !$ctrl.cell.plain_value && !$ctrl.cell.sent_date && !$ctrl.cell.reception_date" style="text-align: center;">
+		<span class="label label-info label-squared">{{ $root._T["fj98qsz4"] }}</span>
+	</div>
+</div>
+
+<script type="text/ng-template" id="popover-prepa-enr.html">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="onoffswitch">
+				<input type="checkbox" ng-model="$ctrl.cell.checked" ng-checked="$ctrl.cell.checked == '1' || $ctrl.cell.checked == true" name="onoffswitch{{$index}}" class="onoffswitch-checkbox" id="myonoffswitchdigital-media-{{$ctrl.product.id+$index+$ctrl.cell.tableausuivicolumn_id}}" >
+				<label class="onoffswitch-label" for="myonoffswitchdigital-media-{{$ctrl.product.id+$index+$ctrl.cell.tableausuivicolumn_id}}" ng-click="setCheck($ctrl.cell.checked)" >
+					<span class="onoffswitch-inner"></span>
+					<span class="onoffswitch-switch"></span>
+					{{ $root._T["d32u2mga"] }}
+				</label>
+			</div>
+		</div>
+		<div class="col-md-6" ng-if="$ctrl.cell.checked_date && $ctrl.cell.checked == '1' || $ctrl.cell.checked_date && $ctrl.cell.checked == true">
+			<span class="label label-success label-squared">{{ $root._T["z0t6p7pd"] }} {{$ctrl.cell.checked_date | asDate | date : "dd/MM/yyyy"}}</span>
+		</div>
+	</div>
+	<div class="row mr-0 ml-0 mb-5">
+		<div class="form-group form-group-small m-0">
+			<input type="text" name="text" class="form-control form-control-small m-0" ng-model="$ctrl.cell.plain_value" placeholder="{{ $root._T['qhjsf1e6'] }}" />
+		</div>
+	</div>
+	<div class="row mr-0 ml-0 mb-5">
+		<div class="col-md-6 pl-0 pr-5">
+			<div class="form-group form-group-small m-0">
+				<input type="text" name="text" class="form-control form-control-small m-0" ng-model="$ctrl.cell.sent_date" placeholder="{{ $root._T['11hw7k1i'] }}" />
+			</div>
+		</div>
+		<div class="col-md-6 pr-0 pl-5">
+			<div class="form-group form-group-small m-0">
+				<input type="text" name="text" class="form-control form-control-small m-0" ng-model="$ctrl.cell.reception_date" placeholder="{{ $root._T['7895k6dn'] }}" />
+			</div>
+		</div>
+	</div>
+	<div class="row mr-0 ml-0 mb-5">
+		<div class="form-group form-group-small m-0">
+			<input type="text" name="text" class="form-control form-control-small m-0" ng-model="$ctrl.cell.note" placeholder="{{ $root._T['q6g3ttxk'] }}" />
+		</div>
+	</div>
+	<button class="btn btn-block btn-success btn-outline btn-xs" ng-click="savePrepEnr($ctrl.cell, $ctrl.product)">{{ $root._T["hvzykhtg"] }}</button>
+</script>

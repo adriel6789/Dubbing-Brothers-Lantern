@@ -1,0 +1,20 @@
+{{ $root._T["57osw6qj"] }}
+<div class="row" style="margin-bottom: 25px;">
+
+    <div class="col-md-12">
+        <div class="label label-danger label-group-border" ng-if="$ctrl.project.type_id == 0">
+          {{ $root._T["yac8dztb"] }}
+        </div>
+        <div ng-if="$ctrl.project.type_id == 0">
+          <label ng-repeat="option in $ctrl.projectTypes">
+            {{option.name}} <input type="radio" name="projectTypeId" ng-value="option.value" ng-change="$ctrl.changeProjectType(option)" ng-model="$ctrl.projectType.projectTypeSelected" > &nbsp;
+          </label>
+        </div>
+        <div ng-if="$ctrl.project.type_id != 0">
+          <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-disabled="$ctrl.hasSelectedRequestsToUpdate()" ng-click="$ctrl.openDateChoiceModal()">{{ $root._T["kib26ptw"] }}</button>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="false">
+      {{ $root._T["vqt9115r"] }}
+    </div>
+</div>

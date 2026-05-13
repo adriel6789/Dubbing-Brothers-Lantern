@@ -1,0 +1,71 @@
+<div class="page-popup page-custom-template" style="max-height: 600px; min-height: 600px; height: 600px;">
+  <div class="row" style="">
+    <div class="col-md-12" style="">
+      <h1 class="template-h1">{{ _T["006gatzp"] }}</h1>
+      <div class="step" style="padding-top:15px; max-height: 600px; min-height: 600px; height: 600px;">
+        
+        <label for="client_numbers">{{ _T["mookkz9j"] }}</label>
+		<textarea ng-model="$parent.client_numbers" ng-change="update_clients_cells()" rows="3" style="width:100%; resize: none;" class="mb-0" />
+		
+	<div style="overflow-y: auto; overflow-x: hidden; margin-top:15px; height: 300px; width: 100%;">  
+        <table class="table-bordered" style="width: 100%">
+            <thead>
+            	<tr>
+            		<th ng-style="{'background-color': ('rgba('+215+', '+232+', '+153+', 1)')}">
+				        <span>
+				          <span><br><br></span>
+				        </span>
+		            </th>
+            	
+		        	<th ng-class="{'th-suivi-prod':client_column.workflow.color == null}" style="color: {{client_column.workflow.color.font}};" ng-style="{'background-color': ('rgba('+client_column.workflow.color.r+', '+client_column.workflow.color.g+', '+client_column.workflow.color.b+', 1)'), 'cursor': (client_column.action != null && client_column.action.allow_request == 1 && client_product.length != 0 && isProductSelected(client_product)) ? 'pointer' : ''}" ng-if="client_column.action.name.indexOf('client_number_') == 0">
+				        <span>
+				          <span class="col-md-12">{{client_column.action.etape_type.value_short+' ' +client_column.action.value_short}}</span>
+				          
+				        </span>
+		            
+		            </th>
+                
+            	</tr>
+            </thead>
+            <tbody>
+            	<tr ng-repeat="product in client_product" ng-hide="product.hideBatch">
+            	<td class="col-md-6" style="width: 50%">
+                  <span ng-if="subproject.nature.name == 'serie'">{{product.episode_number}}</span>
+                  <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                  <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                </td>
+                <td ng-repeat="cell in product.cells  | magicFilterEtape:filterEtape track by $index" 
+                	ng-class="{'request_status_success' : (cell.success == '1' || cell.checked == '1'), 'request_status_error' : cell.error == '1', 'request_status_warning' : cell.warning == '1', 'product_not_in_workflow' : !cell.isProductInWorkflow}" class="text-left p-10 col-md-12" style="width: 50%"
+                	ng-if="cell.action.name.indexOf('client_number_') == 0 && client_column.id == cell.column_id">
+                  <div ng-if="cell.action.allow_request && cell.action.allow_request == '0' && cell.isProductInWorkflow">
+                    <suivi-cell-manual cell="cell" product="product" column="columns[$index]" role="'edit'"></suivi-cell-manual>
+                  </div>
+                  <div ng-if="cell.action.allow_request && cell.action.allow_request == '1' && cell.isProductInWorkflow">
+                    <suivi-cell-request ng-repeat="request in cell.requests track by $index" role="role" request="request" action="cell.action" cell="cell" ng-if="request.is_canceled != 1"></suivi-cell-request>
+                  </div>
+                  <div class="clearfix"></div>
+                  <suivi-cell-plain ng-if="cell.action == null && cell.isProductInWorkflow" cell="cell" role="role"></suivi-cell-plain>
+
+                </td>
+              </tr>
+            </tbody>
+            	
+            
+        </table>
+	</div>
+	
+        
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="$parent.client_numbers = ''; closeThisDialog();alert('11')" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+            <div class="col-md-3 pull-right">
+            	<button ng-click="metrics_import_client_numbers(); closeThisDialog();alert('22')" type="button" class="btn btn-primary btn-block btn-big-shadow">{{ _T["otmpmow5"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

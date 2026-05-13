@@ -1,0 +1,849 @@
+<div class="page-suivi-prod" ng-show="!showLoading">
+  <header class="header-with-tabs header-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>
+          {{ _T["a4u8blvi"] }}
+          <ui-select ng-model="subproject_selected" on-select="goToProductionMonitoring($item)" style="display: inline-table; min-width:450px" theme="bootstrap">
+            <ui-select-match placeholder="{{ _T['7ggppqdj'] }}">{{$select.selected.project_name}} - {{$select.selected.name}}</ui-select-match>
+            <ui-select-choices group-by="'project_name'" repeat="subProject in subProjectFavorites | magicFilter: $select.search">
+              <span ng-bind-html="subProject.name| highlight: $select.search"></span>
+            </ui-select-choices>
+          </ui-select>
+          ({{subproject.nature.value}})
+          <!--span class="label label-warning label-squared label-beta"> BETA</span-->
+          <a href="" ng-click="editSubproject(subproject)" style="color: #fff;"><i class="glyphicon glyphicon-edit" style="font-size:20px;"></i></a>
+          <!-- ==={{subproject}}==== -->
+          <product-managers ng-if="subproject" pmanagers="ctrl.chargeprod"
+            project-data="subproject" ></product-managers>
+          <a href="" style="color: #fff;" popover-placement="bottom" uib-popover-template="'views/Dialog/metricsSubprojectSettings.html'" tooltip-placement="bottom"  data-toggle="tooltip" title="Metrics" popover-trigger="'outsideClick'" id="metrics-settings-popover">
+            <i class="fa fa-medium" style="font-size:20px;"></i>
+          </a>
+          <span class="pull-right">
+            <button ng-if="$root.canDisplay(3)" class="btn btn-default btn-sm btn-text-primary btn-big-shadow text-left" ng-click="createProduct()">
+              <span class="c-icon c-icon-add"></span> {{ _T["yztihdqz"] }}
+            </button>
+            <button ng-if="$root.canDisplay(3)" class="btn btn-default btn-sm btn-text-primary btn-big-shadow text-left" ng-click="createWorkflow()">
+              <span class="c-icon c-icon-add"></span> {{ _T["nexhhzu4"] }}
+            </button>
+            <button class="btn btn-default btn-sm btn-text-primary btn-big-shadow text-left" ng-click="showHelpDialog()"><i class="fa fa-question-circle" aria-hidden="true"></i> {{ _T["7q06vlvp"] }}</button>
+          </span>
+          <span class="fa fa-refresh" style="cursor: pointer;"  ng-click="cleanTable()" title="Rafraîchir le suivi de production"></span>
+          <a href="" ng-click="setCodeSecuriteSubproject(subproject)" style="color: #fff;" title="{{ _T['9688806z'] }}"><i class="glyphicon glyphicon-lock" style="font-size:21px;"></i></a>
+        </p>
+      </div>
+    </div>
+  </header>
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="container-suivi">
+      <div class="row mb-0">
+        <div class="col-md-12">
+          <div class="header">
+            <div class="row">
+              <div class="col-md-2">
+                <button ng-if="$root.canDisplay(3)" ng-disabled="!(subproject.ownProduct.length != 0 && isProductSelected(subproject.ownProduct))" class="btn btn-primary btn-block btn-group-action" ng-click="newRequestFromProduct(subproject.ownProduct)">{{ _T["i9jvns8j"] }}</button>
+              </div>
+              <div class="col-md-1">
+                <button class="btn btn-primary btn-block btn-group-action" ng-click="showExportClient()"><i class="fa fa-file-excel-o"></i> {{ _T["o3r3a9mw"] }}</button>
+              </div>
+              <div class="col-md-1">
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle btn-block" type="button" id="dropdownProductTypeFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-disabled="subproject.nature_id != 2">
+                  <span>{{ _T["xe1mqmv6"] }}</span>
+                  <span class="fa fa-angle-down"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownProductTypeFilter">
+                    <li>
+                      <a href="" ng-click="filterByProductType()" style="padding-top:5px;">
+                        {{ _T["h195ej8l"] }}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="" ng-click="filterByProductType(0)" style="border-top:1px solid lightgrey; padding-top:5px;">
+                        {{ _T["m3iyfpjn"] }}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="" ng-click="filterByProductType(1)" style="border-top:1px solid lightgrey; padding-top:5px;">
+                        {{ _T["h12xqsuf"] }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle btn-block" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  <span>{{ _T["z41fn4zh"] }}</span>
+                  <span class="fa fa-angle-down"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li>
+                      <a href="" ng-click="cancelFilterWorkflow()">
+                        {{ _T["zfa1zcd0"] }}
+                      </a>
+                    </li>
+                    <li ng-repeat="workflow in workflows">
+                      <a href="" ng-click="filterWorkflow(workflow)" style="border-top:1px solid lightgrey; padding-top:5px;">
+                        <i ng-show="workflow.selectedfilter" class="fa fa-check-circle" style="color:blue" ></i>
+                        <i ng-show="!workflow.selectedfilter || workflow.selectedfilter == 'undefined' " class="fa fa-check-circle" style="color:white" ></i>
+                        <span ng-if="workflow.workflow_type.value != null" class="label label-squared"  ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color': workflow.color.font}">
+                          <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                          <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                          <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{workflow.workflow_type.value}}
+                        </span>
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          &nbsp;{{workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+                          - {{workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{workflow.prod_version}}
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <input type="text" class="form-control" ng-model="filterProduct" placeholder="{{ _T['u9mtnyp9'] }}">
+              </div>
+              <div class="col-md-1">
+                <input type="text" class="form-control" ng-model="filterEtape" placeholder="{{ _T['5cyizli4'] }}">
+              </div>
+              <div class="col-md-2">
+                <div ng-if="$root.canDisplay(7)" class="dropdown">
+                  <button class="btn btn-default btn-block dropdown-toggle" type="button" id="dropdownEditWorkflow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="fa fa-pencil"></i> 
+                    <span>{{ _T["x2stn1gs"] }}</span>
+                    <span class="fa fa-angle-down"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownEditWorkflow">
+                    <li ng-repeat="workflow in workflows">
+                      <a href="" ng-click="editWorkflow(workflow)" ng-style="{'border-top': !$first ? '1px solid lightgrey' : '', 'padding-top': !$first ? '5px' : ''}">
+                        <span ng-if="workflow.workflow_type.value != null" class="label label-squared"  ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color': workflow.color.font}">
+                          <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                          <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                          <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{workflow.workflow_type.value}}
+                        </span>&nbsp;
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          - {{workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+                          - {{workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{workflow.prod_version}}
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div ng-if="pushfilterWorkflow.length > 0" class="row" style="margin-top:-5px;">
+                  <ul style="display:inline;">
+                    <li ng-repeat="workflow in pushfilterWorkflow" style="display:inline ;border:1px solid grey; margin-right:5px; margin-left:5px;">
+                        <span ng-if="workflow.workflow_type.value != null" class="label label-squared"  ng-style="{'background-colmetricsor':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color': workflow.color.font}">
+                          <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                          <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                          <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{workflow.workflow_type.value}}
+                        </span>
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          &nbsp;{{workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+                          - {{workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{workflow.prod_version}}
+                        </span>
+                        <a href="" ng-click="removeFilterWorkflow($index,workflow)"><i class="fa fa-times-circle" style=" font-size:15px;color:blue"></i></a>
+                    </li>
+                  </ul>
+            </div>
+          </div>
+
+        </div>
+        <!-- début de la colonne de gauche -->
+        <div class=col-md-2 ng-show="showList">
+          <label class="title">{{ _T["g1lyxhod"] }}</label>
+          <div ng-show="columns.length <= 0" class="no-columns">
+            {{ _T["pofjgxch"] }}
+          </div>
+          <div ng-show="columns.length > 0">
+            <div class='containerVertical menu etape-action-menu'>
+              <ul class="draglist">
+                <li ng-drag="true" ng-drag-data="column" ng-repeat="column in columns" ng-drop="true" ng-drop-success="onDropComplete($index, $data,$event)" ng-drag-start="onDragStart($index, $data,$event)" ng-drag-end="onDragEnd($index, $data,$event)" ng-class="{'column-min' : column.hide == '1'}">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <span ng-if="column.action != null">{{column.action.etape_type.value}} - {{column.action.value}}</span>
+                      <span ng-if="column.action == null">{{column.name}}</span>
+                    </div>
+                    <div class="col-md-6">
+                      <ul class="submenu">
+                        <!--li>
+                          <i class="fa fa-trash" ng-click="deleteColumn(column)" ng-if="column.user_id == $root.user_entity.id"></i>
+                        </li-->
+                        <li>
+                          <i class="fa fa-eye-slash" ng-click="hideColumn($index)"></i>
+                        </li>
+                        <li>
+                          <i class="fa fa-list" aria-hidden="true"></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="column.workflow">
+                    <div class="col-md-12">
+                      <workflow data="column.workflow" overflowhidden="true" tooltiphidden="true"></workflow>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <hr>
+          </div>
+          <label class="title">{{ _T["b4q2ljmf"] }}</label>
+          <input type="checkbox" class="ios8-switch" id="hide_reception_doublage" ng-model="hide_reception_doublage" ng-click="saveHideReceptionColumn()" ng-disabled="reOrderEdited"/>
+          <label for="hide_reception_doublage"> {{ _T["ykwqtarv"] }}</label>
+          <input type="checkbox" class="ios8-switch" id="hide_reception_mastering" ng-model="hide_reception_mastering" ng-click="saveHideReceptionColumn()" ng-disabled="reOrderEdited"/>
+          <label for="hide_reception_mastering"> {{ _T["7aw4jnje"] }}</label>
+          <input type="checkbox" class="ios8-switch" id="hide_reception_servicing" ng-model="hide_reception_servicing" ng-click="saveHideReceptionColumn()" ng-disabled="reOrderEdited"/>
+          <label for="hide_reception_servicing"> {{ _T["t0fzhfrr"] }}</label>
+          <hr>
+          <span ng-if="subproject.ownProduct.length > 1">
+            <label class="title">{{ _T["ji92fc6p"] }}</label>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="number" ng-model="product_batch" class="form-control col-md-12" ng-change="batch_change = true" placeholder="{{ _T['ji92fc6p'] }}" ng-disabled="reOrderEdited">
+                <button class="btn btn-xs btn-block btn-success btn-outline col-md-12" ng-show="batch_change" ng-click="saveProductBatch(product_batch)" ng-disabled="reOrderEdited">{{ _T["hvzykhtg"] }}</button>
+              </div>
+            </div>
+            <hr>
+            <label class="title">{{ _T["qobdqw4e"] }}</label>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle btn-block" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-disabled="reOrderEdited">
+                  <span ng-show="!workflow_order">{{ _T["e4dv9l0r"] }}</span>
+                  <span ng-show="workflow_order">
+                    <span ng-if="workflow_order.workflow_type.value != null" class="label label-squared" ng-style="{'background-color':'rgba('+workflow_order.color.r+', '+workflow_order.color.g+', '+workflow_order.color.b+', '+workflow_order.color.o+')', 'color': workflow_order.color.font}">
+                      <span ng-if="workflow_order.workflow_type.id == 1" class="fa fa-microphone"></span>
+                      <span ng-if="workflow_order.workflow_type.id == 2" class="fa fa-archive"></span>
+                      <span ng-if="workflow_order.workflow_type.id == 3" class="fa fa-briefcase"></span>
+                      {{workflow_order.workflow_type.value}}
+                    </span>
+                    <span ng-if="workflow_order.doublage_type.value != null && workflow_order.workflow_type_id == 1">
+                      &nbsp;{{workflow_order.doublage_type.value}}
+                    </span>
+                    <span ng-if="workflow_order.language != null && workflow_order.workflow_type_id == 1">
+                      - {{workflow_order.language.value}}
+                    </span>
+                    <span ng-if="workflow_order.norme_mix.value != null && workflow_order.workflow_type_id == 1">
+                      - {{workflow_order.norme_mix.value}}
+                    </span>
+                    <span ng-if="workflow_order.servicing_type.value != null && workflow_order.workflow_type_id == 3">
+                      - {{workflow_order.servicing_type.value}}
+                    </span>
+                    <span ng-if="workflow_order.resolution.value != null && workflow_order.workflow_type_id == 3">
+                      - {{workflow_order.resolution.value}}
+                    </span>
+                    <span ng-if="workflow_order.diffuseur.name != null && workflow_order.workflow_type_id == 3">
+                      - {{workflow_order.diffuseur.name}}
+                    </span>
+                  </span>
+                  <span class="fa fa-angle-down"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li>
+                      <a href="" ng-click="saveDisplayOrder(0)">{{ _T["e4dv9l0r"] }}</a>
+                    </li>
+                    <li ng-repeat="workflow in workflows" ng-if="workflow.workflow_type.id == 1">
+                      <a href="" ng-click="saveDisplayOrder(workflow.id)" style="border-top:1px solid lightgrey; padding-top:5px;">
+                        <span ng-if="workflow.workflow_type.value != null" class="label label-squared" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color': workflow.color.font }">
+                          <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                          <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                          <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{workflow.workflow_type.value}}
+                        </span>
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          &nbsp;{{workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+                          - {{workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{workflow.prod_version}}
+                        </span>
+                        <span class="c-icon c-icon-checked fa-2x text-success pull-right" ng-if="workflow.selected == true"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <hr>
+          </span>
+          <!-- Ajouter une etape action -->
+          <label class="title">{{ _T["x640piyl"] }}</label>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle btn-block" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-disabled="reOrderEdited">
+                <span ng-show="!workflow_main">{{ _T["maof4jke"] }}</span>
+                <span ng-show="workflow_main">
+                  <span ng-if="workflow_main.workflow_type.value != null" class="label label-squared" ng-style="{'background-color':'rgba('+workflow_main.color.r+', '+workflow_main.color.g+', '+workflow_main.color.b+', '+workflow_main.color.o+')', 'color': workflow_main.color.font}">
+                    <span ng-if="workflow_main.workflow_type.id == 1" class="fa fa-microphone"></span>
+                    <span ng-if="workflow_main.workflow_type.id == 2" class="fa fa-archive"></span>
+                    <span ng-if="workflow_main.workflow_type.id == 3" class="fa fa-briefcase"></span>
+                    {{workflow_main.workflow_type.value}}
+                  </span>
+                  <span ng-if="workflow_main.doublage_type.value != null && workflow_main.workflow_type_id == 1">
+                    &nbsp;{{workflow_main.doublage_type.value}}
+                  </span>
+                  <span ng-if="workflow_main.language != null && workflow_main.workflow_type_id == 1">
+                    - {{workflow_main.language.value}}
+                  </span>
+                  <span ng-if="workflow_main.norme_mix.value != null && workflow_main.workflow_type_id == 1">
+                    - {{workflow_main.norme_mix.value}}
+                  </span>
+                  <span ng-if="workflow_main.servicing_type.value != null && workflow_main.workflow_type_id == 3">
+                    - {{workflow_main.servicing_type.value}}
+                  </span>
+                  <span ng-if="workflow_main.resolution.value != null && workflow_main.workflow_type_id == 3">
+                    - {{workflow_main.resolution.value}}
+                  </span>
+                  <span ng-if="workflow_main.diffuseur.name != null && workflow_main.workflow_type_id == 3">
+                    - {{workflow_main.diffuseur.name}}
+                  </span>
+                </span>
+                <span class="fa fa-angle-down"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                  <li ng-repeat="workflow in workflows">
+                    <a href="" ng-click="selectWorkflow(workflow)" ng-style="{'border-top': !$first ? '1px solid lightgrey' : '', 'padding-top': !$first ? '5px' : ''}">
+                      <span ng-if="workflow.workflow_type.value != null" class="label label-squared" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color': workflow.color.font}">
+                        <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                        <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                        <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{workflow.workflow_type.value}}
+                      </span>
+                      <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                        &nbsp;{{workflow.doublage_type.value}}
+                      </span>
+                      <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+                        - {{workflow.language.value}}
+                      </span>
+                      <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                        - {{workflow.norme_mix.value}}
+                      </span>
+                      <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                        - {{workflow.servicing_type.value}}
+                      </span>
+                      <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                        - {{workflow.resolution.value}}
+                      </span>
+                      <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                        - {{workflow.diffuseur.name}}
+                      </span>
+                      <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                        - {{workflow.speed.value}}
+                      </span>
+                      <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                        - {{workflow.resolution.value}}
+                      </span>
+                      <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                        - {{workflow.prod_version}}
+                      </span>
+                      <span class="c-icon c-icon-checked fa-2x text-success pull-right" ng-if="workflow.selected == true"></span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <ui-select ng-model="action_type_main" on-select="selectAction($model)" class="w-100" theme="bootstrap" required ng-disabled="!workflow_main || reOrderEdited">
+                <ui-select-match placeholder="{{ _T['89nilim5'] }}">{{$select.selected.etape_value}} - {{$select.selected.value}}</ui-select-match>
+                <ui-select-choices group-by="'etape_value'" repeat="action in etapes_actions | magicFilter: $select.search">
+                  <div ng-bind-html="action.value | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+              <button ng-click="addColumn('action')" class="btn btn-block btn-primary" ng-disabled="reOrderEdited">{{ _T["dsqwx0cq"] }}</button>
+              <button ng-show="workflow_main" ng-click="cancelSelectWorkflow()" class="btn btn-block btn-default" ng-disabled="reOrderEdited">{{ _T["ficbz281"] }}</button>
+              <div class="divider"><span>{{ _T["wppftz0s"] }}</span></div>
+              <label class="title">{{ _T["kez6o3ug"] }}</label>
+              <button ng-click="addColumn('user')" class="btn btn-block btn-primary" ng-disabled="reOrderEdited">{{ _T["4mbwb3mf"] }}</button>
+              <hr>
+            </div>
+
+            <div class="col-md-12">
+              <label class="title">{{ _T["gcc0kckb"] }}</label>
+              <button ng-click="addCustomTemplate()" class="btn btn-block btn-primary" ng-disabled="columns.length <= 0 || reOrderEdited">{{ _T["sm57styd"] }}</button>
+              <hr>
+              <label class="title">{{ _T["j84h5bgl"] }}</label>
+              <button ng-click="modifyTemplate()" class="btn btn-block btn-primary" ng-disabled="reOrderEdited">{{ _T["wq7d84zo"] }}</button>
+              <button ng-click="deleteTemplate()" class="btn btn-block btn-primary" ng-disabled="reOrderEdited">{{ _T["1t25tvnl"] }}</button>
+              <button ng-click="applyTemplate()" class="btn btn-block btn-primary" ng-disabled="reOrderEdited">{{ _T["ixhdm1rc"] }}</button>
+            </div>
+          </div>
+          <!-- fin Ajouter une etape action -->
+        </div>
+        <!-- fin de la colonne de gauche -->
+
+        <script type="text/javascript">
+        $(document).ready(function() {
+          $('tbody').scroll(function(e) {
+            $('thead').css("left", -$("tbody").scrollLeft()); //fix the thead relative to the body scrolling
+            $('thead th:nth-child(1)').css("left", $("tbody").scrollLeft()); //fix the first cell of the header
+            $('thead th:nth-child(2)').css("left", $("tbody").scrollLeft()); //fix the second cell of the header under the first
+            $('tbody td:nth-child(1)').css("left", $("tbody").scrollLeft() - 2); //fix the first column of tdbody
+          });
+        });
+        </script>
+
+        <!-- début du tableau de droite -->
+        <div ng-class="{'col-md-10':showList, 'col-md-12':!showList}" ng-style="pushfilterWorkflow.length > 0 && {'margin-top':'60px'}">
+          <table class="table table-bordered table-suivi" ng-show="columns.length > 0">
+            <thead>
+              <tr>
+                <th class="th-suivi-prod">
+                  <input ng-if="$root.canDisplay(3)" id='allProd' ng-model="subproject.master" ng-click="selectAllProducts(subproject)" type="checkbox" />
+                  <label ng-if="$root.canDisplay(3)" for='allProd'></label> <span class="f-13">{{ _T["ba0heyvu"] }}</span>
+                  <i class="fa fa-compress show-product-info" ng-if="show_product_info" ng-click="openProductColumn()" title="{{ _T['2b3p6r9o'] }}"></i>
+                  <i class="fa fa-expand show-product-info" ng-if="!show_product_info" ng-click="openProductColumn()"  title="{{ _T['hfoeq5k1'] }}"></i>  
+                  <button type="button" name="button" class="btn btn-block btn-primary btn-xs" style="white-space: normal;" ng-click="showList = !showList"><i class="fa fa-cog"></i> {{ _T["4t7tgc1o"] }}</button>
+                </th>
+                <th></th> <!-- en dessous du premier <th>, permet de cacher les autres th lors du scroll  -->
+                <th class="th-col th-suivi-prod element-column" ng-hide="hideReceptionColumn('doublage')">
+                  <span class="f-13">{{ _T["0to1cmv6"] }}</span><br>
+                  <span class="f-11"><i class="fa fa-microphone"></i> {{ _T["i5tk31xb"] }}</span>
+                </th>
+                <th class="th-col th-suivi-prod element-column" ng-hide="hideReceptionColumn('mastering')">
+                  <span class="f-13">{{ _T["0to1cmv6"] }}</span><br>
+                  <span class="f-11"><i class="fa fa-archive"></i> {{ _T["z20ge21k"] }}</span>
+                </th>
+                <th class="th-col th-suivi-prod element-column" ng-hide="hideReceptionColumn('servicing')">
+                  <span class="f-13">{{ _T["0to1cmv6"] }}</span><br>
+                  <span class="f-11"><i class="fa fa-briefcase"></i> {{ _T["1egq4x9k"] }}</span>
+                </th>
+                <th ng-repeat="column in columns | magicFilterEtape:filterEtape" 
+                    ng-drag="$parent.edit_metrics_labels ? false : true" 
+                    ng-drop="true" 
+                    ng-drag-data="column"
+                    ng-drop-success="onDropComplete($index, $data,$event)" 
+                    ng-drag-start="onDragStart($index, $data,$event)" 
+                    ng-drag-end="onDragEnd($index, $data,$event)"
+                    ng-hide="column.hide == '1' || column.filtered" class="th-col column-id-{{column.id}}" 
+                    ng-class="{'th-suivi-prod':column.workflow.color == null}" 
+                    ng-style="{'color': column.workflow.color.font,'background-color': !$parent.edit_metrics_labels ? ('rgba('+column.workflow.color.r+', '+column.workflow.color.g+', '+column.workflow.color.b+', 1)') : ('rgba('+column.workflow.color.r+', '+column.workflow.color.g+', '+column.workflow.color.b+', 0.85)'), 'cursor': $parent.edit_metrics_labels ? 'auto' : (column.action != null && column.action.allow_request == 1 && subproject.ownProduct.length != 0 && isProductSelected(subproject.ownProduct)) ? 'pointer' : ''}"
+                    ng-click="newRequestFromProduct(subproject.ownProduct, column)"
+                    id="{{column.id}}"
+                    >
+                        
+                        <span ng-show="!$parent.edit_metrics_labels || !column.workflow_id">
+                          <span ng-if="column.action != null" class="workflow-column-action-name f-12" 
+                              tooltip-placement="bottom" 
+                              tooltip-append-to-body="true"
+                              uib-tooltip-html="column.action.etape_type.value_short + ' ' + column.action.value_short" 
+                              >{{column.action.etape_type.value_short}} {{column.action.value_short}} 
+                              <span ng-if="column.action.etape_type.loc_value">
+                              <br /> {{$root.dubPlacesByLocValue[branch_id][column.action.etape_type.loc_value].value}}
+                              </span>
+                              
+                          </span>
+                          
+                          <span ng-if="column.action == null" 
+                              class="workflow-column-action-name f-13"
+                              tooltip-placement="bottom" 
+                              tooltip-append-to-body="true"
+                              uib-tooltip-html="column.name"
+                                 >{{column.name}}
+                          </span>
+                          <span ng-show="column.workflow" class="edit-column-workflow f-11" 
+                              data-placement="bottom" 
+                              data-toggle="tooltip" 
+                              tooltip-placement="bottom" 
+                              tooltip-append-to-body="true"
+                              uib-tooltip-html="column.workflow.description"                              
+                              ng-style="{'background-color':'rgba('+column.workflow.color.r+', '+column.workflow.color.g+', '+column.workflow.color.b+', '+column.workflow.color.o+')', 'color': column.workflow.color.font}"
+                              >
+                              <i ng-if="column.workflow.workflow_type_id == 1" class="fa fa-microphone"></i>
+                              <i ng-if="column.workflow.workflow_type_id == 2" class="fa fa-archive"></i>
+                              <i ng-if="column.workflow.workflow_type_id == 3" class="fa fa-briefcase"></i>
+
+                            <span ng-if="column.workflow.doublage_type.value != null && column.workflow.workflow_type_id == 1">
+                              <span ng-switch="column.workflow.doublage_type.name">
+                                <span ng-switch-when="audio-description">AD</span>
+                                <span ng-switch-default>{{column.workflow.doublage_type.value}}</span>
+                              </span>
+                            </span>
+                          <span ng-if="column.workflow.language.value != null && column.workflow.workflow_type_id == 1">
+                              - {{column.workflow.language.value}}
+                          </span>
+                          <span ng-if="column.workflow.servicing_type.value != null && column.workflow.workflow_type_id == 3">
+                              {{column.workflow.servicing_type.value}}
+                            </span>
+                          <span ng-if="column.workflow.resolution.value != null && column.workflow.workflow_type_id == 3">
+                              - {{column.workflow.resolution.value}}
+                            </span>
+                          <span ng-if="column.workflow.diffuseur.name != null && column.workflow.workflow_type_id == 3">
+                              - {{column.workflow.diffuseur.name}}
+                            </span>
+                          <span ng-if="column.workflow.speed.value != null && column.workflow.workflow_type_id == 2">
+                            - {{column.workflow.speed.value}}
+                          </span>
+                          <span ng-if="column.workflow.resolution.value != null && column.workflow.workflow_type_id == 2">
+                            - {{column.workflow.resolution.value}}
+                          </span>
+                          <span ng-if="column.workflow.prod_version != null && column.workflow.workflow_type_id == 2">
+                            - {{column.workflow.prod_version}}
+                          </span>
+                          <hr style="margin: 5px"/>
+
+                          </span>
+
+                          <i class="fa fa-plus-circle" ng-if="$root.canDisplay(3) && column.action != null && column.action.allow_request == 1" style="position: absolute; top: 8px; left: 0; right: 0; font-size: 1.2em;" ng-style="{'opacity': ((subproject.ownProduct.length != 0 && isProductSelected(subproject.ownProduct))) ? '1' : '.5'}"></i>
+                          <i class="fa fa-refresh" ng-if="column.action.name == 'prod_ordre_diff' && column.workflow.id == order_products" ng-click="orderProducts(order_products)" style="position: absolute; top: 8px; left: 0; right: 0; font-size: 1.2em; cursor: pointer"  data-toggle="tooltip" title="{{ _T['owkc2d43'] }}" tooltip-placement="bottom"></i>
+                          <i class="fa fa-clipboard" ng-if="column.action.name.indexOf('client_number_') == 0" style="cursor: pointer; position: absolute; top: 8px; left: 0; right: 0; font-size: 1.2em;"></i>
+                        </span>
+                        <span ng-show="$parent.edit_metrics_labels && column.workflow_id">
+                          <div class="col-md-12" style="z-index:9">
+                            <input type="checkbox" class="ios8-switch" id="column_cb{{$index}}" ng-model="column.show_in_metrics" ng-change="saveMetricsLabel(column)" />
+                            <label for="column_cb{{$index}}"></label>
+                          </div>
+                          <div>&nbsp;</div>
+                          <span ng-if="$root.canDisplay(3)" class="workflow-label">
+                            <input class="editable-has-buttons editable-input form-control" ng-model="column.metrics_label" ng-style="(column.show_in_metrics!=1) ? {'color': '#969595'} : {'color': '#000000'}"
+                                  ng-change="setHasChangedLabel($index)" ng-disabled="column.show_in_metrics!=1"
+                                  ng-value="column.metrics_label ? column.metrics_label : (column.action ? (column.action.etape_type.value_short+' ' +column.action.value_short) : column.name)" />
+
+                            <span class="editable-buttons">
+                              <button type="submit" class="btn btn-primary" ng-click="saveMetricsLabel(column); saveMetricsLabelBtn($index);"
+                                ng-show="column.show_in_metrics==1 && column.metrics_label && column.has_changed_label"><span class="glyphicon glyphicon-ok"></span></button>
+                              <button type="button" class="btn btn-default" ng-click="resetMetricsLabelBtn($index);"
+                                ng-show="column.show_in_metrics==1 && column.metrics_label && column.has_changed_label"><span class="glyphicon glyphicon-remove"></span></button>
+                            </span>
+                          </span>
+                        </span>
+                  
+                  <i class="fa fa-plus-circle" ng-if="$root.canDisplay(3) && column.action != null && column.action.allow_request == 1" style="position: absolute; top: 8px; left: 0px; right: 0; font-size: 1.2em;" ng-style="{'opacity': ((subproject.ownProduct.length != 0 && isProductSelected(subproject.ownProduct))) ? '1' : '.5'}"></i>
+                                 
+                  <i class="fa fa-refresh" ng-if="column.action.name == 'prod_ordre_diff' && column.workflow.id == order_products" ng-click="orderProducts(order_products)" style="position: absolute; top: 8px; left: 0; right: 0; font-size: 1.2em; cursor: pointer" tooltip="{{ _T['owkc2d43'] }}" tooltip-placement="bottom">i</i>
+                  </div>
+                  <div class="f-4" ng-if="(role == 'disabled' || role == 'disabledall') && column.action != null && column.action.allow_request == 1">
+                    <button class="btn btn-outline btn-primary" ng-click="cancelDemandesInProduct(subproject.ownProduct, column)" >{{ _T["ficbz281"] }}</button>
+                 </div>
+
+
+                 
+                </th>
+              </tr>
+            </thead>
+            <tbody ng-show="!reOrderEdited"  ng-style="{'max-height' : pushfilterWorkflow.length > 0 ? 'calc(100vh - 285px)' : 'calc(100vh - 215px)'}">
+              <tr ng-repeat-start="product in filteredProducts = ( subproject.ownProduct | magicFilterProductType:filterProductType | magicFilterProduct:filterProduct | orderBy:order_products_by)" ng-hide="product.hideBatch">
+                <td>
+                  <input ng-if="$root.canDisplay(3)" id='{{::product.id}}' ng-model="product.selected" type="checkbox" />
+                  <label ng-if="$root.canDisplay(3)" for='{{::product.id}}'></label>
+                  <a ui-sref="app.products({id:product.id})">
+                    <span style="width:80px;word-wrap:break-word" ng-if="subproject.nature.name == 'serie'">{{product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]}} {{product.episode_number}}</span>
+                    <span style="width:80px;word-wrap:break-word" ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                    <span style="width:80px;word-wrap:break-word" ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                  </a>
+                  <span ng-if="product.nb_returns > 0" class="badge" style="float: right; background-color: red; cursor: pointer;" ng-click="showProductReturns(product)" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['7q4qael3'] }}">{{product.nb_returns}}</span>
+                  <span ng-if="qcReturnForThisProduct(product.id)" class="badge" ng-style="{'background-color':qcByProducts[product.id].bg}"
+                      tooltip-append-to-body="true" uib-tooltip-html="qcByProducts[product.id].detail"  style="float: right; cursor: pointer;" ng-click="showProductReturns(product)"
+                      tooltip-placement="bottom"  data-toggle="tooltip">QC</span>
+                  <div ng-if="product.mergeable_voicematch" class="alert alert-danger">
+                    {{ _T["kgi8jzth"] }}
+                    <button class="btn btn-danger btn-block mt-5" ng-click="mergeProducts(product)" ng-disabled="!enabledMerge()">{{ _T["p24pn0xu"] }}</button>
+                  </div>
+                  <div class="text-bold">
+                    <i>
+                    <span ng-if="!$root.canDisplay(3)">
+                      {{ ( product.air_date && _T["gh79gq16"] + " : " + product.air_date) || _T["gh79gq16"] }}
+                    </span>
+                    <span ng-if="$root.canDisplay(3)">
+                      <a href="#" blur="ignore" editable-text="product.air_date" onbeforesave="validateDate($data)" onaftersave="doneEditing('air_date', product)">
+                        {{ ( product.air_date && _T["gh79gq16"] + " : " + product.air_date) || _T["gh79gq16"] }}
+                      </a>
+                    </span>
+                    </i>
+                  </div>
+                  <div class="text-bold">
+                    <i>
+                    <span ng-if="!$root.canDisplay(3)">
+                      <span ng-if="product.duration">{{ product.duration }}  min</span>
+                      <span ng-if="!product.duration">{{ _T["k1t6im8d"] }}</span>
+                    </span>
+                    <span ng-if="$root.canDisplay(3)">
+                      <a href="#" blur="ignore" editable-number="product.duration" e-step="any" onaftersave="doneEditing('duration', product)">
+                        <span ng-if="product.duration">{{ product.duration }}  min</span>
+                        <span ng-if="!product.duration">{{ _T["k1t6im8d"] }}</span>
+                      </a>
+                    </span>
+                    </i>
+                  </div>
+                  <div ng-if="subproject.nature.name == 'film'" class="text-bold">
+                    <i>
+                    <span ng-if="!$root.canDisplay(3)">
+                      <span ng-if="product.number_reel">{{ product.number_reel }}  {{ _T["rf6oa6d1"] }}</span>
+                      <span ng-if="!product.number_reel">{{ _T["rf6oa6d1"] }}</span>
+                    </span>
+                    <span ng-if="$root.canDisplay(3)">
+                      <a href="#" blur="ignore" editable-number="product.number_reel" onaftersave="doneEditing('number_reel', product)">
+                        <span ng-if="product.number_reel">{{ product.number_reel }}  {{ _T["rf6oa6d1"] }}</span>
+                        <span ng-if="!product.number_reel">{{ _T["rf6oa6d1"] }}</span>
+                      </a>
+                    </span>
+                    </i>
+                  </div>
+                  <div class="text-bold" ng-if="show_product_info">
+                    <i>
+                    <span ng-if="!$root.canDisplay(3)">
+                      {{ product.title_vo || _T["vf668li1"] }}
+                    </span>
+                    <span ng-if="$root.canDisplay(3)">
+                      <a href="#" blur="ignore" editable-text="product.title_vo" onaftersave="doneEditing('title_vo', product)">
+                        {{ product.title_vo || _T["vf668li1"] }}
+                      </a>
+                    </span>
+                    </i>
+                  </div>
+                  <div class="text-bold" ng-if="show_product_info && product.artistic_director">
+                    <i>{{ _T["kup2m5xn"] }}<br>
+                    {{product.artistic_director.firstname}} {{product.artistic_director.lastname}}</i>
+                  </div>
+                  <div class="text-bold" ng-if="show_product_info && product.co_artistic_director">
+                    <i>{{ _T["7cww79hy"] }}<br>
+                    {{product.co_artistic_director.firstname}} {{product.co_artistic_director.lastname}}</i>
+                  </div>
+                  <div class="text-bold"  ng-if="show_product_info">
+                    <b style="color: #428bca;"> {{ _T["5962cw4f"]}}:</b>
+                    <a blur="ignore" editable-textarea="product.note_for_counter" href="#" onaftersave="doneEditing('note_for_counter', product)" e-rows="2" e-cols="80">
+                          <span class="truncate-text"> {{product.note_for_counter || _T["5962cw4f"]}} </span> 
+                    </a>
+                  </div>
+                  <!--div ng-show="product.finish == '0'" class="step-finished">
+                    <button class='btn btn-block btn-success btn-outline btn-xs' ng-click="finish(product)">
+                    Terminer
+                    </button>
+                  </div>
+                  <div ng-show="product.finish == '1'" class="text-success step-finished" style="font-size: 12px;">
+                    <i class="fa fa-check" aria-hidden="true"></i> Traitement terminé
+                  </div-->
+                  <div ng-if="show_product_info">
+                    <button class="btn btn-block btn-primary btn-xs mt-10" ng-click="showProductReturns(product)">{{ _T["udvvijhg"] }}&nbsp;
+                    <span ng-if="product.nb_returns > 0" class="badge" style="float: right; background-color: red; cursor: pointer;" ng-click="showProductReturns(product)" tooltip-placement="bottom"  data-toggle="tooltip" title="Retours à corriger">{{product.nb_returns}}</span>
+                  </button>
+                    <button class="btn btn-block btn-info btn-xs mt-5" ng-click="showProductAttachments(product)">{{product.ownAttachments.length}} {{ _T["qg7rqxc7"] }}</button>
+                  </div>
+                </td>
+                <td ng-hide="hideReceptionColumn('doublage')" class="element-column">
+                  <div>
+                    <i class="fa fa-volume-up reception-icon"></i>
+                    <a href="#/products/{{product.id}}/mediaItems?search=audio+client" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.doublage_audio_client > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['tqscmj0i'] }}">{{product.doublage_audio_client}}</a>
+                    <a href="#/products/{{product.id}}/mediaItems?search=audio+interne" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.doublage_audio_interne > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['fup5yyac'] }}">{{product.doublage_audio_interne}}</a>
+                  </div>
+                  <div class="mt-5">
+                    <i class="fa fa-video-camera reception-icon"></i>
+                    <a href="#/products/{{product.id}}/mediaItems?search=video+client" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.doublage_video_client > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['ka417gdq'] }}">{{product.doublage_video_client}}</a>
+                    <a href="#/products/{{product.id}}/mediaItems?search=video+interne" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.doublage_video_interne > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['l55u7ho6'] }}">{{product.doublage_video_interne}}</a>
+                  </div>
+                </td>
+                <td ng-hide="hideReceptionColumn('mastering')" class="element-column">
+                  <div>
+                    <i class="fa fa-volume-up reception-icon"></i>
+                    <a href="#/products/{{product.id}}/mediaItems?search=mastering+audio+client" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.mastering_audio_client > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['tqscmj0i'] }}">{{product.mastering_audio_client}}</a>
+                    <a href="#/products/{{product.id}}/mediaItems?search=mastering+audio+interne" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.mastering_audio_interne > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['fup5yyac'] }}">{{product.mastering_audio_interne}}</a>
+                  </div>
+                  <div class="mt-5">
+                    <i class="fa fa-video-camera reception-icon"></i>
+                    <a href="#/products/{{product.id}}/mediaItems?search=mastering+video+client" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.mastering_video_client > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['ka417gdq'] }}">{{product.mastering_video_client}}</a>
+                    <a href="#/products/{{product.id}}/mediaItems?search=mastering+video+interne" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.mastering_video_interne > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['l55u7ho6'] }}">{{product.mastering_video_interne}}</a>
+                  </div>
+                </td>
+                <td ng-hide="hideReceptionColumn('servicing')" class="element-column">
+                  <div>
+                    <i class="fa fa-volume-up reception-icon"></i>
+                    <a href="#/products/{{product.id}}/mediaItems?search=servicing+audio+client" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.servicing_audio_client > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['tqscmj0i'] }}">{{product.servicing_audio_client}}</a>
+                    <a href="#/products/{{product.id}}/mediaItems?search=servicing+audio+interne" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.servicing_audio_interne > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['fup5yyac'] }}">{{product.servicing_audio_interne}}</a>
+                  </div>
+                  <div class="mt-5">
+                    <i class="fa fa-video-camera reception-icon"></i>
+                    <a href="#/products/{{product.id}}/mediaItems?search=servicing+video+client" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.servicing_video_client > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['ka417gdq'] }}">{{product.servicing_video_client}}</a>
+                    <a href="#/products/{{product.id}}/mediaItems?search=servicing+video+interne" target="_blank" class="btn btn-xs btn-default btn-light-shadow" ng-class="{'btn-info btn-outline' : product.servicing_video_interne > 0}" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['l55u7ho6'] }}">{{product.servicing_video_interne}}</a>
+                  </div>
+                </td>
+                <td ng-repeat="cell in product.cells  | magicFilterEtape:filterEtape track by cell.column_id" 
+                      ng-class="{'request_status_success' : (cell.success == '1' || cell.checked == '1'), 'request_status_error' : cell.error == '1', 'request_status_warning' : cell.warning == '1', 'product_not_in_workflow' : !cell.isProductInWorkflow, 'user_color': (cell.colored == '1')}" 
+                      class="text-left p-10 suivi-cell column-id-{{cell.column_id}}" 
+                      ng-hide="cell.hide == '1' || cell.filtered">
+                  <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">Column_id:{{cell.column_id}}  </span>
+
+                  <div  ng-if="cell.action.allow_request && cell.action.allow_request == '0' && cell.isProductInWorkflow">
+                    <suivi-cell-manual cell="cell" product="product" column="columns[$index]" role="role"></suivi-cell-manual>
+                  </div>
+
+
+                  <div ng-if="cell.action.allow_request && cell.action.allow_request == '1' && cell.isProductInWorkflow">
+                    <suivi-cell-request ng-repeat="request in cell.requests track by $index" role="role" request="request" action="cell.action" cell="cell" products="subproject.ownProduct" ng-if="request.is_canceled != 1"></suivi-cell-request>
+                    <!--span class="col-xs-12 text-center alert alert-info" ng-if="cell.action != null && cell.requests.length == 0"><i class="glyphicon glyphicon-ban-circle" style="color:grey"></i> Il n'y a pas encore de demande</span-->
+                  </div>
+                  <div><suivi-cell-user-color cell="cell"></suivi-cell-user-color></div>
+                  <!--script type="text/ng-template" id="popover-partial.html">
+                    <input type="text" ng-model="cell.comment" style="min-width:100px" class="form-control">
+                    <button class="btn btn-xs btn-block btn-success btn-outline" ng-click="saveCellComment(cell)">Sauvegarder</button>
+                  </script-->
+                  <div class="clearfix"></div>
+                  <suivi-cell-plain ng-if="cell.action == null && cell.isProductInWorkflow" cell="cell" role="role"></suivi-cell-plain>
+                </td>
+              </tr>
+              <tr ng-if="($index+1) % product_batch == 0"  ng-click="hideBatchProducts(filteredProducts, ($index+1) - product_batch, $index)" ng-repeat-end>
+                <td class="batch-separator">
+                  <i class="fa fa-chevron-up" style="cursor: pointer;" ng-if="!product.hideBatch"></i>
+                  <i class="fa fa-chevron-right" style="cursor: pointer;" ng-if="product.hideBatch"></i>
+                  <span style="width:80px;word-wrap:break-word" ng-if="subproject.nature.name == 'serie'">{{filteredProducts[($index+1) - product_batch].episode_number}} - {{product.episode_number}}</span>
+                  <span style="width:80px;word-wrap:break-word" ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{filteredProducts[($index+1) - product_batch].description.value}} - {{product.description.value}}</span>
+                  <span style="width:80px;word-wrap:break-word" ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{filteredProducts[($index+1) - product_batch].description_text}} - {{product.description_text}}</span>
+                </td>
+                <td ng-hide="hideReceptionColumn('doublage')" class="element-column batch-separator"></td>
+                <td ng-hide="hideReceptionColumn('mastering')" class="element-column batch-separator"></td>
+                <td ng-hide="hideReceptionColumn('servicing')" class="element-column batch-separator"></td>
+                <td ng-repeat="cell in product.cells | magicFilterEtape:filterEtape" ng-hide="cell.hide == '1' || cell.filtered" class="batch-separator"></td>
+              </tr>
+            </tbody>
+          </table>
+          <div ng-show="reOrderEdited" class="reorder-column">
+            <div class="row">
+              <div class="col-md-12 pb-20">
+                {{ _T["xpa1bi8u"] }}
+              </div>
+              <div class="col-md-12">
+                <!-- Standard button -->
+                <button type="button" class="btn btn-default" ng-click="resetReOrder()">{{ _T["ficbz281"] }}</button>
+                <button type="button" class="btn btn-primary" ng-disabled="ReorderIsDisabled" ng-click="saveReOrder()">{{ _T["hvzykhtg"] }}</button>
+              </div>
+            </div>
+          </div>
+          <div ng-show="columns.length <= 0 && workflows.length > 0" class="reorder-column">
+            <div class="row">
+              <div class="col-md-12 pb-20">
+                {{ _T["y2udkpnp"] }}
+              </div>
+              <div class="col-md-12">
+                <!-- Standard button -->
+                <button type="button" class="btn btn-primary" ng-click="initModel()">{{ _T["9razh4fs"] }}</button>
+                <div class="text-center">
+                  <br>
+                  <div class="alert alert-info col-md-offset-3 col-md-6" role="alert">{{ _T["v0d53mq7"] }}
+                    <br>
+                    <a class="btn btn-default" ui-sref="app.products({id : product.id, workflow_id: selectedWorkflowFilter.id})" target="_blank" ng-repeat="product in subproject.ownProduct | orderBy: ['episode_number','description_text'] ">
+                      <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+                      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-show="workflows.length <= 0" class="reorder-column">
+            <div class="row">
+              <div class="col-md-12 pb-20">
+                {{ _T["ex6iqh09"] }}
+              </div>
+              <div class="col-md-12">
+                <!-- Standard button -->
+                <button ng-if="$root.canDisplay(3)" type="button" class="btn btn-primary" ng-click="createWorkflow()"><span class="c-icon c-icon-add"></span> {{ _T["nexhhzu4"] }}</button>
+                <div class="text-center">
+                  <br>
+                  <div class="alert alert-info col-md-offset-3 col-md-6" role="alert">{{ _T["v0d53mq7"] }}
+                    <br>
+                    <a class="btn btn-default" ui-sref="app.products({id : product.id, workflow_id: selectedWorkflowFilter.id})" target="_blank" ng-repeat="product in subproject.ownProduct | orderBy: ['episode_number','description_text'] ">
+                      <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+                      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- fin du tableau de droite -->
+      </div>
+    </div>
+  </div>
+</div>

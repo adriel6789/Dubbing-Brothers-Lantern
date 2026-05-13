@@ -1,0 +1,34 @@
+<div class="form-group">
+    <label ng-class="{'textRed':field.return == true}" class="col-sm-12 control-label">{{ field.title }}<em ng-hide="!field.return">*</em></label>
+    <span ng-switch on="field.type.view">
+
+        <span ng-switch-when="label">
+                <div class="col-sm-12">
+                    <label class="control-label">{{ field.text }}</label>
+                </div>
+        </span>
+        <span ng-switch-when="description">
+                <div class="col-sm-12">
+                    <label class="control-label">{{ field.text }}</label>
+                </div>
+        </span>
+        <span ng-switch-when="switch">
+            <div class="col-sm-12">
+                <div class="onoffswitch">
+                    <input type="checkbox" ng-model="method[field.name]" ng-checked="method[field.name]" disabled="true" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </span>
+        <span ng-switch-default>
+            <div class="col-sm-12">
+                <div>
+                    <pre>{{ method[field.name] || field.title + " " + _T["6ku07zui"] }}</pre>
+                </div>
+            </div>
+        </span>
+    </span>
+</div>

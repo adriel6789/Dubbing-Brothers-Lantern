@@ -1,0 +1,22 @@
+<!-- Gestion des cas avec les request associées -->
+<div class="row">
+	<div class="col-md-5">
+		<div class="onoffswitch">
+			<input type="checkbox" ng-model="$ctrl.cell.checked" ng-checked="$ctrl.cell.checked == '1' || $ctrl.cell.checked == true" ng-change="$ctrl.cell.change = true" name="onoffswitch{{$index}}" class="onoffswitch-checkbox" id="myonoffswitchdigital-media-{{$ctrl.product.id+$index+$ctrl.cell.tableausuivicolumn_id}}" >
+			<label class="onoffswitch-label" for="myonoffswitchdigital-media-{{$ctrl.product.id+$index+$ctrl.cell.tableausuivicolumn_id}}" ng-click="setCheck($ctrl.cell.checked)" >
+				<span class="onoffswitch-inner"></span>
+				<span class="onoffswitch-switch"></span>
+				{{ $root._T["d32u2mga"] }}
+			</label>
+		</div>
+	</div>
+	<div class="col-md-5" ng-if="$ctrl.cell.checked_date && $ctrl.cell.checked == '1'">
+				<span class="label label-success label-squared">{{ $root._T["z0t6p7pd"] }} {{$ctrl.cell.checked_date | asDate | date : "dd/MM/yyyy"}}</span>
+	</div>
+</div>
+<div class="row mr-0 ml-0 mb-5">
+		<div class="form-group m-0">
+			<input type="text" name="text" class="form-control m-0" ng-model="$ctrl.cell.plain_value" ng-change="$ctrl.cell.change = true"/>
+		</div>
+</div>
+<button class="btn btn-block btn-success btn-xs" ng-show="$ctrl.cell.change" ng-click="saveChange($ctrl.cell, $ctrl.product)">{{ $root._T["hvzykhtg"] }}</button>

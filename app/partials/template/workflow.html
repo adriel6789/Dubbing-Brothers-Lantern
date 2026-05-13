@@ -1,0 +1,49 @@
+
+<div ng-style="overflowhidden && {'overflow':'hidden'}">
+  <span class="label label-squared label-info" tooltip-placement="bottom" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color': workflow.color.font}" uib-tooltip-html="!tooltiphidden && workflow.description">
+    <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+    <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+    <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span>
+    <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+    -
+    {{workflow.doublage_type.value}}
+    </span>
+    <span ng-if="workflow.format_mix.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.format_mix.value}}
+    </span>
+    <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.language.value}}
+    </span>
+    <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.norme_mix.value}}
+    </span>
+    <span ng-if="workflow.exploitation.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.exploitation.value}}
+    </span>
+    <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+      -
+      {{workflow.servicing_type.value}}
+    </span>
+    <span ng-if="workflow.resolution && workflow.resolution.value != null && workflow.workflow_type_id == 3">
+      -
+      {{workflow.resolution.value}}
+    </span>
+    <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+      -
+      {{workflow.diffuseur.name}}
+    </span>
+    <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+      - {{workflow.speed.value}}
+    </span>
+    <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+      - {{workflow.resolution.value}}
+    </span>
+    <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+      - {{workflow.prod_version}}
+    </span>
+  </span>
+</div>

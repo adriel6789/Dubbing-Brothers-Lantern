@@ -1,0 +1,449 @@
+<div class="page-popup dragresize" data-x=0 data-y=0>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="step">
+        <form>
+          <div>
+            <div class="col-md-12" ng-show="step == 1">
+              <div class="panel">
+                <label class="title poignee">{{ _T["2f1m5jxo"] }}</label>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label>{{ _T["rhl5q9lp"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.workflow_type" on-select="selectWorkflowType($item)" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match placeholder="{{ _T['rhl5q9lp'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="workflow in workflow_types | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="workflow.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["hbtvjrk1"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.exploitation_id" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['hbtvjrk1'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="type.id as type in exploitation_types | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="type.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <!-- Servicing -->
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'servicing'">
+                      <label>{{ _T["fa1lnlij"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.servicing_type_id" on-select="selectServicingType($item)" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['fa1lnlij'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="item.id as item in servicing_types | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <!-- mastering -->
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'mastering'">
+                      <label>{{ _T["cq02isiz"] }}</label>
+                      <input class="form-control" data-placeholder="Workflow" ng-model="workflow_model.prod_version" style="width:100%;" type="text">
+                    </div>
+                  </div>
+                  <div class="row" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                    <div class="col-sm-6" ng-if="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["sl5qnahw"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.doublage_type_id" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['sl5qnahw'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="item.id as item in doublage_types | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["awbb7v9i"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.language_id" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="item.id as item in languages | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["l5mah47l"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.format_mix_id" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['l5mah47l'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="item.id as item in formatmixs | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["5zr61zuf"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.norme_mix_id" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['5zr61zuf'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="item.id as item in normesmix | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["noa1wtgc"] }}</label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.speed_id" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['noa1wtgc'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="item.id as item in speeds | propsFilter: {value: $select.search, id: $select.search}">
+                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                      <label>{{ _T["nytpo4zw"] }}</label>
+
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.dub_place" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['nytpo4zw'] }}">{{$select.selected.name}}</ui-select-match>
+                      <ui-select-choices repeat="item in dub_places | propsFilter: {value: $select.search}">
+                      <div ng-bind-html="item.name | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="workflow_model.workflow_type.name == 'doublage'">
+                    <div class="col-sm-6">
+                      <label>{{ _T["cq02isiz"] }}</label>
+                      <input class="form-control" data-placeholder="Workflow" ng-model="workflow_model.prod_version" style="width:100%;" type="text">
+                    </div>
+                    <div class="col-sm-6" ng-show="workflow_model.workflow_type.name == 'doublage' && branch_id == 2">
+                      <label>{{ _T['po3zfrj1'] }}  </label>
+                      <ui-select ng-disabled="disabled" ng-model="workflow_model.main_location" style="width: 100%;" theme="bootstrap">
+                      <ui-select-match allow-clear placeholder="{{ _T['po3zfrj1'] }}">{{$select.selected.value.name}}</ui-select-match>
+                      <ui-select-choices repeat="(key, location) in mainLocationList | propsFilter: {value: $select.search}">
+                      <div ng-bind-html="location.value.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <!-- Partie Servicing -->
+                  <!-- Bloc PAD dans le Servicing -->
+                  <div ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'pad'">
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'pad'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["irlv7lue"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.diffuseur_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['irlv7lue'] }}">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in diffuseurs | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["wrctg8ou"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.resolution_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['wrctg8ou'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'pad'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["awbb7v9i"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.language_labo" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in languages_labo | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["8izp2is4"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.layout_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in layouts | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'pad'">
+                      <div class="col-sm-6">
+                        <label for="checkdolbye">{{ _T["aq9ar5xy"] }}</label>
+                        <input id="checkdolbye" ng-model="workflow_model.dolbye" type="checkbox"/>
+                        <label for="checkdolbye"></label>
+                        <input id="checkdolbye" ng-model="workflow_model.dolbye" style="width: 100%;" type="checkbox"/>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["s8xaaxu2"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.dynamic_process" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['s8xaaxu2'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in dynamic_processes | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'pad'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["iprheja8"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.type_audio_process" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['iprheja8'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in audio_processes | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["7xhlusz8"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.subtitle" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['7xhlusz8'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in subtitles | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'pad'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["lmvddeqr"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.nature_subtitle" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['lmvddeqr'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in nature_subtitle | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Bloc VOD dans le Servicing -->
+                  <div ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'vod'">
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'vod'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["irlv7lue"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.diffuseur_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['irlv7lue'] }}">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in diffuseurs | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["wrctg8ou"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.resolution_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['wrctg8ou'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'vod'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["awbb7v9i"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.language_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in languages | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["8izp2is4"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.layout_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in layouts | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Bloc DCP dans le Servicing -->
+                  <div ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'dcp'">
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'dcp'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["gknlq48m"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.projector_aspect" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['gknlq48m'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in projector_aspects | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["wrctg8ou"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.resolution_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['wrctg8ou'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'dcp'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["awbb7v9i"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.language_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in languages | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["8izp2is4"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.layout_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in layouts | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row" ng-show="workflow_model.workflow_type.name == 'servicing' && servicing_type == 'dcp'">
+                      <div class="col-sm-6">
+                        <label>{{ _T["jik0oq9i"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.dcp_standard" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['jik0oq9i'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in dcp_standards | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bloc mastering-->
+                  <div ng-show="workflow_model.workflow_type.name == 'mastering'">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <label>{{ _T["noa1wtgc"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.speed_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['noa1wtgc'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in speeds | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["wrctg8ou"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.resolution_id" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="Résolution">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <label>{{ _T["awbb7v9i"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.language_labo" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in languages_labo | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["0c1vz2jl"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.dynamic_process" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['0c1vz2jl'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in dynamic_processes | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <label>{{ _T["7xhlusz8"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.subtitle" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['7xhlusz8'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in subtitles | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                      <div class="col-sm-6">
+                        <label>{{ _T["lmvddeqr"] }}</label>
+                        <ui-select ng-disabled="disabled" ng-model="workflow_model.nature_subtitle" style="width: 100%;" theme="bootstrap">
+                        <ui-select-match allow-clear placeholder="{{ _T['lmvddeqr'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.value as item in nature_subtitle | propsFilter: {value: $select.search, id: $select.search}">
+                        <div ng-bind-html="item.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12" ng-show="step == 2">
+              <div class="panel">
+                <div class="col-md-9">
+                  <label class="title">{{ _T["k7eczxk7"] }}</label>
+                </div>
+                <div class="col-md-3">
+                  <button class="btn btn-default" ng-click="selectAll()">{{ _T["advcciwh"] }}</button>
+                </div>
+
+                <div class="panel-container">
+                  <div class="panel panel-default mr-0" ng-repeat="product in subproject_workflow.ownProduct| orderBy:'episode_number'" >
+                    <div class="panel-body creation" ng-click="selectProduct(product)" >
+                      <div class="col-md-11">
+                        <span ng-if="subproject_workflow.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }}
+                        {{product.episode_number}}</span>
+                        <span ng-if="subproject_workflow.nature.name != 'serie' && subproject_workflow.nature.name == 'film'">{{product.description.value}}</span>
+                        <span ng-if="subproject_workflow.nature.name != 'serie' && subproject_workflow.nature.name != 'film'">{{product.description_text}}</span>
+                      </div>
+                      <div class="col-md-1">
+                        <label for="selectProd{{product.id}}"><i class="fa fa-check fa-2x" aria-hidden="true" ng-class="{'element-selected' : product.selected}"></i></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="footer">
+          <div class="col-sm-12">
+            <div class="col-md-3">
+              <button class="btn btn-danger btn-block" ng-click="closeThisDialog('cancelButton')" ng-disabled="disabledButtons">{{ _T["ficbz281"] }}</button>
+            </div>
+            <div class="col-md-3" ng-show="step == 2">
+              <button class="btn btn-default btn-block" ng-click="previousStep()" ng-disabled="disabledButtons">{{ _T["0u030qx5"] }}</button>
+            </div>
+            <div class="col-md-3 col-md-offset-3" ng-show="step == 2">
+              <button class="btn btn-success btn-block" ng-click="createNewWorkflows(subproject_workflow.ownProduct)" ng-disabled="disabledButtons">{{ _T["d32u2mga"] }}</button>
+            </div>
+            <div class="col-md-3 col-md-offset-6" ng-show="step == 1">
+              <button class="btn btn-primary btn-block" ng-click="nextStep()" ng-disabled="!workflow_model.workflow_type">{{ _T["im19ajy6"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h1>{{ _T["pwq4mp0s"] }}</h1>
+      <ul class="step-container" ng-repeat="nav in steps">
+        <li ng-class="{'unchecked' : step < $index+1, 'bt-0' : $index > 0}">{{ _T["dfuet0tp"] }} {{nav.step}} - {{nav.title}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<style>
+  .dragresize {
+    resize:both;
+    overflow: auto;
+    max-height: 900px !important;
+    min-height: 400px !important;   
+    min-width: 400px !important;   
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);  
+  }
+  </style>  
+  <script>
+    let position = { x: 0, y: 0 }
+    let edges = { left: true, right: true,   bottom: true,  top: true }
+    let attributes = {x:'data-x',y:'data-y'}
+    let IJS = Object.create(interactJS);
+    IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+  </script>

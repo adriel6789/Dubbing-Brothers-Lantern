@@ -1,0 +1,50 @@
+<!-- Gestion des cas avec les request associées -->
+<div>
+	<div ng-switch="$ctrl.cell.etape_type.name">
+		<div ng-switch-when="prepa_enregistrement">
+			<div ng-include="'partials/Components/suivi_preview/prep_enr.html'"></div>
+		</div>
+		<div ng-switch-when="production">
+			<div ng-if="hasContextInfo($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_contextualinfo.html'"></div>
+			</div>
+			<div ng-if="hasValidDate($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_valid_date.html'"></div>
+			</div>
+			<div ng-if="hasValidItem($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_valid.html'"></div>
+			</div>
+			<div ng-if="hasValidNote($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_valid_note.html'"></div>
+			</div>
+			<div ng-if="hasClientNumber($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/client_number.html'"></div>
+			</div>
+		</div>
+		<div ng-switch-when="production_mastering">
+			<div ng-if="hasContextInfo($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_contextualinfo.html'"></div>
+			</div>
+			<div ng-if="hasValidItem($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_valid.html'"></div>
+			</div>
+			<div ng-if="hasClientNumber($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/client_number.html'"></div>
+			</div>
+		</div>
+		<div ng-switch-when="production_servicing">
+			<div ng-if="hasContextInfo($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_contextualinfo.html'"></div>
+			</div>
+			<div ng-if="hasValidItem($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/prod_valid.html'"></div>
+			</div>
+			<div ng-if="hasClientNumber($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi_preview/client_number.html'"></div>
+			</div>
+		</div>
+		<div ng-switch-default>
+			<div ng-include="'partials/Components/suivi_preview/default_action.html'"></div>
+		</div>
+	</div>
+</div>

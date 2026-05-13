@@ -1,0 +1,22 @@
+header {
+    font-family: 'Century Gothic', 'graphik-regular', sans-serif;
+    background-color: #3570E1;
+    padding: 5px 0 5px;
+    color: #fff;
+    font-weight: lighter;
+    position: relative;
+    z-index: 0;
+    margin-bottom: 73px;
+}
+
+header .header-input-text {
+    position: absolute;
+    width: 100%;
+    bottom: -50px;
+    top: 80px;
+}
+
+header p {
+    margin-top: 10px;
+    font-size: 25px;
+}

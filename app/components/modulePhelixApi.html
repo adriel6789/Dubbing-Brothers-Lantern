@@ -1,0 +1,27 @@
+<div class="col-md-12" ng-style="$ctrl.elementType =='product' && {'display':'inline-flex'}">
+    <h5 ng-show="$ctrl.elementType =='project'">{{ $root._T["vvsv3c0f"] }}</h5>
+    <h5 ng-show="$ctrl.elementType =='subproject'">{{ $root._T["sjt2zfhu"] }}</h5>
+    <!-- <h5 ng-show="$ctrl.elementType =='product'">{{ $root._T["e17mulit"] }}</h5> -->
+    <div class="form-group pheli-api" style="width:100%;">
+            <span ng-show="$ctrl.elementData.title_phelix">{{$ctrl.elementData.title_phelix}}
+                <span>
+                    <button class="btn btn-danger btn-xs" ng-click="$ctrl.unlinkWithPhelix($ctrl.elementData.id)"  data-toggle="tooltip" title="" ng-disabled="false"><i class="fa fa-trash-o"></i></button>
+                </span>
+            </span>
+        <ui-select ng-disabled="disabled" multiple close-on-select="true" ng-model="$ctrl.phelixItem"  ng-change="$ctrl.update($ctrl.elementData.id)" style="width: 100%" theme="bootstrap">
+            <ui-select-match placeholder="{{ $root._T['m1znxpno']}}">
+                <span  ng-if="$ctrl.elementType =='project'"> {{$item.Security_Title}} ({{$item.Title}} )</span> 
+                <span  ng-if="$ctrl.elementType !='project'"> {{$item.Title}} </span> 
+            </ui-select-match>
+            <ui-select-choices
+                repeat="phelix as phelix in $ctrl.phelixItemList| propsFilter: {Security_Title: $select.search, Title: $select.search} | orderBy:'Record_ID'"
+                refresh="$ctrl.refreshPhelixItemList($select.search)">
+                <div ng-if="$ctrl.elementType =='project'" ng-bind-html="phelix.Security_Title + '('+phelix.Title +')'| highlight: $select.search"></div>
+                <div ng-if="$ctrl.elementType !='project'" ng-bind-html="phelix.Title| highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+    <div ng-if="($ctrl.elementType =='product' || $ctrl.elementType =='feature') && $ctrl.isShowSaveTitle && !$ctrl.hideSaveButton"> 
+        <button class="btn btn-success btn-outline btn-sm mt-5" ng-click="$ctrl.doneEditing('title_phelix')">{{ $root._T["6n3679ox"] }}</button>
+    </div>
+</div>

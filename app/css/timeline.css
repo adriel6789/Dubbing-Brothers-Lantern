@@ -1,0 +1,75 @@
+
+/*
+Original Author : Myo Kyaw Htun
+URL : http://htun.me/labs/timeline.php
+*/
+
+.timeline-container{
+    width:920px;
+    margin:30px auto;
+    overflow: hidden;
+    position: relative; /* good for 100% margin child element */
+}
+.timeline-margin{
+
+    height:100%;
+    position: absolute;
+    background:#e2e2e2;
+
+    left:50%; 
+    width:2px;
+    margin-left:-1px; /* make it center */
+
+    bottom:10px;	/* margin-bottom space used by li element */
+
+    z-index:1000;
+}
+
+ul.timeline{
+    width: 920px; /* total width and plus 20px for triangles */
+    position: relative;
+    list-style:none;
+    overflow: hidden; 
+    padding: 0px;
+    margin: 0px ;
+}
+
+.timeline > li{
+    width:450px;
+    background:#e2e2e2;
+    padding: 5px;
+    position: relative; /* important to hold the absolute element triangles */
+    margin:0px 0px 10px;
+}
+
+.timeline > li:before{
+    border:7px solid;
+    content:'';
+    display: block;
+    position: absolute;
+}
+.timeline > li:nth-child(even){
+    float:right;
+    clear:right;
+}
+.timeline > li:nth-child(odd){
+    float:left;
+    clear:left;
+}
+.timeline > li:nth-child(even):before{
+    /* #e2e2e2 same as li background */
+    border-color:#fff #e2e2e2 #fff #fff;
+    right:100%;
+    top:10px; /* you can adjust */
+}
+
+.timeline > li:nth-child(odd):before{
+    /* #e2e2e2 same as li background */
+    border-color:#fff #fff #fff #e2e2e2;
+    left:100%;
+    top:10px; /* you can adjust */
+}
+.timeline > li p{
+    margin:10px 0px;
+    line-height:1.8em;
+}

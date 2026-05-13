@@ -1,0 +1,254 @@
+<div class="page-popup page-custom-template">
+  <div class="row" ng-if="apply || (!done && !delete && !doneDelete && !modify && !doneModify && !doneApply)">
+    <div class="col-md-12">
+      <h1 class="template-h1">{{ _T["ns4l37fc"] }}</h1>
+      <div class="step text-center" style="padding-top:15px;">
+        <form class="ng-pristine ng-valid">
+          <div>
+            <div class="form-group">
+              <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12">
+                  <button type="button" class="btn" ng-class="{'btn-primary' : userTemplatesTab, 'btn-link' : !userTemplatesTab}" ng-click="changeTab(true)">{{ _T["9gnodeq6"] }}</button>
+                  <button type="button" class="btn" ng-class="{'btn-primary' : !userTemplatesTab, 'btn-link' : userTemplatesTab}" ng-click="changeTab(false)">{{ _T["5c5wu6vi"] }}</button>
+                </div>
+                <div style="clear:both;"></div>
+                <hr style="border-color: rgba(53, 112, 225, 0.5);">
+                <span class="col-md-12 alert alert-info" ng-if="apply" style="font-size: 15px;"><i class="fa fa-info-circle"></i> {{ _T["46e189n4"] }}</span>
+                <div class="col-md-12" ng-show="userTemplatesTab">
+                  <ui-select ng-model="templateSelected" on-select="selectTemplate($item)" theme="bootstrap">
+                    <ui-select-match placeholder="{{ _T['wq4ubgsr'] }}">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="template in user_templates | magicFilterTemplate: $select.search | orderBy: 'name'">
+                      <span ng-bind-html="template.name| highlight: $select.search"></span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+                <div class="col-md-12" ng-hide="userTemplatesTab">
+                  <ui-select ng-model="templateSelected" on-select="selectTemplate($item)" theme="bootstrap">
+                    <ui-select-match placeholder="{{ _T['wq4ubgsr'] }}">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="template in templates | magicFilterTemplate: $select.search | orderBy: 'name'">
+                      <span ng-bind-html="template.name| highlight: $select.search"></span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+            </div>
+            <div ng-show="templateSelected" class="col-md-12 mt-10">
+              <h2>{{ _T["hnvr9ajk"] }}</h2>
+              <ul class="list template-list" ng-style="apply && {'height' : '490px'}">
+                <li ng-repeat="template in templateSelected.list" style="margin-bottom:15px;">
+                  <div class="template-column-info">
+                    {{ template.nbCol }} colonne{{ template.nbCol > 1 ? 's' : '' }} &laquo; {{template.action.etape_type.value}} - {{template.action.value}} &raquo; {{ _T["uz3ch364"] }} &laquo; {{template.workflow_type.value}} - {{template.doublage_type.value}} - {{template.norme_mix.value}} &raquo;
+                  </div>
+                  <div>
+                    <div class="btn-group" ng-repeat="workflow in workflows | filterTemplateWorkflow:template as result">
+                      <button class="btn btn-sm" tooltip-placement="bottom" ng-style="{'background-color': workflowElementSelected[workflow.id + '_' + template.id] ? 'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')' : 'whitesmoke', 'color': workflowElementSelected[workflow.id + '_' + template.id] ? workflow.color.font : 'black'}" uib-tooltip-html="workflow.description" ng-click="selectWorkflowElement(workflow.id + '_' + template.id, template)">
+                        <span ng-if="workflow.workflow_type_id == 1">
+                          <span class="fa fa-microphone"></span> {{ _T["i5tk31xb"] }}
+                        </span>
+                        <span ng-if="workflow.workflow_type_id == 2">
+                          <span class="fa fa-archive"></span> {{ _T["z20ge21k"] }}
+                        </span>
+                        <span ng-if="workflow.workflow_type_id == 3">
+                          <span class="fa fa-briefcase"></span> {{ _T["1egq4x9k"] }}
+                        </span>
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.prod_version}}
+                        </span>
+                      </button>
+                    </div>
+                    <span class="template-no-workflow" ng-if="result.length === 0" style="">
+                      {{ _T["dzw50ed3"] }}
+                    </span>
+                  </div>
+                  <hr style="border-color: rgb(237, 8, 83); width: 40%;">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" ng-disabled="isLoading" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+            <div class="col-md-3 col-md-offset-6">
+              <button ng-if="!apply" ng-click="save(templateSelected)" ng-disabled="!templateSelected || totalSelected == 0" type="button" class="btn btn-primary btn-block btn-big-shadow">{{ _T["si3hu62w"] }} {{totalSelected}} {{ _T["zqrgd25q"] }}</button>
+              <button ng-if="apply && !isLoading" ng-click="saveApply(templateSelected)" ng-disabled="!templateSelected || totalSelected == 0" type="button" class="btn btn-primary btn-block btn-big-shadow">{{ _T["qgotbrcb"] }}{{totalSelected}} {{ _T["sclcf2fg"] }}</button>
+              <button ng-if="apply && isLoading" ng-click="" ng-disabled="true" type="button" class="btn btn-primary btn-block btn-big-shadow">{{ _T["x89rhp3u"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="(done || doneApply) && !delete && !doneDelete && !modify && !doneModify">
+    <div class="col-md-12">
+      <h1 class="template-h1">{{ _T["utet7f59"] }}</h1>
+      <div class="step text-center">
+        <form class="ng-pristine ng-valid">
+          <div class="body">
+            <div class="col-md-6 col-md-offset-3" ng-show="templateSelected">
+              <h2>{{ _T["busadzbg"] }}</h2>
+              <hr style="border-color: rgba(53, 112, 225, 0.5);">
+              <div class="template-column-info">
+                {{nbCol}} {{ _T["7r40th26"] }}{{ nbCol > 1 ? _T["346wp4c6"] : _T["xbaezlz6"] }}
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3 col-md-offset-9">
+              <button ng-click="close()" type="button" class="btn btn-primary btn-block btn-big-shadow" ng-if="done || doneApply">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="(delete || modify) && !done && !doneDelete && !doneModify && !doneApply">
+    <div class="col-md-12">
+      <h1 class="template-h1">{{ _T["k9wkx506"] }} {{ delete ? _T["tc6j8t46"] : _T["rnr4bk5z"] }}</h1>
+      <div class="step text-center" style="padding-top:15px;">
+        <form class="ng-pristine ng-valid">
+          <div>
+            <div class="form-group">
+              <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12">
+                  <button type="button" class="btn btn-primary">{{ _T["9gnodeq6"] }}</button>
+                </div>
+                <div style="clear:both;"></div>
+                <hr style="border-color: rgba(53, 112, 225, 0.5);">
+                <span class="col-md-12 alert alert-info" ng-if="modify" style="font-size: 15px;"><i class="fa fa-info-circle"></i> {{ _T["98mtvj5a"] }}</span>
+                <div class="col-md-12">
+                  <ui-select ng-model="templateSelected" on-select="selectTemplate($item)" theme="bootstrap">
+                    <ui-select-match placeholder="{{ _T['wq4ubgsr'] }}">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="template in user_templates | magicFilterTemplate: $select.search | orderBy: 'name'">
+                      <span ng-bind-html="template.name| highlight: $select.search"></span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+            </div>
+            <div ng-show="templateSelected" class="col-md-12 mt-10">
+              <h2>{{ _T["ts7fcvrv"] }} {{ delete ? _T["tc6j8t46"] : _T["rnr4bk5z"]}}</h2>
+              <ul class="list template-list" ng-style="modify && {'height' : '490px'}">
+                <li ng-repeat="template in templateSelected.list" style="margin-bottom:15px;">
+                  <div class="template-column-info">
+                    {{ result.length }} colonne{{ result.length > 1 ? 's' : '' }} &laquo; {{template.action.etape_type.value}} - {{template.action.value}} &raquo; {{ _T["uz3ch364"] }} &laquo; {{template.workflow_type.value}} - {{template.doublage_type.value}} - {{template.norme_mix.value}} &raquo;
+                  </div>
+                  <div>
+                    <div class="btn-group" ng-repeat="workflow in workflows | filterTemplateWorkflow:template as result">
+                      <button class="btn btn-sm" tooltip-placement="bottom" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')'}" style="color:{{::workflow.color.font}}" uib-tooltip-html="workflow.description">
+                        <span ng-if="workflow.workflow_type_id == 1">
+                          <span class="fa fa-microphone"></span> {{ _T["i5tk31xb"] }}
+                        </span>
+                        <span ng-if="workflow.workflow_type_id == 2">
+                          <span class="fa fa-archive"></span> {{ _T["z20ge21k"] }}
+                        </span>
+                        <span ng-if="workflow.workflow_type_id == 3">
+                          <span class="fa fa-briefcase"></span> {{ _T["1egq4x9k"] }}
+                        </span>
+                        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.doublage_type.value}}
+                        </span>
+                        <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.language.value}}
+                        </span>
+                        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                          - {{::workflow.norme_mix.value}}
+                        </span>
+                        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.servicing_type.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                          - {{::workflow.diffuseur.name}}
+                        </span>
+                        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.speed.value}}
+                        </span>
+                        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.resolution.value}}
+                        </span>
+                        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                          - {{::workflow.prod_version}}
+                        </span>
+                      </button>
+                    </div>
+                    <span class="template-no-workflow" ng-if="result.length === 0" style="">
+                      {{ _T["dzw50ed3"] }}
+                    </span>
+                  </div>
+                  <hr style="border-color: rgb(237, 8, 83); width: 40%;">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+            <div class="col-md-3 col-md-offset-6">
+              <button ng-click="saveDelete(templateSelected)" ng-if="delete" ng-disabled="!templateSelected" type="button" class="btn btn-danger btn-block btn-big-shadow">{{ _T["cgsyb2lx"] }}</button>
+              <button ng-click="saveModify(templateSelected)" ng-if="modify" ng-disabled="!templateSelected" type="button" class="btn btn-primary btn-block btn-big-shadow">{{ _T["4lzvmzjg"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-if="(doneDelete || doneModify) && !done && !delete && !modify && !apply">
+    <div class="col-md-12">
+      <h1 class="template-h1">{{ _T["4qcyir01"] }} {{ delete ? _T["t77jtbg0"] : _T["yxhodpof"] }} {{ _T["3lmzq6rf"] }}</h1>
+      <div class="step text-center">
+        <form class="ng-pristine ng-valid">
+          <div class="body">
+            <div class="col-md-6 col-md-offset-3" ng-show="templateSelected">
+              <h2>{{ _T["z0t6p7pd"] }} {{ doneDelete ? _T["wkts7t2m"] : _T["96a3xk4x"] }} {{ _T["syio2xid"] }}</h2>
+              <hr style="border-color: rgba(53, 112, 225, 0.5);">
+              <div class="template-column-info">
+                {{ _T["kinc0yg1"] }} &laquo; {{templateSelected.name}} &raquo; {{ _T["lcn96otp"] }} {{ doneDelete ? _T["t77jtbg0"] : _T["yxhodpof"] }}
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3 col-md-offset-9">
+              <button ng-click="close()" type="button" class="btn btn-primary btn-block btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="page-popup page-custom-template" style="max-height: 600px; min-height: 600px; height: 600px;" ng-mouseup="clearDrag()" ng-mousemove="updateSelectedColumnPosition($event)">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="template-h1">{{ _T["1h6jj63b"] }}</h1>
+      <div class="step text-center" style="padding-top:15px; max-height: 600px; min-height: 600px; height: 600px;">
+        
+	<div class="col-md-12" style="overflow-y: auto; overflow-x: auto; height: calc(100% - 38px);">  
+        <table class="table table-bordered" ng-show="columns.length > 0" style="border-collapse: separate">
+            <thead>
+            	<tr>
+            		<th ng-style="{'background-color': ('rgba('+215+', '+232+', '+153+', 1)')}">
+				        <span>
+				          <span class="f-12"><br><br></span>
+				        </span>
+		            </th>
+		            
+                <th id="preview_column_{{column.id}}" ng-repeat="column in columns | orderBy: 'metrics_order'" ng-hide="!column.show_in_metrics" class="th-col" ng-class="{'th-suivi-prod': column.workflow.color == null}" style="vertical-align: top; text-align: center; cursor: pointer;position:relative;z-index:1;user-select: none;-moz-user-select: none;-ms-user-select: none;-webkit-user-select: none;color:black" 
+                  ng-mousedown="startDrag(column, $event)" ng-mouseup="stopDrag()" 
+                  ng-style="{'visibility' : column.isMetricsColumnDraggedOver ? 'hidden' : 'visible', 'cursor' : 'grab', 'transform' : column.isDragging ? 'translate(' + mouseDiffDragX + 'px,' + mouseDiffDragY + 'px)' : 'none', 'background-color' : column.isDragging ? 'rgba(41, 218, 51, 0.55)' : 'rgba('+column.workflow.color.r+', '+column.workflow.color.g+', '+column.workflow.color.b+', '+column.workflow.color.o+')', 'z-index' : column.isDragging ? '1000' : '1'}">
+                  <span style="display: block; font-size: 0.8em; white-space: nowrap">
+                    <span class="label-squared"  ng-style="{'background-color':'rgba('+column.workflow.color.r+', '+column.workflow.color.g+', '+column.workflow.color.b+', '+column.workflow.color.o+')'}" style="color: {{column.workflow.color.font}}">
+                        <span ng-if="column.workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                        <span ng-if="column.workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                        <span ng-if="column.workflow.workflow_type.id == 3" class="fa fa-briefcase"></span>
+                      </span>
+                    <span ng-if="column.workflow.doublage_type.value != null && column.workflow.workflow_type_id == 1">
+                      - {{column.workflow.doublage_type.value}}
+                    </span>
+                    <span ng-if="column.workflow.language != null && column.workflow.workflow_type_id == 1">
+                      - {{column.workflow.language.value}}
+                    </span>
+                    <span ng-if="column.workflow.norme_mix.value != null && column.workflow.workflow_type_id == 1">
+                      - {{column.workflow.norme_mix.value}}
+                    </span>
+                    <span ng-if="column.workflow.servicing_type.value != null && column.workflow.workflow_type_id == 3">
+                      - {{column.workflow.servicing_type.value}}
+                    </span>
+                    <span ng-if="column.workflow.resolution.value != null && column.workflow.workflow_type_id == 3">
+                      - {{column.workflow.resolution.value}}
+                    </span>
+                    <span ng-if="column.workflow.diffuseur.name != null && column.workflow.workflow_type_id == 3">
+                      - {{column.workflow.diffuseur.name}}
+                    </span>
+                    <span ng-if="column.workflow.speed.value != null && column.workflow.workflow_type_id == 2">
+                      - {{column.workflow.speed.value}}
+                    </span>
+                    <span ng-if="column.workflow.resolution.value != null && column.workflow.workflow_type_id == 2">
+                      - {{column.workflow.resolution.value}}
+                    </span>
+                    <span ng-if="column.workflow.prod_version != null && column.workflow.workflow_type_id == 2">
+                      - {{column.workflow.prod_version}}
+                    </span>
+                  </span>
+                  <hr style="margin: 5px"/>
+                  <span>
+                    <span class="f-12">{{column.metrics_label}}</span>
+                  </span>
+                </th>
+                <th id="preview_column_last_column" ng-mouseup="stopDrag()" ng-style="{'visibility' : isMetricsColumnDraggedOverLastColumn ? 'hidden' : 'visible'}" style="background-color: aquamarine">
+                  &nbsp;&nbsp;
+                </th>
+            	</tr>
+            </thead>
+            <tbody>
+            	<tr ng-repeat="product in subproject.ownProduct  | orderBy:order_products_by">
+                <td style="background-color: aquamarine">
+                  <span ng-if="subproject.nature.name == 'serie'">{{product.episode_number}}</span>
+                  <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                  <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                  <div style="font-style: italic;" ng-if="product.duration">({{product.duration}}&nbsp;{{ $root._T["t1xblc8y"] }})</div>
+                </td>
+                <td ng-repeat="column in columns | orderBy: 'metrics_order'"  class="text-center p-10 suivi-cell" ng-hide="!column.show_in_metrics">
+                  <div ng-if="product.cells[columns.indexOf(column)].isProductInWorkflow && product.cells[columns.indexOf(column)].action.allow_request && product.cells[columns.indexOf(column)].action.allow_request == '0'">
+                    <suivi-cell-manual cell="product.cells[columns.indexOf(column)]" product="product" column="column" role="'preview'"></suivi-cell-manual>
+                  </div>
+                  <div ng-if="product.cells[columns.indexOf(column)].isProductInWorkflow && product.cells[columns.indexOf(column)].action.allow_request && product.cells[columns.indexOf(column)].action.allow_request == '1'">
+                    <suivi-cell-request ng-repeat="request in product.cells[columns.indexOf(column)].requests" role="'preview'" request="request" action="product.cells[columns.indexOf(column)].action" cell="product.cells[columns.indexOf(column)]" ng-if="request.is_canceled != 1"></suivi-cell-request>
+                  </div>
+                  <suivi-cell-plain ng-if="product.cells[columns.indexOf(column)].isProductInWorkflow && product.cells[columns.indexOf(column)].action == null" cell="product.cells[columns.indexOf(column)]" role="'preview'"></suivi-cell-plain>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+	</div>
+        
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

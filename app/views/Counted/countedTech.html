@@ -1,0 +1,146 @@
+<header class="header-with-tabs">
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <p>
+        {{ _T["y36ld57l"] }}
+      </p>
+    </div>
+  </div>
+</header>
+<div class="container-fluid container-fixed-nav-aside">
+  <div class="row">
+   <div ng-include="'views/partials/nav-requests.html'"></div>
+  </div>
+</div>
+<div class="container-fluid container-fixed-nav-aside">
+  <div class="well well-sm col-md-offset-2 col-md-8" style="background-color:white">
+    <div class="col-md-3 text-center">
+      <div class="col-md-12">
+        <i class="fa fa-user fa-2x"></i> <strong>{{ _T["qbjpkrru"] }}</strong>
+      </div>
+      <div class="col-md-12">
+        <h4 style="margin-top:0px"><span class="label label-primary"><span ng-if="user.sexe == 'Homme'">{{ _T["1wluwmk1"] }}</span><span ng-if="user.sexe == 'Femme'">{{ _T["syw68zt3"] }}</span> {{::user.firstname}} {{::user.lastname}}</span></h4>
+      </div>
+    </div>
+    <div class="col-md-6 text-center">
+      <div class="col-md-12">
+        <i class="fa fa-calendar fa-2x"></i> <strong>{{ _T["v870gpf0"] }}</strong>
+      </div>
+      <div class="col-md-12">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(true)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['pmi0fz3q'] }}">
+          << </button> </span>
+          <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span> <input ng-model="dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span> <input
+          ng-model="dateEnd" type="text" style="width:100%; padding-bottom: 21px; padding-top: 22px;" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-btn">
+            <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(false)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['z98e8ejr'] }}"> >>
+            </button>
+          </span>
+        </div>
+        <script ng-if="products.length!=0">
+          $('input.calendar').datepicker({
+            format: "dd-mm-yyyy",
+            todayBtn: true,
+            language: $.cookie("language"),
+            orientation: "top",
+            multidateSeparator: " - ",
+            calendarWeeks: true,
+            todayHighlight: true
+          });
+          $(function() {
+            $('[data-toggle="tooltip"]').tooltip({html: true})
+          });
+        </script>
+      </div>
+    </div>
+    <div class="col-md-3 text-center">
+      <section ng-if="calculInProgress > 0">
+        <div class="col-md-12">
+          <i class="fa fa-spinner fa-spin fa-2x"></i>
+        </div>
+        <div class="col-md-12">
+          <strong>{{ _T["y9uiclqq"] }}</strong>
+        </div>
+      </section>
+      <section ng-if="calculInProgress <= 0">
+        <div class="col-md-12">
+          <i class="fa fa-clock-o fa-2x"></i> <strong>{{ _T["459p5v06"] }}</strong>
+        </div>
+        <div class="col-md-12">
+          <h4 style="margin-top:0px"><span class="label label-info">{{countTimeTotal().hours}} ({{countTimeTotal().minutes}} min)</span></h4>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div ng-if="farmers.length <= 0 && calculInProgress <= 0" class="alert alert-info col-md-offset-3 col-md-6 text-center">
+    {{ _T["wnoo5e29"] }}
+  </div>
+  <div class="col-md-12" ng-if="farmers.length > 0 && calculInProgress <= 0">
+    <table class="table table-hover">
+      <thead>
+        <th class="text-center">
+          {{ _T["ovna6ycs"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["0rvv41bf"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["hbtvjrk1"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["awbb7v9i"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["240labxx"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["h9ox64fe"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["agwqbccp"] }}
+        </th>
+        <th class="text-center">
+          {{ _T["7efqgpfl"] }}
+        </th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="farmer in farmers | orderBy: 'sortByTime'">
+          <td class="text-center">
+            <i>{{farmer.request.product.subproject.project.client.name}}</i> - {{farmer.request.product.human_description}}
+          </td>
+          <td class="text-center">
+            <a href="#/requestsTech/{{farmer.request.id}}?farmer={{farmer.id}}" >{{farmer.request.action_type.etape_type.value}}/{{farmer.request.action_type.value}}</a>
+          </td>
+          <td class="text-center">
+            {{farmer.request.workflow.exploitation.value}}
+          </td>
+          <td class="text-center">
+            {{farmer.request.workflow.language.value}}
+          </td>
+          <td class="text-center">
+            {{ _T["z0t6p7pd"] }} <strong>{{farmer.day | asDate | date:"dd MMMM yyyy"}}</strong>
+            {{ _T["jeepc9om"] }} <strong>{{farmer.working_time_start | asDate | date:"HH\'h\'mm"}}</strong>
+            {{ _T["v9l0r966"] }} <strong>{{farmer.working_time_end | asDate | date:"HH\'h\'mm"}}</strong>
+            <br/>
+            <span style="font-size:smaller;color:blue">
+              {{ _T["zu0pbyfu"] }}
+            {{ _T["mc051ilq"] }} (<strong>{{farmer.working_time_start | asDate | date:"dd MMMM yyyy HH\'h\'mm"}}</strong>
+            {{ _T["f6vwmdfc"] }} <strong>{{farmer.working_time_end | asDate | date:"dd MMMM yyyy HH\'h\'mm"}}</strong>)
+            </span>
+          </td>
+          <td class="text-center">
+            {{farmer.audit}}
+          </td>
+          <td class="text-center">
+            {{countTimeOne(farmer, "hours")}}
+            ({{countTimeOne(farmer, "minutes")}} min)
+          </td>
+          <td class="text-center">
+            {{ farmer.break_time + " min" }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

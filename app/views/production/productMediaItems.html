@@ -1,0 +1,240 @@
+<header>
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["4m0y1qim"] }} {{::product.human_description}}
+            </p>
+        </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside header-input-text">
+        <form class="col-sm-12">
+            <div class="form-group search-form">
+                <input type="text" class="form-control input-search" aria-label="Rechercher parmi vos demandes" placeholder="{{ _T['ruv870gp'] }}" ng-model="textSearchFilter">
+            </div>
+        </form>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+  <div class="panel panel-default" ng-show="mediaItems.length > 0">
+          <table  class="table table-custom table-striped" style="margin-top:0" st-safe-src="mediaItems" st-table="displayedCollection">
+            <thead>
+              <tr>
+                <th style="width:120px" st-sort="date_creation">{{ _T["d5sogua1"] }}</th>
+                <th st-sort="support">{{ _T["h5bglkgi"] }}</th>
+                <th st-sort="path">{{ _T["zh4fsex6"] }}</th>
+                <th st-sort="layout">{{ _T["8izp2is4"] }}</th>
+                <th st-sort="nature">{{ _T["0kckbj84"] }}</th>
+                <th st-sort="speed_reception">{{ _T["dz8plzyk"] }}</th>
+                <th st-sort="speed">{{ _T["34ou49b2"] }}</th>
+                <th>{{ _T["26suhfgm"] }}</th>
+                <th st-sort="media_seal_security_version">{{ _T["9wii0lxr"] }}</th>
+                <th st-sort="origin">{{ _T["hq73hg2l"] }}</th>
+                <th st-sort="comment">{{ _T["2w7jtwr8"] }}</th>
+                <th st-sort="comment">{{ _T["eq9spk3x"] }}</th>
+                <th style="width:80px" colspan=2 st-sort="reference">{{ _T["ug82k00a"] }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in displayedCollection | magicFilter:textSearchFilter">
+                <td>
+                  {{item.date_creation | asDate | date: "dd/MM/yyyy"}}
+                </td>
+                <td>
+                  <a e-ng-options="support.support as support.support for support in supports" blur="ignore" editable-select="item.support" href="#" onaftersave="editMediaItem(item, true)">
+                    {{ item.support || _T["fj98qsz4"] }}
+                  </a>
+                </td>
+                <td style="width: 45%; word-break: break-all;">
+                  <a  style="word-break: break-all;" blur="ignore" editable-text="item.path" href="#" onaftersave="editMediaItem(item)">
+                    {{ item.path || _T["fj98qsz4"] }}
+                  </a>
+                </td>
+                <td>
+                  <span ng-if="item.nature == 'Audio'">
+                    <ui-select ng-model="item.layout" multiple theme="bootstrap" on-select="$select.search = ''; changeLayout(item.id)" on-remove="changeLayout(item.id)" close-on-select="false" ng-disabled="disabled" style="width: 100%;">
+                      <ui-select-match allow-clear placeholder="Layout">{{$item.name}}</ui-select-match>
+                      <ui-select-choices repeat="layout.name as layout in layouts | propsFilter: {name: $select.search}">
+                        <div ng-bind-html="layout.name | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                    <button class="btn btn-success btn-xs btn-block" ng-show="showBtnLayout[{{item.id}}]" ng-click="editLayout(item)">{{_T["d32u2mga"] }}</button>
+                  </span>
+                  <span ng-if="item.nature != 'Audio'">
+                    N/A
+                  </span>
+                </td>
+                <td>
+                  {{item.nature}}
+                </td>
+                <td>
+                  <a e-ng-options="speed.name as speed.name for speed in speeds" blur="ignore" editable-select="item.speed_reception" href="#" onaftersave="editMediaItem(item)">
+                    {{ item.speed_reception || _T["fj98qsz4"] }}
+                  </a>
+                </td>
+                <td>
+                  <a e-ng-options="speed.name as speed.name for speed in speeds" blur="ignore" editable-select="item.speed" href="#" onaftersave="editMediaItem(item)">
+                    {{ item.speed || _T["fj98qsz4"] }}
+                  </a>
+                </td>
+                <td>
+                  <span ng-if="item.nature == 'Video'">
+                    <a blur="ignore" editable-password="item.media_seal_security_code"  e-autocomplete="off" href="#" onaftersave="editMediaItemCodeSecurite(item)">
+                      <span ng-if="item.media_seal_security_code">
+                        <span class="glyphicon glyphicon-lock"></span>
+                      </span>
+                      <span ng-if="!item.media_seal_security_code">
+                        {{ _T["fj98qsz4"] }}
+                      </span>
+                    </a>
+                  </span>
+                  <span ng-if="item.nature != 'Video'">
+                    N/A
+                  </span>
+                </td>
+                <td>
+                  <span ng-if="item.nature == 'Video'">
+                    <a e-ng-options="media_seal_security_version.value as media_seal_security_version.value for media_seal_security_version in media_seal_security_versions" blur="ignore" e-style="padding: 0 2px" editable-select="item.media_seal_security_version" href="#" onaftersave="editMediaItem(item)">
+                      {{item.media_seal_security_version || _T["fj98qsz4"] }}
+                    </a>
+                  </span>
+                  <span ng-if="item.nature != 'Video'">
+                    N/A
+                  </span>
+                </td>
+                <td>
+                  <i>{{item.origin}}</i>
+                </td>
+                <td>
+                  {{item.workflow}}
+                </td>
+                <td>
+                  <a blur="ignore" editable-text="item.comment" href="#" onaftersave="editMediaItem(item)">
+                    {{ item.comment || _T["fj98qsz4"] }}
+                  </a>
+                </td>
+                <td>
+                  <a e-title="Élément de référence ?" blur="ignore" editable-checkbox="item.reference" href="#" onaftersave="editMediaItem(item);">
+                    {{ item.reference == 1 && _T["ug82k00a"] || _T["adoyhyi2"] }}
+                  </a>
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-xs pull-right" ng-click="removeItem(item)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    {{ _T["tc6j8t46"] }}</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+  </div>
+  <div class="alert alert-info" ng-show="mediaItems.length == 0">
+    {{ _T["t35opyka"] }}
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">{{ _T["uajjacyf"] }}</div>
+        <div class="panel-body">
+          <label class="control-label col-md-3">{{ _T["h5bglkgi"] }}
+          </label>
+          <div class="col-md-9">
+            <ui-select ng-disabled="disabled" ng-model="newItem.support" on-select="selectSupportNewElement($item,$model)" style="width: 100%;" theme="bootstrap">
+              <ui-select-match placeholder="{{ _T['h5bglkgi'] }}">{{$select.selected.support}}</ui-select-match>
+              <ui-select-choices repeat="support.support as support in supports | propsFilter: {support: $select.search, id: $select.search}">
+                <div ng-bind-html="support.support | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <label class="control-label col-md-3">{{ _T["zh4fsex6"] }}
+          </label>
+          <div class="col-md-9">
+            <input class="form-control" ng-model="newItem.path" placeholder="{{ _T['zh4fsex6'] }}" type="text"/>
+          </div>
+          <label class="control-label col-md-3">{{ _T["eq9spk3x"] }}
+          </label>
+          <div class="col-md-9">
+            <textarea class="form-control" ng-model="newItem.comment" placeholder="{{ _T['eq9spk3x'] }}"></textarea>
+          </div>
+          <div ng-if="newItem.nature == 'Audio'">
+            <label class="control-label col-md-3">{{ _T["8izp2is4"] }}
+            </label>
+            <div class="col-md-9">
+              <ui-select ng-disabled="disabled" multiple ng-model="newItem.layout" style="width: 100%;" theme="bootstrap" close-on-select="false">
+                <ui-select-match placeholder="Layout">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="layout.name as layout in layouts | propsFilter: {name: $select.search}">
+                  <div ng-bind-html="layout.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>        
+            </div>
+          </div>
+          <label class="control-label col-md-3">{{ _T["dz8plzyk"] }}
+          </label>
+          <div class="col-md-9">
+            <ui-select ng-disabled="disabled" ng-model="newItem.speed_reception" style="width: 100%;" theme="bootstrap">
+              <ui-select-match placeholder="{{ _T['dz8plzyk'] }}">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="speed.name as speed in speeds | propsFilter: {name: $select.search, id: $select.search}">
+                <div ng-bind-html="speed.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <label class="control-label col-md-3">{{ _T["34ou49b2"] }}
+          </label>
+          <div class="col-md-9">
+            <ui-select ng-disabled="disabled" ng-model="newItem.speed" style="width: 100%;margin-bottom: 15px;" theme="bootstrap">
+              <ui-select-match placeholder="{{ _T['34ou49b2'] }}">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="speed.name as speed in speeds | propsFilter: {name: $select.search, id: $select.search}">
+                <div ng-bind-html="speed.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <div ng-if="newItem.nature == 'Video'">
+            <label class="control-label col-md-3">{{ _T["26suhfgm"] }}
+            </label>
+            <div class="col-md-9">
+              <input class="form-control newcodesecurite" style="margin-bottom: 5px;" ng-model="newItem.media_seal_security_code" placeholder="{{ _T['26suhfgm'] }}" type="password" autocomplete="off"/>
+            </div>
+            <label class="control-label col-md-3">{{ _T["9wii0lxr"] }}
+            </label>
+            <div class="col-md-9">
+              <ui-select ng-disabled="disabled" ng-model="newItem.media_seal_security_version" style="width: 100%;margin-bottom: 15px;" theme="bootstrap">
+                <ui-select-match placeholder="{{ _T['9wii0lxr'] }}">{{$select.selected.value}}</ui-select-match>
+                <ui-select-choices repeat="media_seal_security_version.value as media_seal_security_version in media_seal_security_versions | propsFilter: {name: $select.search, id: $select.search}">
+                  <div style="height: 20px;" ng-bind-html="media_seal_security_version.value | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <label class="control-label col-md-3">{{ _T["2w7jtwr8"] }}
+          </label>
+          <div class="col-md-9">
+            <ui-select ng-disabled="disabled" ng-model="newItem.workflow" style="width: 100%;" theme="bootstrap">
+              <ui-select-match placeholder="{{ _T['2w7jtwr8'] }}">{{$select.selected.value}}</ui-select-match>
+              <ui-select-choices repeat="workflow.value as workflow in workflow_types | propsFilter: {value: $select.search, id: $select.search}">
+                <div ng-bind-html="workflow.value | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <label class="control-label col-md-3">{{ _T["hq73hg2l"] }}
+          </label>
+          <div class="col-md-9">
+            <ui-select ng-disabled="disabled" ng-model="newItem.origin" style="width: 100%;" theme="bootstrap">
+              <ui-select-match placeholder="{{ _T['hq73hg2l'] }}">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="origin.name as origin in origins | propsFilter: {name: $select.search, id: $select.search}">
+                <div ng-bind-html="origin.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <label class="control-label col-md-3">{{ _T["0kckbj84"] }}
+          </label>
+          <div class="col-md-9">
+            <pre>{{newItem.nature}}</pre>
+          </div>
+
+          <button class="btn btn-success pull-right" ng-click="createItem(newItem)">
+            <i class="glyphicon glyphicon-send"></i>
+            {{ _T["ms5ezwyf"] }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

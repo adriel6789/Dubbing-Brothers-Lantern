@@ -1,0 +1,198 @@
+<div class="container-fluid ">
+  <input id="sortByDates" type="checkbox" name="onoffswitch" ng-model="noteTechnicianIsFilterDate" ng-click="loadRequestsFromTechIfFilterDateIsOff()" class="ios8-switch ng-pristine ng-untouched ng-valid ng-empty">
+  <label for="sortByDates" style="top: 35px; left: 50px;">{{ _T["j7pqabyh"] }}</label>
+  <div class="well well-sm col-md-offset-3 col-md-6">
+<div id='colUser' class="col-md-6 text-center">
+  <div class="col-md-12">
+    <i class="fa fa-user fa-2x"></i>
+        <strong>{{ _T["qbjpkrru"] }}</strong>
+      </div>
+      <div class="col-md-12">
+        <ui-select ng-disabled="disabled" ng-model="tech" on-select="loadRequestsFromTech($item)" style="width: 100%;" theme="bootstrap">
+          <ui-select-match placeholder="{{ _T['zf3fjcz8'] }}">{{$select.selected.name}}</ui-select-match>
+          <ui-select-choices repeat="technician in allTechs | propsFilter: {name: $select.search, id: $select.search} | orderBy: tech.lastname">
+            <div ng-bind-html="technician.name | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+    <div id="colInfos" class="col-md-6 text-center">
+      <section ng-if="hasTech != true && calculInProgress == 0">
+        <div class="col-md-12">
+          <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+        </div>
+        <div class="col-md-12">
+          <strong>{{ _T["hw30mphu"] }}</strong>
+        </div>
+      </section>
+      <section ng-if="calculInProgress > 0">
+        <div class="col-md-12">
+          <i class="fa fa-spinner fa-spin fa-2x"></i>
+        </div>
+        <div class="col-md-12">
+          <strong>{{ _T["8pkdoclf"] }}</strong>
+        </div>
+      </section>
+      <section ng-if="hasTech == true && calculInProgress == 0">
+        <div class="col-md-12">
+          <i class="fa fa-check fa-2x text-success" ng-show="farmers.length > 0"></i>
+          <i class="fa fa-frown-o fa-2x text-warning" ng-show="farmers.length == 0"></i>
+        </div>
+        <div class="col-md-12">
+          <strong ng-show="farmers.length > 0">{{ _T["svr5xq7r"] }} {{farmers.length}} {{ _T["ym8ug09i"] }}
+              <div>
+                  <div id="noteContainer" ng-show="noteContainerToggle">
+                    <strong><p class="note" style="margin-top: 17px;">{{ _T["ugbxtkax"] }}</p></strong>
+                    <textarea id="note" style="position: relative; right: 25px;" class="note" placeholder="{{ _T['q6g3ttxk'] }}" rows="4" cols="36" maxlength="191" ng-model="noteTechnician.contentNote"></textarea>
+                    <div style="display: inline-block;">
+                        <button class="btn btn-danger btn-xs pull-right" style="width:75px; height: 30px;"  ng-click="openDeleteNote()">{{ _T["tc6j8t46"] }}</button>
+                        <button class="btn btn-warning btn-xs pull-right" style="width:75px; height: 30px;" ng-click="openModifyNote()">{{ _T["rnr4bk5z"] }}</button>
+                    </div>           
+                  </div>
+                  <div id="deleteNoteContainer" ng-show="deleteNoteContainerToggle">
+                    <strong><p style="margin-top: 17px;">{{ _T["89jgi8i3"] }}</p></strong>
+                    <div style="display: inline-block;">
+                      <button type="button" style="width:75px; height: 30px; margin-top: 17px;" class="btn btn-danger btn-xs pull-right" name="button" ng-click="deleteTechnicianNote(); validateDeleteNote();">{{ _T["w7redrmn"] }}</button>
+                      <button type="button" style="width:75px; height: 30px; margin-top: 17px;" class="btn btn-default btn-text-primary btn-xs pull-right" name="button" ng-click="closeDeleteNote()">{{ _T["adoyhyi2"] }}</button><br><br>
+                    </div>
+                  </div>
+                  <div id="modifyNoteContainer"ng-show="modifyNoteContainerToggle" >
+                    <strong><p style="margin-top: 17px;">{{ _T["crg1xozw"] }}</p></strong>
+                    <div style="display: inline-block;">
+                      <button type="button" style="width:75px; height: 30px; margin-top: 17px;" class="btn btn-danger btn-xs pull-right" name="button" ng-click="modifyTechnicianNote(); closeModifyNote();">{{ _T["w7redrmn"] }}</button>
+                      <button type="button" style="width:75px; height: 30px; margin-top: 17px;" class="btn btn-default btn-text-primary btn-xs pull-right" name="button" ng-click="closeModifyNote()">{{ _T["adoyhyi2"] }}</button><br><br>
+                    </div> 
+                  </div>
+              </div>
+              <div>
+                <div id="addNoteContainer" ng-show="addNoteContainerToogle">
+                  <button id="addNote"  class="btn btn-success btn-xs" style="width:150px; height: 30px;  margin-top: 17px;"  ng-click="openAddNote()">{{ _T["t1tdhr09"] }}</button>
+                </div>
+                <div id="addNoteFormContainer" ng-show="addNoteFormContainerToogle">
+                  <textarea id="inputNote" style="margin-top: 17px;" placeholder="{{ _T['q6g3ttxk'] }}" rows="2" cols="26" maxlength="191" ng-model="newNoteTechnician.contentNote"></textarea>
+                  <button id="validBtn" class="btn btn-success btn-xs" style="width: 75px" ng-click="addTechnicianNote(); validateAddNote();">{{ _T["d32u2mga"] }}</button>
+                  <button class="btn btn-warning btn-xs" style="width: 75px" ng-click="closeAddNote(); cancelAddNote();">{{ _T["ficbz281"] }}</button>       
+                </div>
+              </div>
+          </strong>
+          <strong ng-show="farmers.length == 0">{{ _T["xwhz5up1"] }}</strong>
+        </div>
+      </section>
+    </div>
+    <div id="colDate" class="col-md-4 text-center" style="position: relative; right: 25px;">
+      <i class="fa fa-calendar fa-2x"></i>
+      <strong>{{ _T["uhm2vkrg"] }}</strong>
+      <input id="panierTechDatepicker" ng-model="datepicker" style="margin:0" type="text" class="form-control calendar ng-pristine ng-untouched ng-valid ng-not-empty" placeholder="{{ _T['uhm2vkrg'] }}">
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="page page-requests-demands" ng-show="hasTech == true && farmers.length > 0">
+    <div class="row">
+    <div class="col-md-12 parent equal">
+      <div class="col-sm-8 col-md-6 col-lg-4 child" ng-repeat="farmer in farmers | orderBy: ['day', 'start_time']" ng-class="{'card-selected' : farmer.show_more}">
+        <div class="panel panel-default p-10 request-card" ng-class="{'panel-unselected' : elementSelected != key && $ctrl.cols == 12, 'more' : farmer.showMore, 'less' : !farmer.showMore}">
+          <div class="media">
+            <div class="media-left">
+              <img alt="64x64" class="media-object img-circle" ng-src="{{::farmer.client.url || '../app/img/no-customer.png'}}"
+                data-holder-rendered="true">
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading">
+                {{ _T["240labxx"] }} {{ _T["mc051ilq"] }} {{farmer.day | asDate | date:"dd MMMM yyyy"}}
+                <br> {{$root.allRoomsById[$root.allRoomsByName[farmer.audit]].long_name || farmer.audit}} {{ _T["jeepc9om"] }} {{farmer.start_time}} à {{farmer.end_time}}
+              </h4>
+              <p class="label label-primary">
+                {{farmer.product_name}}
+              </p>
+            </div>
+            <br>
+          </div>
+          <hr>
+          <div class=" panel-body request-card-group" ng-class="{'more' : farmer.show_more, 'less' : !farmer.show_more}">
+            <div class="card" ng-repeat="product in farmer.products | orderBy:'product.product_name'" ng-show="!farmer.hide">
+              <div class="row group">
+                <div class="col-md-12">
+
+                  <a ui-sref="app.requestsDetail({id : product.request_id})" target="_blank">
+                    <div class="col-md-6">
+                      <i class="fa fa-film"></i> {{product.product_name}}
+                    </div>
+                    <div class="col-md-6">
+                      <i class="fa fa-tags"></i> {{product.etape}} / {{product.action}}
+                    </div>
+                  </a>
+                  <div class="col-md-6" ng-if="product.tech_writer_id">
+                    <i class="fa fa-bullseye"></i> writer : <i>{{product.writer || _T["ekhm2hvz"] }}</i>
+                  </div>
+                  <div class="col-md-6" ng-if="product.tech_reader_id">
+                    <i class="fa fa-cog"></i> reader : <i>{{product.reader || _T["ekhm2hvz"] }}</i>
+                  </div>
+                  <div class="col-md-6" ng-if="product.tech_editor_id">
+                    <i class="glyphicon glyphicon-blackboard" ></i> editor : <i>{{product.editor || _T["ekhm2hvz"] }}</i>
+                  </div>
+                  <div class="col-md-6" ng-if="false">
+                    <i class="fa fa-bullhorn"></i> {{_T["dj3924mi"]}} : <i>{{_T["ekhm2hvz"] }}</i> 
+                  </div>
+                  <div class="col-md-12">
+
+                    <div class="text-center">
+                      <span class="label label-primary" ng-show="techSelected.id == product.tech_reader_id">{{ _T["npaxq3f4"] }}</span>
+                      <i>{{ _T["ykhtgbfd"] }}  {{product.date_send_tech | asDate | date:"dd/MM/yyyy à HH\'h\'mm"}}</i></div>
+                  </div>
+
+                  <div class="">
+
+                    <div class="col col-md-6 pull-left">
+                      <span ng-show="!showChangeTech">
+                          <button ng-show="!showChangeTech" class="btn btn-primary btn-xs" style="width:120px" ng-click="showChangeTech = true;">{{ _T["dpab165x"] }}</button>
+                          </span>
+                      <span ng-show="showChangeTech">
+                            <ui-select ng-disabled="disabled" ng-model="techChange" on-select="associateToAnotherTechnician($item, farmer, product)" style="width: 100%;" theme="bootstrap">
+                                <ui-select-match placeholder="{{ _T['cplvmrqf'] }}">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="technician in allTechs | propsFilter: {name: $select.search, id: $select.search} | orderBy: tech.lastname">
+                                  <div ng-bind-html="technician.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                              </ui-select>
+                        </span>
+                    </div>
+                    <div class="col col-md-6 pull-right">
+                      <span ng-show="!showConfirmDel">
+                          <button ng-show="!showConfirmDel" class="btn btn-danger btn-xs pull-right" style="width:120px" ng-click="showConfirmDel = true;">{{ _T["lh0c2gaa"] }}</button>
+                          </span>
+                      <span ng-show="showConfirmDel">
+                          <button ng-show="showConfirmDel" type="button" style="width:60px" class="btn btn-danger btn-xs pull-right" name="button" ng-click="showConfirmDel = false; cancelTechRequest2(farmer);">{{ _T["w7redrmn"] }}</button>
+                          <button ng-show="showConfirmDel" type="button" style="width:60px" class="btn btn-default btn-text-primary btn-xs pull-right" ng-click="showConfirmDel = false;" name="button">{{ _T["adoyhyi2"] }}</button>
+                        </span>
+
+                      <span ng-show="product.date_see_tech != null" class="text-danger pull-right"><i class="fa fa-eye"></i> {{product.date_see_tech | asDate | date:"'Vue le' dd/MM/yyyy à HH\'h\'mm"}}</span>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- <div ng-show="request.length >= 2">
+
+                <div ng-click="changeState(request)" class="show-more">
+                  <span ng-show="!request.show_more">Voir + de séances </span>
+                  <span ng-show="request.show_more">Voir - de séances</span>
+                </div>
+              </div> -->
+            </div>
+            
+          </div>
+          <div class="panel-footer">
+              <span ng-click="changeState(farmer)" class="show-more">
+                  <span ng-show="!farmer.show_more">{{ _T["ny42m9kz"] }} </span>
+                  <span ng-show="farmer.show_more">{{ _T["1abmdxo2"] }}</span>
+                </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div ng-if="hasTech == true && farmers.length == 0 && calculInProgress == 0">
+      <div class="alert alert-warning text-center col-md-offset-3 col-md-6">{{ _T["vfv8z7e8"] }}</div>
+    </div>
+  </div>
+</div>

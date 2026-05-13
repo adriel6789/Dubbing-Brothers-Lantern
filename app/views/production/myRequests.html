@@ -1,0 +1,392 @@
+<section ng-if="!isMobile()">
+    <header>
+        <div class="container-fluid container-fixed-nav-aside">
+            <div class="col-sm-12">
+                <p>
+                    {{ _T["egqbjpkr"] }}
+                </p>
+            </div>
+        </div>
+        <div class="container-fluid container-fixed-nav-aside header-input-text">
+            <form class="col-sm-12">
+                <div class="form-group search-form">
+                    <input type="text" class="form-control input-search" aria-label="Rechercher parmi vos demandes" placeholder="{{ _T['ruv870gp'] }}" ng-model="textFilter">
+                </div>
+
+            </form>
+        </div>
+    </header>
+
+    <div class="container-fluid container-fixed-nav-aside">
+        <section  ng-class="{'footer-requests-container': isSelectedRequest()}">
+
+        <div ng-show="requests.length == 0" class="alert alert-info text-center ng-cloak">
+          {{ _T["f0pmi0fz"] }}
+        </div>
+
+        <div class="panel panel-default" ng-repeat="request in requests | magicFilterRequest:textFilter | orderBy:'date_creation':true" ng-show="request.display == 1">
+            <table class="table table-no-border">
+                <tbody>
+                    <tr>
+                            <td style="width:10%">
+                                <input ng-if="request.from_group == null" ng-model="request.selected" type="checkbox" id="{{request.id}}"><label ng-if="request.from_group == null" for="{{request.id}}"></label>
+                                <input ng-if="request.from_group != null" ng-click="selectGroup(request.group)" type="checkbox" class="checkboxGroup" id="gr{{request.id}}"><label ng-if="request.from_group != null" for="gr{{request.id}}"></label>
+
+                                    <img class="img img-circle" width=50 height=50 style="margin-right: 5px; border:1px black solid;" ng-src="{{::request.product.subproject.project.client.url || '../app/img/no-customer.png'}}">
+                            </td>
+
+                            <td style="width:40%">
+                                <label ng-if="request.from_group == null">
+                                    <a data-toggle="collapse" href="#collapseExample{{request.id}}" target="_self">
+                                        {{::request.product.human_description}}
+                                        -
+                                        {{::request.workflow.language.value}}
+                                    </a>
+                                </label>
+                                <label>
+                                    <a ng-if="request.from_group != null" data-toggle="collapse" href="#collapseExample{{request.id}}" target="_self">
+                                        <span>{{request.product.subproject.project.name}}
+                                            -</span>
+                                        <span ng-if="request.product.subproject.nature.name == 'serie'">
+                                            {{ _T["6vwtywcc"] }}
+                                            {{request.product.subproject.season}}
+                                            -
+                                        </span>
+                                        <span ng-if="request.product.subproject.nature.name != 'serie'">
+                                            {{request.product.subproject.nature.value}}
+                                            -
+                                        </span>
+                                        <i style="color:#6200FF;">
+                                            {{ _T["5sar2sqw"] }}
+                                            {{request.number_request}}
+                                            {{ _T["ba0heyvu"] }}
+                                        </i>
+                                    </a>
+                                </label>
+                                <br>
+
+
+                                <div >
+                                <!-- <div class="" ng-class="{'label-group':(request.important == 1 && request.on_hold == 1 || request.important == 1 && request.selectedDates.length > 0 || request.on_hold == 1 && request.selectedDates.length > 0 || request.selectedDates.length > 1)}"> -->
+                                    <!-- <span class="label label-warning label-group-border-right">Créée le {{request.date_creation | asDate | date:"dd/MM/yyyy 'à' HH'\h'mm"}}</span> -->
+                                    <date-wish data="request" small="true"></date-wish>
+                                    <span ng-if="request.important && request.important == 1"  class="label label-danger">{{ _T["4orz1fdr"] }}</span>
+                                    <span ng-if="request.on_hold && request.on_hold == 1" class="label label-blue"><i class="fa fa-pause" aria-hidden="true"></i> {{ _T["2ctuc541"] }}</span>
+                                    <!-- <span ng-if="request.selectedDates.length > 0 && request.selectedDates[0] != ''" class="label label-primary"><span class="c-icon c-icon-dateWish"></span> {{request.selectedDates[0] | amDateFormat:'DD MMM YY'}} </span> -->
+                                    <!-- <span data-toggle="collapse" href="#collapseExample{{request.id}}" ng-if="request.selectedDates.length > 1" class="label label-primary" style="opacity:0.7">+{{request.selectedDates.length - 1}}</span> -->
+                                </div>
+
+                            </td>
+                            <td>
+                                <span class="label label-squared label-info" tooltip-placement="bottom" ng-style="{'background-color':'rgba('+request.workflow.color.r+', '+request.workflow.color.g+', '+request.workflow.color.b+', '+request.workflow.color.o+')', 'color' : request.workflow.color.font}" uib-tooltip-html="request.workflow.description"><i class="c-icon c-icon-{{request.workflow.workflow_type.name}}"></i>
+                                {{request.workflow.workflow_type.value}}
+                                <span ng-if="request.workflow.doublage_type.value != null && request.workflow.workflow_type_id == 1">
+                                  -
+                                  {{request.workflow.doublage_type.value}}
+                                </span>
+                                <span ng-if="request.workflow.language.value != null && request.workflow.workflow_type_id == 1">
+                                  -
+                                  {{request.workflow.language.value}}
+                                </span>
+                                <span ng-if="request.workflow.norme_mix.value != null && request.workflow.workflow_type_id == 1">
+                                  -
+                                  {{request.workflow.norme_mix.value}}
+                                </span>
+                                <span ng-if="request.workflow.servicing_type.value != null && request.workflow.workflow_type_id == 3">
+                                  -
+                                  {{request.workflow.servicing_type.value}}
+                                </span>
+                                <span ng-if="request.workflow.resolution.value != null && request.workflow.workflow_type_id == 3">
+                                  -
+                                  {{request.workflow.resolution.value}}
+                                </span>
+                                <span ng-if="request.workflow.diffuseur.name != null && request.workflow.workflow_type_id == 3">
+                                  -
+                                  {{request.workflow.diffuseur.name}}
+                                </span>
+                            </span>
+                            <br>
+                            <label>
+                                <a ng-if="request.from_group == null" href="#/requests/detail/{{request.id}}"  data-toggle="tooltip" title="{{ _T['u5gb76mh'] }}" tooltip-placement="bottom">
+                                    {{::request.action_type.etape_type.value}} - {{::request.action_type.value}}
+                                </a>
+                                <a ng-if="request.from_group != null" href="#/requests/detail/{{request.id}}"  data-toggle="tooltip" title="{{ _T['3qz98e8e'] }}" tooltip-placement="bottom">
+                                    {{::request.action_type.etape_type.value}} - {{::request.action_type.value}}
+                                </a>
+
+                            </label>
+
+                        </td>
+                        <td>
+                            <span ng-if="request.ownFarmerbookings.length > 0" data-toggle="collapse" href="#collapseExample{{request.id}}">
+                                <span  data-toggle="tooltip" title="{{ _T['jrhw30mp'] }}"  tooltip-placement="bottom" class="btn-circle ">{{(request.ownFarmerbookings | filter:{'is_selected': '!1', 'is_finished' : '!1'}).length}} <i class="glyphicon glyphicon-hourglass"></i></span>
+
+                                <span  data-toggle="tooltip" title="{{ _T['huy9uicl'] }}"  tooltip-placement="bottom" class="btn-circle ">{{(request.ownFarmerbookings | filter:{'is_selected': '1', 'is_finished' : '!1'}).length}} <i class="glyphicon glyphicon-send"></i></span>
+
+                                <span  data-toggle="tooltip" title="{{ _T['qq459p5v'] }}"  tooltip-placement="bottom" class="btn-circle ">{{(request.ownFarmerbookings | filter:{'is_selected': '1', 'is_finished' : '1'}).length}} <i class="glyphicon glyphicon-ok-circle"></i></span>
+                            </span>
+
+                            <span ng-if="request.ownFarmerbookings.length == 0" data-toggle="collapse" href="#collapseExample{{request.id}}">
+                                <span ng-if="request.planification_date != null">
+                                  <span  data-toggle="tooltip" title="{{ _T['udvvijhg'] }} {{request.planification_date | asDate | date:'dd/MM'}}" tooltip-placement="bottom" class="btn-circle fa fa-calendar-check-o"></span>
+
+                                  <span  data-toggle="tooltip" title="{{ _T['06r82ct9'] }} {{request.date_send_tech | asDate | date:'dd/MM/yyyy'}} à {{request.tech_writer_user.person.firstname}} {{request.tech_writer_user.person.lastname}}" tooltip-placement="bottom" ng-show="request.date_send_tech != null && request.is_done != 1" class="btn-circle glyphicon glyphicon-send"></span>
+
+                                  <span  data-toggle="tooltip" title="{{ _T['1xmc051i'] }} {{request.tech_writer_user.person.firstname}} {{request.tech_writer_user.person.lastname}}" tooltip-placement="bottom" ng-show="request.is_done == 1" class="btn-circle glyphicon glyphicon-ok-circle"></span>
+
+                                  <span  data-toggle="tooltip" title="{{ _T['p6z8tfxu'] }}" ng-show="request.date_send_tech == null" tooltip-placement="bottom" class="btn-circle glyphicon glyphicon-hourglass"></span>
+
+                                  <span class="btn-circle fa fa-eye" ng-show="request.date_see_tech != null" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['lqf6vwmd'] }} {{request.date_see_tech | asDate | date: 'dd/MM à HH\'h\'mm'}}"></span>
+
+                                  <span class="btn-circle fa fa-clock-o" ng-show="request.date_start != null || request.date_end != null" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['fcyidb9l'] }} : {{request.date_start}} {{ _T['tseq9spk'] }} : {{request.date_end}}"></span>
+
+                                  <span class="btn-circle fa fa-eye-slash" ng-show="request.date_see_tech == null && request.date_send_tech != null" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['aix3a5ry'] }}"></span>
+                                </span>
+                                <span ng-if="request.planification_date == null" class="btn-circle fa fa-calendar-times-o"  data-toggle="tooltip" title="{{ _T['emq7sj7p'] }}" tooltip-placement="bottom">
+                                </span>
+                            </span>
+                            <span class="btn-circle glyphicon glyphicon-menu-down btn-collapse" role="button" data-toggle="collapse" href="#collapseExample{{request.id}}" aria-expanded="false" aria-controls="collapseExample{{request.id}}"  data-toggle="tooltip" title="{{ _T['1v7vl2tu'] }}" tooltip-placement="bottom"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="collapse" id="collapseExample{{request.id}}">
+                <table class="table table-striped table-hover table-cell-small">
+                    <tbody>
+                        <tr >
+                            <td>
+                                <div ng-repeat="request in request.group.requests | orderBy:'product.human_description'">
+                                    <a href="#/requests/detail/{{request.id}}">
+                                        {{request.product.human_description}}
+                                    </a>
+                                    <a class="btn btn-info btn-xs btn-light-shadow" href="#/requests/detail/{{request.id}}">
+                                      {{ _T["u5gb76mh"] }}
+                                    </a>
+                                    <span ng-if="request.ownFarmerbookings.length == 0">
+                                        <span ng-if="request.planification_date != null">
+                                          <span  data-toggle="tooltip" title="{{ _T['udvvijhg'] }} {{request.planification_date | asDate | date:'dd/MM'}}" tooltip-placement="bottom" class="btn-circle fa fa-calendar-check-o"></span>
+
+                                          <span  data-toggle="tooltip" title="{{ _T['06r82ct9'] }} {{request.date_send_tech | asDate | date:'dd/MM/yyyy'}} à {{request.tech_writer_user.person.firstname}} {{request.tech_writer_user.person.lastname}}" tooltip-placement="bottom" ng-show="request.date_send_tech != null && request.is_done != 1" class="btn-circle glyphicon glyphicon-send"></span>
+
+                                          <span  data-toggle="tooltip" title="{{ _T['1xmc051i'] }} {{request.tech_writer_user.person.firstname}} {{request.tech_writer_user.person.lastname}}" tooltip-placement="bottom" ng-show="request.is_done == 1" class="btn-circle glyphicon glyphicon-ok-circle"></span>
+
+                                          <span  data-toggle="tooltip" title="{{ _T['p6z8tfxu'] }}" ng-show="request.date_send_tech == null" tooltip-placement="bottom" class="btn-circle glyphicon glyphicon-hourglass"></span>
+
+                                          <span class="btn-circle fa fa-eye" ng-show="request.date_see_tech != null" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['lqf6vwmd'] }} {{request.date_see_tech | asDate | date: 'dd/MM à HH\'h\'mm'}}"></span>
+
+                                          <span class="btn-circle fa fa-clock-o" ng-show="request.date_start != null || request.date_end != null" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['fcyidb9l'] }} : {{request.date_start}} {{ _T['tseq9spk'] }} : {{request.date_end}}"></span>
+
+                                          <span class="btn-circle fa fa-eye-slash" ng-show="request.date_see_tech == null && request.date_send_tech != null" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['aix3a5ry'] }}"></span>
+                                        </span>
+                                        <span ng-if="request.planification_date == null" class="btn-circle fa fa-calendar-times-o"  data-toggle="tooltip" title="{{ _T['emq7sj7p'] }}" tooltip-placement="bottom">
+                                        </span>
+                                    </span>
+                                </div>
+                                <div ng-if="request.from_group == null">
+                                    <a href="#/products/{{notif.request.product.id}}">
+                                        {{request.product.human_description}}
+                                    </a>
+
+                                    <a class="btn btn-default btn-xs btn-text-primary btn-light-shadow" href="#/requests/detail/{{request.id}}">
+                                      {{ _T["u5gb76mh"] }}
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <span ng-repeat="date in request.selectedDates">
+                                    <span class="label label-primary" style="margin:5px">{{date | amDateFormat:'DD MMM YY'}}</span>
+                                    <br ng-if="($index+1) % 5 == 0">
+                                    <br ng-if="($index+1) % 5 == 0">
+                                </span>
+
+                            </td>
+                            <td>
+                                <span ng-repeat="farmer in request.ownFarmerbookings | orderBy:['day','start_time']">
+                                    <div class="label-group">
+                                        <span class="label label-warning">{{ _T['z0t6p7pd'] }} {{farmer.day | asDate | date:"dd/MM/yyyy"}}</span>
+                                        <span class="label label-warning label-group-border">{{farmer.audit}}</span>
+                                        <span class="label label-warning">{{farmer.start_time}} - {{farmer.end_time}}</span>
+                                    </div>
+
+                                    <span title="{{ _T['fpq5jgm6'] }} <i>{{farmer.tech_writer_user.person.firstname}} {{farmer.tech_writer_user.person.lastname}}</i>" ng-show="farmer.is_selected == 1 && farmer.is_finished != 1" data-placement="bottom" data-toggle="tooltip" class="btn-circle "><i class="glyphicon glyphicon-send"></i></span>
+
+                                    <span title="{{ _T['1xmc051i'] }} <i>{{farmer.tech_writer_user.person.firstname}} {{farmer.tech_writer_user.person.lastname}}</i>" ng-show="farmer.is_selected == 1 && farmer.is_finished == 1" data-placement="bottom" data-toggle="tooltip" class="btn-circle glyphicon glyphicon-ok-circle"></span>
+
+                                    <span title="{{ _T['p6z8tfxu'] }}" ng-show="farmer.is_selected != 1 && farmer.is_finished != 1" data-placement="bottom" data-toggle="tooltip" class="btn-circle glyphicon glyphicon-hourglass"></span>
+
+                                    <span class="btn-circle fa fa-eye" ng-show="farmer.date_see_tech != null" data-placement="bottom" data-toggle="tooltip" title="{{ _T['lqf6vwmd'] }} {{farmer.date_see_tech | asDate | date: 'dd/MM à HH\'h\'mm'}}"></span>
+
+                                    <span class="btn-circle fa fa-eye-slash" ng-show="farmer.date_see_tech == null" data-placement="bottom" data-toggle="tooltip" title="{{ _T['aix3a5ry'] }}"></span>
+                                    <script>
+                                          $(function() {
+                                            $('[data-toggle="tooltip"]').tooltip({html: true})
+                                          });
+                                    </script>
+                                    <br/>
+                                </span>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <script type="text/javascript">
+            $('.collapse').on('show.bs.collapse', function () {
+                var ariaControls = $(this).attr('id');
+
+                $('.btn-collapse[aria-controls=' + ariaControls + ']').addClass('rotate180');
+
+                });
+
+                $('.collapse').on('hide.bs.collapse', function () {
+                var ariaControls = $(this).attr('id');
+
+                $('.btn-collapse[aria-controls=' + ariaControls + ']').removeClass('rotate180');
+                });
+            </script>
+        </div>
+
+
+
+        <div>
+
+        </div>
+
+            <footer class="footer-requests text-center" ng-show="isSelectedRequest()">
+                <h2>{{ _T["xz4nb6u6"] }}</h2>
+
+                <div class="btn-group btn-group-justified">
+                    <div class="btn-group">
+                        <button class="btn btn-warning" ng-click="massUpdatePopup('date_desired')">
+                            <span class="c-icon c-icon-dateWish"></span>
+                            {{ _T["1x4sbskx"] }}
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-default btn-text-primary" ng-click="massUpdatePopup('urgent')">
+                            <span class="glyphicon glyphicon-asterisk"></span>
+                            {{ _T["0aqrcc0y"] }}
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" ng-click="massUpdatePopup('add_comment')">
+                            <span class="c-icon c-icon-comment"></span>
+                            {{ _T["3iaza590"] }}
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-info" ng-click="massUpdatePopup('put_on_hold_or_cancel_requests')">
+                            <span class="glyphicon glyphicon-pause"></span>
+                            {{ _T["it5svsr8"] }}
+                        </button>
+                    </div>
+                </div>
+            </footer>
+        </section>
+    </div>
+</section>
+
+
+<section ng-if="isMobile()">
+  <div class="col-xs-12">
+    <ul class="list-group" ng-show="requests.length != 0">
+      <li class="list-group-item" ng-repeat="request in requests | magicFilterRequest:textFilter">
+        <section ng-if="request.from_group == null">
+          <div class="row text-center">
+            <div class="col-xs-12 col-sm-12" >
+              <i class="fa fa-film"></i> {{request.product.human_description}} <span ng-if="request.workflow.language!= null">- {{request.workflow.language.value}}</span>
+            </div>
+          </div>
+          <div class="row text-center">
+            <a class="col-xs-12 col-sm-12" href="#/requests/detail/{{request.id}}">
+                <i class="fa fa-tag"></i> {{request.action_type.etape_type.value}} - {{request.action_type.value}}
+                <span ng-if="request.workflow.doublage_type != null">- {{request.workflow.doublage_type.value}}</span>
+            </a>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-md-12">
+              <span ng-if="request.ownFarmerbookings.length == 0">
+                  <span ng-if="request.planification_date != null">
+                    <i class="fa fa-calendar-check-o"></i> {{ _T["t74sa69p"] }} {{request.planification_date | asDate | date:"dd/MM"}}
+                    <i ng-show="request.date_send_tech != null && request.is_done != 1" class="glyphicon glyphicon-send"></i>
+                    <i ng-show="request.is_done == 1" class="glyphicon glyphicon-ok-circle"></i>
+                    <i ng-show="request.date_send_tech == null" class="glyphicon glyphicon-hourglass"></i>
+                    <i class="fa fa-eye" ng-show="request.date_see_tech != null" ></i>
+                    <i class="fa fa-clock-o" ng-show="request.date_start != null || request.date_end != null" ></i>
+                    <i class="fa fa-eye-slash" ng-show="request.date_see_tech == null"></i>
+                  </span>
+                  <span ng-if="request.planification_date == null"><i class="fa fa-calendar-times-o"></i> {{ _T["5j1nv2tu"] }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6">
+              <span ng-if="request.important == 1" class="label label-danger">{{ _T["4orz1fdr"] }}</span>
+              <span class="label label-blue" ng-if="request.on_hold == 1"><i class="fa fa-pause" aria-hidden="true"></i> {{ _T["2ctuc541"] }}</span>
+            </div>
+            <div class="col-xs-6 col-sm-6">
+              <span class="pull-right">
+                <i class="fa fa-clock-o"></i> {{request.date_creation| asDate | date:'dd/MM/yy'}}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section ng-if="request.from_group != null">
+          <div class="row text-center">
+            <div class="col-xs-12 col-sm-12">
+              <span>{{request.product.subproject.project.name}} -</span>
+              <span ng-if="request.product.subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] }} {{request.product.subproject.season}} -</span>
+              <span ng-if="request.product.subproject.nature.name != 'serie'">{{request.product.subproject.nature.value}} -</span>
+              <a  href="" ng-click="request.showGroup = !request.showGroup" style="color:#6200FF">
+                <span>{{request.number_request}} {{ _T["ba0heyvu"] }}</span>
+              </a>
+            </div>
+            <span ng-if="request.from_group != null" ng-show="request.showGroup">
+                <br/>
+                <div ng-repeat="aRequest in request.group.requests | orderBy:'product.human_description'" ng-show="aRequest.is_sent_back != 1">
+                  <i class="fa fa-film"></i>
+                  {{ (aRequest.product.episode_number != null && (aRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + aRequest.product.episode_number) || (aRequest.product.description != null && _T["06djaui5"] + " " + aRequest.product.description) || _T["06djaui5"] + " " + aRequest.product.description_text}}
+                  <span ng-if="aRequest.workflow.language != null">- {{aRequest.workflow.language.value}}</span> -
+                    <a href="#/requests/detail/{{aRequest.id}}">
+                        {{ _T["8wk4rg65"] }}
+                    </a>
+                    <br/>
+                </div>
+            </span>
+          </div>
+          <div class="row text-center">
+            <div class="col-xs-12 col-sm-12">
+              <i class="fa fa-tag"></i> {{request.action_type.etape_type.value}} - {{request.action_type.value}}
+              <span ng-if="request.workflow.doublage_type != null">- {{request.workflow.doublage_type.value}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <i ng-if="countRequestPlanInGroup(request.group) == 0" class="fa fa-calendar-times-o"></i>
+              <i class="fa fa-calendar-check-o" ng-if="countRequestPlanInGroup(request.group) != 0"></i>
+              <span>{{countRequestPlanInGroup(request.group)}}
+                  {{ _T["ypgtvu3j"] }}</span>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-6">
+              <span ng-if="request.important == 1" class="label label-danger">{{ _T["4orz1fdr"] }}</span>
+              <span class="label label-blue" ng-if="request.on_hold == 1"><i class="fa fa-pause" aria-hidden="true"></i> {{ _T["2ctuc541"] }}</span>
+            </div>
+            <div class="col-xs-6 col-sm-6">
+              <span class="pull-right">
+                <i class="fa fa-clock-o"></i> {{request.date_creation| asDate | date:'dd/MM/yy'}}
+              </span>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
+
+    <div ng-show="requests.length == 0" class="alert alert-info">
+      {{ _T["6w0u030q"] }}
+    </div>
+  </div>
+</section>

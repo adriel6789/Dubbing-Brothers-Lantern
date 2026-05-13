@@ -1,0 +1,36 @@
+<div class="container-fluid">
+    <div>
+        {{ _T["xok3qkcu"] }} #{{currentStepsList.id}}
+        <button class="btn btn-danger" ng-show="currentStepsList.ownStep.length != 0" ng-click="deleteList(currentStepsList.id)">
+        <i class="glyphicon glyphicon-trash"></i>
+        {{ _T["m6cmrtkw"] }}</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{{ _T["dfuet0tp"] }}</th>
+                <th>{{ _T["r48ex2km"] }}</th>
+                <th>{{ _T["6sy7i74e"] }}</th>
+                <th>{{ _T["7pzwcjem"] }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="step in currentStepsList.ownStep">
+                <td>
+                    {{step.etape_type.value}}
+                </td>
+                <td>
+                    {{step.action_type.value}}
+                </td>
+                <td>
+                    <a ui-sref="app.technicalSpecEdit({idSpec : step.techspec_id})">{{ _T["ieq2tjs7"] }}</a>
+                </td>
+                <td>
+                    <button class="btn btn-danger" ng-click="deleteStep(step)">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

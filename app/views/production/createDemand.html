@@ -1,0 +1,215 @@
+<header ng-if="!isMobile()">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["bwx055gp"] }}
+
+                <a href="" role="button" ng-click="initForm()" class="btn btn-default btn-text-primary btn-big-shadow pull-right"> {{ _T["r786lnh6"] }} </a>
+
+            </p>
+        </div>
+    </div>
+</header>
+<section ng-if="isMobile()">
+  <h2 class="text-center">{{ _T["10523wyx"] }}</h2>
+  <div class="panel panel-default" style="width:100%">
+    <div class="panel-body">
+      <section ng-if="step == 1">
+        <h4 class="text-center"><i class="fa fa-television"></i> {{ _T["qfw48pa1"] }}</h4>
+        <div class="btn-group btn-group-vertical btn-block" role="group" >
+          <button type="button" ng-repeat="project in projects" ng-click="addProjectToRequest(project);" ng-class="{'btn-outline': requestToCreate.project != project.id}" class="btn btn-info" >
+            {{project.name}}
+          </button>
+        </div>
+      </section>
+      <section ng-if="step == 2">
+        <h4 class="text-center"><i class="fa fa-folder-o"></i> {{ _T["krvlddec"] }}</h4>
+        <div class="btn-group btn-group-vertical btn-block" role="group" >
+          <button type="button" ng-repeat="subproject in projectChoosen.ownSubproject" ng-click="addSubprojectToRequest(subproject);" ng-class="{'btn-outline': requestToCreate.subproject != subproject.id}" class="btn btn-danger" >
+            {{(subproject.season) && _T["6vwtywcc"] + ' ' + subproject.season || subproject.nature.value}}
+          </button>
+        </div>
+      </section>
+      <section ng-if="step == 3">
+        <h4 class="text-center"><i class="fa fa-film"></i> {{ _T["p70c96w0"] }}</h4>
+        <div class="btn-group btn-group-vertical btn-block" role="group" >
+          <button class="btn btn-primary btn-outline" ng-click="addAllProducts(); step = step + 1;">{{ _T["d087pif1"] }}</button>
+          <button type="button" ng-click="addProductToRequest(product)" ng-repeat="product in subProjectChoosen.ownProduct | filter: projectFilter | orderBy: ['episode_number','description_text', 'id']" ng-class="{'btn-outline': !product.isInEntity}" class="btn btn-primary" >
+            {{(product.episode_number) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + product.episode_number || product.description.value || product.description_text}}
+          </button>
+        </div>
+      </section>
+      <!-- Section workflow -->
+      <section ng-if="step == 4">
+        <h4 class="text-center"><i class="fa fa-list-ul"></i> {{ _T["2o2ciphc"] }}</h4>
+        <div class="alert alert-danger alert-dismissible text-center" ng-show="errorOnWorkflow && !loadFromUrl" role="alert">
+          {{ _T["gbbjft3u"] }}
+          <br>
+          {{ _T["qglgienb"] }}
+        </div>
+        <div class="btn-group btn-group-vertical btn-block" role="group" >
+          <button style="padding-left:2px; padding-right:2px; overflow-wrap: break-word;" type="button" ng-click="addWorkflowToRequest(workflow);" ng-repeat="workflow in workflows" ng-class="{'btn-outline': requestToCreate.workflow_id != workflow.id}" class="btn btn-warning" >
+            <span ng-if="workflow.workflow_type_id == 1">
+              {{ _T["i5tk31xb"] }}
+            </span>
+            <span ng-if="workflow.workflow_type_id == 2">
+              {{ _T["z20ge21k"] }}
+            </span>
+            <span ng-if="workflow.workflow_type_id == 3">
+              {{ _T["1egq4x9k"] }}
+            </span>
+            <br>
+            <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+              - {{workflow.doublage_type.value}}
+            </span>
+            <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+              -
+              {{workflow.language.value}}
+            </span>
+            <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+              -
+              {{workflow.norme_mix.value}}
+            </span>
+            <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+              -
+              {{workflow.servicing_type.value}}
+            </span>
+            <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+              -
+              {{workflow.resolution.value}}
+            </span>
+            <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+              -
+              {{workflow.diffuseur.name}}
+            </span>
+            <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+              - {{workflow.speed.value}}
+            </span>
+            <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+              - {{workflow.resolution.value}}
+            </span>
+            <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+              - {{workflow.prod_version}}
+            </span>
+            -
+            <br>
+            <span ng-show="requestToCreate.workflow_id == workflow.id" ng-bind-html="workflow.description"></span>
+          </button>
+        </div>
+        <div class="clearfix"></div>
+        <br>
+
+      </section>
+
+      <section ng-show="step == 5">
+        <h4 class="text-center">
+          <i class="glyphicon glyphicon-tags"></i> {{ _T["aelw8o95"] }}
+        </h4>
+          <ui-select ng-model="action_type_main" on-select="addEtapeActionToRequest($item,$model); updateActionType($model)" style="width: 100%;" theme="bootstrap">
+            <ui-select-match placeholder="{{ _T['89nilim5'] }}">{{$select.selected.etape_value}} - {{$select.selected.value}}</ui-select-match>
+            <ui-select-choices group-by="'etape_value'" repeat="action in etapes_actions | magicFilter: $select.search">
+              <div ng-bind-html="action.value | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+
+          <div class="clearfix"></div>
+          <br>
+        <h4 class="text-center" ng-show="requestToCreate.service != null">
+          <span class="label label-default">{{ _T["vx1kcdq3"] }}</span>
+          <br>
+          <span class="label label-default">{{plannings[requestToCreate.service]}}</span>
+        </h4>
+
+        <h4 class="text-center"><i class="fa fa-align-center"></i> {{ _T["vruzhuo4"] }}</h4>
+        <textarea style="width:100%; border-color: gainsboro; border-radius: 4px; height: 200px;" ng-model="method.info_for_tech"></textarea>
+
+        <div class="row">
+          <ul class="list-group">
+            <li class="list-group-item">
+                <label for="coucou">{{ _T["0aqrcc0y"] }}</label>
+
+              <label class="ios7-switch pull-right">
+                <input id="coucou" type="checkbox" ng-model="method.important" ng-checked="method.important">
+                <span></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+
+      </section>
+
+      <section ng-if="step == 6">
+        <h4 class="text-center">
+          <i class="fa fa-calendar"></i> {{ _T["rghietfm"] }}
+        </h4>
+
+        <div uib-datepicker template-url='views/Vendor/multi-datepicker.tpl.html' ng-model="dt" show-weeks="true"  starting-day="1" multi-select="requestToCreate.delai_souhaite"></div>
+        <br>
+        <span class="col-sm-4 col-xs-4" ng-repeat="date in requestToCreate.delai_souhaite | orderBy:date">
+          {{date | date:"dd MMM"}}
+        </span>
+        <div class="text-center" ng-if="requestToCreate.delai_souhaite.length <= 0">
+          {{ _T["21gawcit"] }}
+        </div>
+      </section>
+
+      <section ng-if="step == 7">
+        <h4 class="text-center">
+          <i class="fa fa-wrench"></i> {{ _T["0to1cmv6"] }} <br><small>{{ _T["wi7clyxv"] }}</small>
+        </h4>
+        <div ng-repeat="product in requestToCreate.products | orderBy:'episode_number'">
+          <h5>{{(product.episode_number) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + product.episode_number || product.description.value || product.description_text}}</h5>
+          <ul class="list-group">
+            <li ng-if="product.itemsInRequest.length == 0" class="list-group-item text-warning text-center">{{ _T["d57zjk3u"] }}</li>
+            <li class="list-group-item" ng-repeat="item in product.itemsInRequest">
+              <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                  <span class="label label-default">{{item.nature}}</span>
+                  <span class="label label-primary">{{item.support}}</span>
+                  <span class="pull-right"><i class="fa fa-clock-o"></i> {{item.date_creation | asDate | date:"dd/MM/yyyy"}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6 col-sm-6">
+                  <small>{{ _T["2w7jtwr8"] }} : {{item.workflow || "..."}}</small>
+                </div>
+                <div ng-show="item.nature == 'Audio'" class="col-xs-6 col-sm-6">
+                  <small>{{ _T["8izp2is4"] }} : {{item.layout || "..."}}</small>
+                </div>
+                <div class="col-xs-6 col-sm-6">
+                  <small>{{ _T["noa1wtgc"] }} : {{item.speed || "..."}}</small>
+                </div>
+                <div class="col-xs-6 col-sm-6">
+                  <small>{{ _T["ok6vs9k2"] }} : {{item.speed_reception || "..."}}</small>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </li>
+          </ul>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+
+  <nav class="navbar navbar-default navbar-fixed-bottom" style="padding-top: 7px">
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <button type="button" style="margin-bottom:-15px"  ng-show="(step > 1)" ng-click="nextStep(-1)" class="btn btn-default">
+          <i class="fa fa-chevron-left"></i> {{ _T["0u030qx5"] }}
+        </button>
+      </div>
+      <div class="btn-group" role="group">
+        <button ng-if="step < 7 && showNextButton()" type="button" style="margin-bottom:-15px"  ng-click="nextStep(1)" class="btn btn-default">
+          {{ _T["im19ajy6"] }} <i class="fa fa-chevron-right"></i>
+        </button>
+        <button class="btn btn-success btn-outline pull-right" ng-click="createDemand()" style="margin-bottom:-15px"  ng-show="step == 7">
+          {{ _T["hurvzyz7"] }} <i class="glyphicon glyphicon-send"></i>
+        </button>
+      </div>
+    </div>
+
+  </nav>
+</section>

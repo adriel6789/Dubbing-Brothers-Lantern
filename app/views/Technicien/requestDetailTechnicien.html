@@ -1,0 +1,1770 @@
+<header class="no-margin-bottom">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                <a class="btn btn-default btn-lg btn-big-shadow btn-text-primary" ng-if="mainRequest.action_type.planning != 'volume'" href="#/requestsValidated" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['tyod6ifx'] }}">
+                    <i class="c-icon c-icon-arrowLeft"></i></a>
+                <a class="btn btn-default btn-lg btn-big-shadow btn-text-primary" ng-if="mainRequest.action_type.planning == 'volume'" href="#/requestsAutoTech" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['gn36lygf'] }}">
+                    <i class="c-icon c-icon-arrowLeft"></i></a>
+                {{ _T["x7mdtgfs"] }} {{::mainRequest.product.subproject.project.client.name}} <small><i>{{ _T["6qfau07l"] }} {{::mainRequest.user.person.firstname}} {{::mainRequest.user.person.lastname}}</i></small>
+                <product-managers style="margin-left: 15% !important;" ng-if="mainRequest.product.subproject.project"
+                  pmanagers="ctrl.chargeprod" project-data="mainRequest.product.subproject"></product-managers>
+            </p>
+        </div>
+    </div>
+
+</header>
+
+<div class="container-fixed-nav-aside-activity" style="background-color:white">
+    <div class="descrip-dialog">
+        <div class="col-md-7">
+            <h2 style="color:black">{{ _T["5qvwxxzx"] }} <span class="notifs-detail text-center">{{mainRequest.ownComment.length}}</span></h2>
+
+        </div>
+        <div class="col-md-5">
+            <div class="pull-right">
+                <button class="btn btn-default" ng-click="showActivity = !showActivity" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['69o5dvna'] }}">
+                    <span class="fa-stack ">
+                      <i class="c-icon c-icon-activity fa-stack-2x" ></i>
+                      <i class="fa fa-ban fa-stack-2x text-danger" ng-show="!showActivity"></i>
+                    </span>
+
+                </button>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="container-activity" id="scrollToBottom">
+        <div class="text-activity">
+            <div class="col-md-12" ng-repeat="comment in mainRequest.ownComment | orderBy:'date_creation'" ng-if="comment.show_tech == 1">
+              <section class="text-center from-activity"  ng-if="comment.activity_log == true && showActivity"> <!-- Activité log -->
+                <small><strong class="primary-font"><i class="fa fa-bell-o" aria-hidden="true"></i>
+                  {{comment.date_creation | asDate | date:"dd MMMM à HH\'h\'mm"}}</strong><br>
+                  <div style="word-wrap: break-word;">{{comment.text}}
+                    {{ _T["6qfau07l"] }} {{comment.user.person.firstname}}
+                    {{comment.user.person.lastname}}</div>
+                    <div style="word-wrap: break-word;">
+                        <span ng-if="comment.old_value != null && comment.old_value != ''">
+                            <i class="fa fa-minus-square"></i> {{ _T["s9ka8e0t"] }} : {{comment.old_value}} <br>
+                        </span>
+                        <span ng-if="comment.new_value != null && comment.new_value != ''">
+                            <i class="fa fa-plus-square"></i> {{ _T["2r346aew"] }} : {{comment.new_value}}
+                        </span>
+                    </div></small>
+                    <script type="text/javascript">
+                        var objDiv = document.getElementById("scrollToBottom");
+                        objDiv.scrollTop = objDiv.scrollHeight;
+                    </script>
+              </section>
+              <section ng-if="comment.user.id == user_entity.id && !comment.activity_log"> <!-- Moi -->
+                <div class="bubbledRight" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+                  <span class="save-text-p">{{comment.text}}</span>
+                </div>
+                <script type="text/javascript">
+                    var objDiv = document.getElementById("scrollToBottom");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                </script>
+
+              </section>
+
+              <section ng-if="comment.user.id != user_entity.id && !comment.activity_log"> <!-- Eux -->
+
+                <div class="from-them-text">
+                    {{comment.user.person.firstname}} {{comment.user.person.lastname}}
+                </div>
+                <div class="bubbledLeft" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+                  <span class="save-text-p">{{comment.text}}</span>
+                </div>
+                <script type="text/javascript">
+                    var objDiv = document.getElementById("scrollToBottom");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                </script>
+              </section>
+
+              <div class="clear">
+
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="input-activity">
+        <form class="col-md-12" ng-submit="addCommentOnRequest(mainRequest, show_tech)" >
+            <textarea style="background-color:#F2F6FA; width:100%; margin-top:10px" class="form-control autoExpand" ng-model="mainRequest.newComment" placeholder="{{ _T['niay2jt0'] }}" rows="1" data-min-rows="1"></textarea>
+            <input type="submit" class="btn btn-primary btn-xs btn-block" name="name" value="{{ _T['cefm3w2w'] }}">
+
+            <script type="text/javascript" language="javascript">
+            $(document)
+                .one('focus.textarea', '.autoExpand', function(){
+                    var savedValue = this.value;
+                    this.value = '';
+                    this.baseScrollHeight = this.scrollHeight;
+                    this.value = savedValue;
+                })
+                .on('input.textarea', '.autoExpand', function(){
+                    var minRows = this.getAttribute('data-min-rows')|0,
+                         rows;
+                    this.rows = minRows;
+                    rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
+                    this.rows = minRows + rows;
+                });
+            </script>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="container-fluid-detail container-fixed-nav-aside-detail descrip-dialog">
+    <img ng-src="{{clients[mainRequest.product.subproject.project.client.id].url || '../app/img/no-customer.png'}}" style="border:1px solid black; max-width:60px; max-height:60px;" class="img-circle">
+    <div class="col-md-12">
+        <h2 style="margin-bottom:0; color:black;">
+                    {{::mainRequest.product.subproject.project.name}} -
+                    <span ng-if="mainRequest.product.subproject.nature.name == 'serie'">
+                        {{::_T["6vwtywcc"] + ' ' + mainRequest.product.subproject.season}}
+                    </span>
+
+                    <span ng-if="mainRequest.product.subproject.nature.name != 'serie'">
+                        {{::mainRequest.product.subproject.nature.value}}
+                    </span>
+                    <small>({{::mainRequest.product.subproject.nature.value}})
+                        <span ng-if="isReadOnly"><i class="fa fa-book" aria-hidden="true" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['3jokvxjw'] }}"></i></span>
+                        <span ng-if="!isReadOnly"><i class="fa fa-wrench" aria-hidden="true" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['ga7as6f2'] }}"></i></span>
+                    </small>
+        </h2>
+        <h3 style="margin-top:0">
+                <i class="glyphicon glyphicon-film"></i>
+                {{ (mainRequest.product.episode_number != null && (mainRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + mainRequest.product.episode_number) || (mainRequest.product.description != null && _T["06djaui5"] + " " + mainRequest.product.description) || _T["06djaui5"] + " " + mainRequest.product.description_text}}
+        </h3>
+    </div>
+
+</div>
+
+<div class="container-fluid-detail container-fixed-nav-aside-detail">
+  <section class="col-md-12 col-lg-12" ng-if="!isMobile()">
+      <h1>
+          {{::mainRequest.action_type.etape_type.value}} - {{::mainRequest.action_type.value}}
+          <small>
+            <span class="label label-danger" ng-if="mainRequest.is_canceled == 1"><i class="fa fa-ban" aria-hidden="true"></i> {{ _T['fotidtc6'] }}</span>
+              <span class="label label-success" ng-if="mainRequest.is_done == 1">{{ _T["46z910du"] }}</span>
+              <span class="label label-info" ng-if="mainRequest.is_planned == 1 && !(mainRequest.is_done == 1 || mainRequest.is_in_progress == 1 || mainRequest.is_not_done == 1)">{{ _T["5dd4lerz"] }}</span>
+              <span class="label label-primary" ng-if="mainRequest.is_in_progress == 1">{{ _T["xvyyayrz"] }}</span>
+              <span class="label label-warning" ng-if="mainRequest.is_not_done == 1">{{ _T["yxdfq1zn"] }}</span>
+              <span class="label label-danger" ng-if="mainRequest.important == 1">{{ _T["4orz1fdr"] }}</span>
+              <span class="label label-blue" ng-if="mainRequest.on_hold == 1"><i class="fa fa-pause" aria-hidden="true"></i> {{ _T["2ctuc541"] }}</span>
+
+
+          </small>
+      </h1>
+      <h2 ng-if="mainRequest.parent_request_id != null">
+          <a href="#/requests/detail/{{mainRequest.parent_request_id}}">
+              {{ _T["6k1b4xr8"] }} :
+              {{::parent_request.action_type.etape_type.value}}
+              -
+              {{::parent_request.action_type.value}}
+          </a>
+      </h2>
+
+      <div style="font-size:1.4em">
+          <span class="label label-squared label-info" ng-if="workflow.workflow_type.value != null" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')'}" style="color: {{workflow.color.font}}" tooltip-placement="bottom" uib-tooltip-html="workflow.description">
+              <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+              <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+              <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span>
+              {{::workflow.workflow_type.value}} - {{::workflow.doublage_type.value}}
+          </span>
+          &nbsp;
+          <span style="margin-left:10px" ng-if="workflow.exploitation.value != null">
+              <span class="c-icon c-icon-display"></span>
+              {{::workflow.exploitation.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.language.value != null">
+              <span class="glyphicon glyphicon-flag"></span>
+              {{::workflow.language.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.prod_version != null">
+              <span class="glyphicon glyphicon-user"></span>
+              {{::workflow.prod_version}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.speed.value != null">
+              <span class="c-icon c-icon-format"></span>
+              {{::workflow.speed.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.format_mix.value != null">
+              <span class="c-icon c-icon-sound"></span>
+              {{::workflow.format_mix.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.norme_mix.value != null">
+              <span class="c-icon c-icon-activity"></span>
+              {{::workflow.norme_mix.value}}
+          </span>
+
+          <span style="margin-left:10px" ng-if="workflow.servicing_type != null">
+              <span class="glyphicon glyphicon-random"></span>
+              {{::workflow.servicing_type.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.diffuseur != null">
+              <span class="glyphicon glyphicon-user"></span>
+              {{::workflow.diffuseur.name}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.resolution != null">
+              <span class="glyphicon glyphicon-fullscreen"></span>
+              {{::workflow.resolution.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.layout != null">
+              <span class="glyphicon glyphicon-sound-5-1"></span>
+              {{::workflow.layout.value}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.dolbye != null && workflow.workflow_type_id == 3">
+              <span class="glyphicon glyphicon-sound-dolby"></span>
+              <span ng-show="workflow.dolbye == 1">{{ _T["e102wwz9"] }}</span>
+              <span ng-show="workflow.dolbye == 0 && workflow.workflow_type_id == 3">{{ _T["b5qjq23w"] }}</span>
+          </span>
+
+          <span style="margin-left:10px" ng-if="workflow.type_audio_process != null">
+              <span class="glyphicon glyphicon-signal"></span>
+              {{::workflow.type_audio_process}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.subtitle != null">
+              <span class="glyphicon glyphicon-font"></span>
+              {{::workflow.subtitle}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.nature_subtitle != null">
+              <span class="glyphicon glyphicon-font"></span>
+              {{::workflow.nature_subtitle}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.projector_aspect != null">
+              <span class="glyphicon glyphicon-facetime-video"></span>
+              {{::workflow.projector_aspect}}
+          </span>
+          <span style="margin-left:10px" ng-if="workflow.dcp_standard != null">
+              <span class="glyphicon glyphicon-film"></span>
+              {{::workflow.dcp_standard}}
+          </span>
+
+          <span style="margin-left:10px" ng-if="workflow.dynamic_process != null">
+              <span class="glyphicon glyphicon-headphones"></span>
+              {{::workflow.dynamic_process}}
+          </span>
+
+          <!-- <span style="margin-left:10px" ng-if="workflow.doublage_type.value != null">
+              <span class="glyphicon glyphicon-volume-up"></span>
+              {{::workflow.doublage_type.value}}
+          </span> -->
+
+
+          <span style="margin-left:10px" ng-if="workflow.language_labo != null">
+              <span class="glyphicon glyphicon-flag"></span>
+              {{::workflow.language_labo}}
+          </span>
+
+          <span style="margin-left:10px" ng-if="workflow.dub_place != null">
+              <span class="c-icon c-icon-loc"></span>
+              {{::workflow.dub_place}}
+          </span>
+
+      </div>
+
+      <div ng-if="mainRequest.action_type.planning != 'farmer' && mainRequest.action_type.service != 'digital-media'" class="col-md-4">
+          <section >
+              <div class="separator">
+                  <p class="separator-label">{{ _T["9dz4crm9"] }}
+                  </p>
+                  <hr>
+              </div>
+              <pre>{{mainRequest.date_start || _T["kl6nexv6"] }} {{mainRequest.date_start_time || ""}}</pre>
+
+              <div class="separator">
+                  <p class="separator-label">{{ _T["rcf56y1f"] }}
+                  </p>
+                  <hr>
+              </div>
+              <pre>{{mainRequest.date_end || _T["kl6nexv6"] }} {{mainRequest.date_end_time || ""}}</pre>
+          </section>
+
+      </div>
+
+      <div ng-class="{'col-md-offset-1 col-md-7':mainRequest.action_type.planning != 'farmer' && mainRequest.action_type.service != 'digital-media'}">
+          <div class="separator">
+              <p class="separator-label">{{ _T["bpe31fvp"] }}</p>
+              <hr>
+          </div>
+
+          <textarea id="infoForTech"></textarea>
+
+          <div ng-show="mainRequest.action_type.etape_type.name == 'enregistrement'" class="separator">
+            <p class="separator-label">{{ _T["kup2m5xn"] }}</p>
+            <hr>
+          </div>
+          <p ng-show="mainRequest.action_type.etape_type.name == 'enregistrement' && showPanelDA != 1">
+            <span ng-if="mainRequest.artistic_director_id != null">{{mainRequest.artistic_director.firstname}} {{mainRequest.artistic_director.lastname}}</span>
+            <span ng-if="mainRequest.artistic_director_id == null">{{ _T["fi1rfhmk"] }}</span>
+          </p>
+
+          <button ng-if="techspec_id != null" class="btn btn-default btn-block btn-text-primary btn-big-shadow" ng-click="showTechnicalSpecModal()">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            {{ _T["gbtguz3q"] }}
+          </button>
+      </div>
+      <div class="col-md-12" ng-if="mainRequest.action_type.form != null">
+          <div class="separator">
+              <p class="separator-label">{{ _T["uh1dxak9"] }}</p>
+              <hr>
+          </div>
+          <div ng-repeat="field in masteringGeneralForm" style="margin-top:5px">
+            <div class="col-md-12" ng-if="field.type.view == 'description'" ng-include="'partials/Technicien/read-field.html'" style="min-height: 100px"></div>
+            <div class="col-sm-2 col-md-3" ng-if="field.type.view != 'description'" ng-include="'partials/Technicien/read-field.html'" style="min-height: 100px"></div>
+          </div>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <section ng-if="mainRequest.linked_requests != null">
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+          <div class="separator">
+            <p class="separator-label">{{ _T["nsxzn71k"] }}</p>
+            <hr>
+          </div>
+        <linked-requests data="mainRequest"></linked-requests>
+      </section>
+
+      <div class="clearfix">
+
+<div class="row" style="margin-top:20px">
+    <div class="col-xs-12">
+      <div class="panel panel-default full-block">
+
+        <h4 class="padd-30">
+            <a href="#/products/{{mainRequest.product.id}}">
+                <i class="glyphicon glyphicon-film"></i>
+                {{ (mainRequest.product.episode_number != null && (mainRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + mainRequest.product.episode_number) || (mainRequest.product.description != null && _T["06djaui5"] + " " + mainRequest.product.description) || _T["06djaui5"] + " " + mainRequest.product.description_text}}</a>
+
+            <a class="btn btn-default btn-big-shadow pull-right" href="#/products/{{mainRequest.product.id}}">
+                {{ _T["7hsxi6xf"] }}</a>
+
+        </h4>
+
+        <section class="col-md-12" ng-if="mainRequest.action_type.form != null">
+
+            <div ng-repeat="field in masteringProductForm[0]">
+                <div class="col-md-12" ng-if="field.type.view == 'description'" ng-include="'partials/production/edit-field.html'" style="min-height: 100px"></div>
+                <div class="col-sm-2 col-md-3" ng-if="field.type.view != 'description'" ng-include="'partials/production/edit-field.html'" style="min-height: 100px"></div>
+            </div>
+        </section>
+
+        <table class="table table-striped table-custom" ng-if="mainRequest.action_type.planning == 'farmer' && isReadOnly == false">
+          <thead>
+            <tr>
+              <th>{{ _T["dahbw8c3"] }}</th>
+              <th>{{ _T["a2tucrf9"] }}</th>
+              <th>{{ _T["ftakd60h"] }}</th>
+              <th ng-if="mainRequest.action_type.etape_type.name == 'enregistrement'">{{ _T["kup2m5xn"] }}</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><i class="c-icon c-icon-date"></i><span class="bold"> {{::currentFarmer.day | amDateFormat:'dddd DD MMMM YYYY'}} </span> -
+                  <span ng-if="currentFarmer.is_finished != 1">
+                      {{::currentFarmer.start_time}}
+                      -
+                      {{::currentFarmer.end_time}}
+                  </span>
+
+                  <span ng-if="currentFarmer.is_finished == 1">
+                      {{::currentFarmer.working_time_start| asDate | date:'HH:mm'}}
+                      à
+                      {{::currentFarmer.working_time_end| asDate | date:'HH:mm'}}
+                      (Pause :
+                      {{::currentFarmer.break_time|| "0"}}
+                      min)
+                  </span>
+              </td>
+              <td><i class="c-icon c-icon-loc"></i><span class="bold"> {{$root.allRoomsById[$root.allRoomsByName[currentFarmer.audit]].long_name || currentFarmer.audit}} </span></td>
+              <td>
+                  <span class="c-icon c-icon-tech" tooltip-placement="bottom" uib-tooltip-html="currentFarmer.description"></span>
+                  <span class="bold">
+                      <span ng-show="currentFarmer.tech_writer.person.firstname != null">
+                          {{currentFarmer.tech_writer.person.firstname}}
+                          {{currentFarmer.tech_writer.person.lastname}}
+                      </span>
+                      <span ng-show="currentFarmer.tech_writer.person.firstname == null">
+                          {{ _T["nvo32nvv"] }}
+                      </span>
+                  </span>
+              </td>
+              <td ng-if="mainRequest.action_type.etape_type.name == 'enregistrement'">
+                <i class="fa fa-user"></i>
+                <span ng-show="currentFarmer.artistic_director.firstname != null">{{currentFarmer.artistic_director.firstname}} {{currentFarmer.artistic_director.lastname}}</span>
+                <span ng-show="currentFarmer.artistic_director.firstname == null">{{ _T["nvo32nvv"] }}</span>
+              </td>
+              <td class="text-right">
+                  <span class="label label-default" ng-class="{'label-danger' : currentFarmer.is_selected == 1 && currentFarmer.is_finished != 1 && (currentFarmer.is_done == 1 || currentFarmer.is_partial == 1 || currentFarmer.is_not_done == 1), 'label-success' : currentFarmer.is_finished == 1 && currentFarmer.is_done == 1 && currentFarmer.is_partial != 1, 'label-warning' : currentFarmer.is_finished == 1 && currentFarmer.is_not_done == 1, 'label-info': currentFarmer.is_finished == 1 && currentFarmer.is_done == 1 && currentFarmer.is_partial == 1, 'label-primary' : currentFarmer.is_finished != 1 && currentFarmer.is_selected == 1}">
+                      <span ng-if="currentFarmer.is_finished == 1">
+                          {{ _T["k7su5zvx"] }}
+                          <span ng-if="currentFarmer.is_partial == 1">
+                              {{ _T["jguzo1fd"] }}</span>
+                          <span ng-if="currentFarmer.is_done == 1 && farmer.is_partial != 1">
+                              {{ _T["dbkkkv1w"] }}</span>
+                          <span ng-if="currentFarmer.is_not_done == 1">
+                              {{ _T["pt07sq7v"] }}</span>
+                      </span>
+                      <span ng-if="currentFarmer.is_selected == 1 && farmer.is_finished != 1">
+                          {{ _T["41wi3did"] }}
+                      </span>
+                      <span ng-if="currentFarmer.is_selected != 1">
+                          {{ _T["p6z8tfxu"] }}
+                      </span>
+                  </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+    <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist"> 
+            <li role="presentation" class="active"><a href="#elements" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["0to1cmv6"] }}</a></li>
+            <li role="presentation" ng-show="mainRequest.action_type.etape_type.name == 'prepa_audio' || mainRequest.action_type.name == 'montage_synchro_dial_confo'"><a class="col-sm-10" href="#rapports" target="_self" aria-controls="profile" role="tab" data-toggle="tab">{{ _T["j2uv8lq8"] }}</a>
+            <a class="col-sm-2" tooltip-placement="bottom" data-toggle="tooltip" title="{{ _T['3eq6rndf'] }}"
+              href="{{url_api}}/export/exportrapportvi?request_id={{mainRequest.id}}&isVI={{mainRequest.action_type.etape_type.name == 'prepa_audio'}}"
+              target="_blank" class="btn btn-link btn-xs pull-right"><img ng-click="" width=20 class="pull-right" src="img/word.png"
+                alt="" /> </a>
+            </li>
+            <li role="presentation" style="width: auto;"><a href="#retoursOnDemand" target="_self" aria-controls="messages" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{countMyReturns}}</span> {{ _T["b0srx0g3"] }}</a></li>
+            <!-- action_id of fabrication qc -->
+            <li ng-if="canAddQCReturn()" role="presentation" style="width: auto;" ng-click="qcValues(mainRequest.id)"><a href="#qc" target="_self" aria-controls="messages" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{countMyReturnsQC}}</span>{{ _T["xl8siett"] }}</a></li>
+            <li ng-if="canExportQC()" role="presentation" style="width: auto;"><a href="#qcexport" ng-click="exportQCInfos(workflow)" target="_self" aria-controls="messages" role="tab" data-toggle="tab">{{ _T["46a357fd"] }}</a></li>
+            <li role="presentation" ng-if="mainRequest.sharedReturn.length > 0"><a href="#retoursToCorrect" target="_self" aria-controls="messages" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{mainRequest.sharedReturn.length}}</span> {{ _T["7q4qael3"] }}</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="elements">
+                <form>
+                    <div class="form-group search-form form-select">
+                        <input type="text" class="form-control input-search large-input" ng-model="elementsFilter" placeholder="{{ _T['q2ffbx18'] }}">
+
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-sm-12">
+                      <div class="padd-30">
+                          <div class="panel panel-default panel-bg panel-shadow" style="width:415px; float:left;" ng-if="isReadOnly == false">
+                              <div class="panel-body text-center" style="min-height:244px">
+                                  <p class="text-center text-primary fa-2x">
+                                      {{ _T["apup5do2"] }}
+                                  </p>
+                                  <br>
+                                  <div class="col-md-12" ng-click="showAddNewElementsFn()">
+                                      <button type="button" class="btn btn-primary" style="border-radius:50px; padding:0">
+                                          <i class="c-icon c-icon-add fa-4x"></i>
+                                      </button>
+                                      <p class="text-center text-primary">
+                                          {{ _T["06djaui5"] }}
+                                      </p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div ng-mouseenter="show = true" ng-mouseleave="show = false" class="panel panel-default panel-bg  panel-shadow" style="width:415px; float:left" ng-repeat="item in mainRequest.itemsInRequest | magicFilter:elementsFilter" ng-class="{'panel-item-tech':item.original_request_id == mainRequest.id}">
+                              <div class="panel-body" style="padding:15px; padding-bottom:0; min-height:200px; ">
+                                  <div class="label-group">
+                                      <span class="label label-info">{{::item.nature}}</span>
+                                      <span class="label label-default label-group-border">{{::item.origin}}</span>
+                                      <span class="label label-info">{{ (item.product.episode_number != null && (item.product.type == 0 ? _T["590wjx96"] : _T["h12xqsuf"]) + " " + item.product.episode_number) || (item.product.description != null && item.product.description) || item.product.description_text}}</span>
+                                  </div>
+                                <span class="text-label pull-right">
+                                    {{item.date_creation | asDate | date:'dd MMM yyyy'}}
+                                    <span class="btn-circle c-icon c-icon-close" ng-click="removeMediaItem(mainRequest, item)"  data-toggle="tooltip" title="{{ _T['t4ajnuqr'] }}" role="button"></span>
+                                </span>
+                                <h3 class="card-title">{{::item.support}} </h3>
+                                <p class="card-description">
+                                    {{::item.workflow}}
+                                    <span class="infobull normal-infobull pull-right" ng-if="item.comment != null && item.comment != ''" tooltip-placement="bottom" uib-tooltip-html="item.comment">
+                                        <i class="c-icon c-icon-comment c-icon-shadow "></i><span class="infobull-text">1</span>
+                                    </span>
+                                </p>
+                                <div class="row">
+                                  <div ng-show="item.nature == 'Audio'" class="col-xs-6 col-sm-6">
+                                    <small>{{ _T["8izp2is4"] }} : {{item.layout || "..."}}</small>
+                                  </div>
+                                  <div class="col-xs-6 col-sm-6">
+                                    <small>{{ _T["50304nwz"] }} : {{item.speed_reception || "..."}}</small>
+                                  </div>
+                                  <div class="col-xs-6 col-sm-6">
+                                    <small>{{ _T["y5bxfkuj"] }} : {{item.speed || "..."}}</small>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div ng-show="item.nature == 'Video' && (role_of_user === 'all' || (canDisplay(8) || (canDisplay(4) && canDisplay(8)) ))" class="col-xs-6 col-sm-6 pull-right">
+                                    <a ng-if="item.media_seal_security_code == 1" class="pull-right" href="" popover-placement="top" uib-popover-template="'popover-code-securite.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['26suhfgm'] }}" ng-click="showCodeSecurity(item.id)">
+                                      <img class="img-responsive img-circle" style="margin: auto; cursor: pointer;" src="img/lock-icon.png" alt="code" />
+                                    </a>
+                                    <script type="text/ng-template" id="popover-code-securite.html">
+                                      <div class="col mb-0" style="color: #2A2A2A; width:250px">
+                                        <div class="col-md-12 f-18">
+                                          <b>{{ _T["26suhfgm"] }}</b>
+                                        </div>
+                                        <div clipboard text="decryptedCode" on-copied="showNotifSuccess(_T['tb0rzife'])" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['7sbub8y1'] }}" class="col-md-12 panel-footer panel-footer-neutral">
+                                          <p>{{decryptedCode}}</p>
+                                        </div>
+                                        <div style="font-size: 8px; font-style: italic; text-align: center">
+                                          {{ _T['bomjx9pp'] }}
+                                        </div>
+                                      </div>
+                                    </script>
+                                  </div>
+                                </div>
+                            </div>
+                            <div  clipboard text="item.path" on-copied="showNotifSuccess(_T['f2eum0r2'])" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['yao0bcb4'] }}" class="panel-footer panel-footer-neutral">
+                                <p ng-show="!show">{{::item.path.truncLink(30)}} <span class="c-icon c-icon-link"></span></p>
+                                <p style="word-wrap: break-word; width:100%" ng-show="show" >{{::item.path}} <span class="c-icon c-icon-link"></span></p>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="row" ng-show="showAddNewElements" ng-if="isReadOnly == false">
+                            <div class="panel panel-default panel-bg panel-shadow" style="width:415px; float:left">
+                                <div class="panel-body" style="padding:15px; padding-bottom:0; min-height:180px">
+                                    <div class="label-group">
+                                        <span class="label label-info">{{newItem.nature}}</span>
+                                        <span class="label label-default label-group-border">{{ _T["sgnstmtu"] }}</span>
+                                    </div>
+                                    <span class="text-label pull-right">
+                                        <span class="btn-circle c-icon c-icon-dateBooked" ng-click="createItem(newItem, mainRequest, 0)"  data-toggle="tooltip" title="{{ _T['ms5ezwyf'] }}" role="button"></span>
+                                    </span>
+                                    <h3 class="card-title">
+                                        <ui-select ng-disabled="disabled" ng-model="newItem.support" on-select="selectSupportNewElement($item,$model)" style="width: 100%;" theme="bootstrap">
+                                          <ui-select-match placeholder="{{ _T['h5bglkgi'] }}">{{$select.selected.support}}</ui-select-match>
+                                          <ui-select-choices repeat="support.support as support in supports | propsFilter: {support: $select.search, id: $select.search}">
+                                            <div ng-bind-html="support.support | highlight: $select.search"></div>
+                                          </ui-select-choices>
+                                        </ui-select>
+                                    </h3>
+                                    <p class="card-description">
+                                        <textarea class="form-control" ng-model="newItem.comment" placeholder="{{ _T['eq9spk3x'] }}"></textarea>
+
+                                        <div class="clearfix"></div>
+
+                                        <ui-select ng-if="newItem.nature == 'Audio'" multiple ng-disabled="disabled" ng-model="newItem.layout" style="width: 100%;" theme="bootstrap" close-on-select="false">
+                                          <ui-select-match placeholder="{{ _T['8izp2is4'] }}">{{$item.name}}</ui-select-match>
+                                          <ui-select-choices repeat="layout.name as layout in layouts | propsFilter: {name: $select.search}">
+                                            <div ng-bind-html="layout.name | highlight: $select.search"></div>
+                                          </ui-select-choices>
+                                        </ui-select>
+
+                                        <ui-select ng-disabled="disabled" ng-model="newItem.speed_reception" style="width: 100%; margin-top:10px;" theme="bootstrap">
+                                          <ui-select-match placeholder="{{ _T['dz8plzyk'] }}">{{$select.selected.name}}</ui-select-match>
+                                          <ui-select-choices repeat="speed.name as speed in speeds | propsFilter: {name: $select.search, id: $select.search}">
+                                            <div ng-bind-html="speed.name | highlight: $select.search"></div>
+                                          </ui-select-choices>
+                                        </ui-select>
+
+                                        <ui-select ng-disabled="disabled" ng-model="newItem.speed" style="width: 100%; margin-top:10px" theme="bootstrap">
+                                          <ui-select-match placeholder="{{ _T['34ou49b2'] }}">{{$select.selected.name}}</ui-select-match>
+                                          <ui-select-choices repeat="speed.name as speed in speeds | propsFilter: {name: $select.search, id: $select.search}">
+                                            <div ng-bind-html="speed.name | highlight: $select.search"></div>
+                                          </ui-select-choices>
+                                        </ui-select>
+                                    </p>
+
+                                </div>
+                                <div class="panel-footer panel-footer-neutral">
+                                    <input class="form-control" ng-model="newItem.path" placeholder="{{ _T['zh4fsex6'] }}" type="text"/>
+                                </div>
+                            </div>
+
+                          <div class="col-md-8" ng-show="newMediasItems.length != 0">
+                            <div class="panel panel-default panel-shadow">
+                                <div class="panel-body">
+                                    <div class="panel panel-default panel-bg col-sm-5 panel-shadow" ng-repeat="item in newMediasItems">
+                                        <div class="panel-body" style="padding:15px; padding-bottom:0; min-height:180px">
+                                            <div class="label-group">
+                                                <span class="label label-info">{{::item.nature}}</span>
+                                                <span class="label label-default label-group-border">{{::item.origin}}</span>
+                                            </div>
+                                            <h3 class="card-title">{{::item.support}} </h3>
+                                            <p class="card-description">
+                                                {{::item.workflow}}
+                                                <span class="infobull normal-infobull pull-right" ng-show="item.comment != null" tooltip-placement="bottom" uib-tooltip-html="item.comment">
+                                                    <i class="c-icon c-icon-comment c-icon-shadow "></i><span class="infobull-text">1</span>
+                                                </span>
+                                            </p>
+                                            <div class="row">
+                                              <div ng-show="item.nature == 'Audio'" class="col-xs-6 col-sm-6">
+                                                <small>{{ _T['8izp2is4'] }} : {{item.layout || "..."}}</small>
+                                              </div>
+                                              <div class="col-xs-6 col-sm-6">
+                                                <small>{{ _T['noa1wtgc'] }} : {{item.speed || "..."}}</small>
+                                              </div>
+                                              <div class="col-xs-6 col-sm-6">
+                                                <small>{{ _T['50304nwz'] }} : {{item.speed_reception || "..."}}</small>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-footer panel-footer-neutral">
+                                            <p>{{::item.path.truncLink(20).toLowerCase()}} <span class="c-icon c-icon-link"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer panel-footer-success" ng-click="publishNewMediaItems(mainRequest, 0)" ng-if="newMediasItems.length > 0">
+                                      <i class="glyphicon glyphicon-send"></i>
+                                      {{ _T['5pt77yi2'] }}
+                                </div>
+
+
+
+                            </div>
+
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="rapports">
+                <tabset type="pills" style="margin-top:10px">
+                    <tab heading="Informations générales">
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <form class="padd-15" style="margin-top: 30px">
+                                <div class="text-center">
+                                  <h4>
+                                    <span class="label label-default text-center">
+                                      {{ _T["w5x1jq2i"] }}
+                                    </span>
+                                  </h4>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <div class="separator">
+                                        <p class="separator-label" style="background-color:white">{{ _T["ljuqvitg"] }}</p>
+                                        <hr>
+                                    </div>
+                                    <div ng-class="{'btn-group':isReadOnly == false}">
+                                      <button type="button" class="btn btn-default btn-change"> {{ showSelect(varispeeds, report.varispeed) }}</button>
+                                      <button ng-if="isReadOnly == false" type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret triangle"></span>
+                                        <span class="sr-only">{{ _T["n9j6zrd5"] }}</span>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li ng-repeat="item in varispeeds"><a ng-click="report.varispeed = item.value; updateReport()">{{item.text}}</a></li>
+                                      </ul>
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-3">
+                                    <div class="separator">
+                                        <p class="separator-label" style="background-color:white">{{ _T["q45v0edp"] }}</p>
+                                        <hr>
+                                    </div>
+                                  <div ng-class="{'btn-group':isReadOnly == false}">
+                                    <button type="button" class="btn btn-default btn-change"> {{ showSelect(point_montages, report.point_montage) }}</button>
+                                    <button ng-if="isReadOnly == false" type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <span class="caret triangle"></span>
+                                      <span class="sr-only">{{ _T["n9j6zrd5"] }}</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                      <li ng-repeat="item in point_montages"><a ng-click="report.point_montage = item.value; updateReport()">{{item.text}}</a></li>
+                                    </ul>
+                                  </div>
+                              </div>
+                                <div class="form-group col-xs-6">
+                                    <div class="separator">
+                                        <p class="separator-label" style="background-color:white">{{ _T["eq9spk3x"] }}
+                                            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="!editCommentReport && isReadOnly == false" ng-click="editCommentReport = true"><i class="fa fa-edit"></i> {{ _T["3xoocd81"] }}</button>
+                                            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="editCommentReport" ng-click="updateReport(); editCommentReport = false"><i class="fa fa-check"></i> {{ _T["hvzykhtg"] }}</button>
+                                        </p>
+                                        <hr>
+                                    </div>
+                                  <p ng-show="!editCommentReport" style="cursor:pointer;" class="save-text-p text-underline">{{ report.comment || _T["ybgpeeee"] }}</p>
+                                  <textarea style="width:100%; border-color: gainsboro; border-radius: 4px; height: 200px;" ng-show="editCommentReport" ng-model="report.comment" placeholder="{{ _T['0bj1qmlx'] }}">{{ report.comment }}</textarea>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <form class="padd-15">
+                                <div class="form-group col-xs-12">
+                                    <div class="separator">
+                                        <p class="separator-label" style="background-color:white">{{ _T["2ql6r5f0"] }}
+                                            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="!editRemarksReport && isReadOnly == false" ng-click="editRemarksReport = true"><i class="fa fa-edit"></i> {{ _T["3xoocd81"] }}</button>
+                                            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="editRemarksReport" ng-click="updateReport(); editRemarksReport = false"><i class="fa fa-check"></i> {{ _T["hvzykhtg"] }}</button>
+                                        </p>
+                                        <hr>
+                                    </div>
+                                  <p ng-show="!editRemarksReport" style="cursor:pointer;" class="text-underline save-text-p"><i>{{ report.remarks || _T["ryjvnejr"] }}</i></p>
+                                  <textarea style="width:100%; border-color: gainsboro; border-radius: 4px; height: 200px;" ng-show="editRemarksReport" ng-model="report.remarks" placeholder="_T['1gsyxdtf']">{{ report.remarks }}</textarea>
+                                </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-12 text-center" ng-show="isReadOnly == false">
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-default btn-change">
+                                  <span ng-if="report.level == null"><span class="type type-default"></span> {{ _T["s78rerhe"] }}</span>
+                                  <span ng-if="report.level == 1"><span class="type type-success"></span> {{ _T["5lhpmej6"] }}</span>
+                                  <span ng-if="report.level == 2"><span class="type type-primary"></span> {{ _T["wekslbuz"] }}</span>
+                                  <span ng-if="report.level == 3"><span class="type type-warning"></span> {{ _T["se8q3b3i"] }}</span>
+                                  <span ng-if="report.level == 4"><span class="type type-danger"></span> {{ _T["kb8au41i"] }}</span>
+
+                              </button>
+                              <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret triangle"></span>
+                                <span class="sr-only">{{ _T["n9j6zrd5"] }}</span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a ng-click="updateReportLevel(3,'À Corriger');"><span class="type type-warning"></span> {{ _T["darnvdy7"] }}</a></li>
+                                <li><a ng-click="updateReportLevel(4,'Refusée');"><span class="type type-danger"></span> {{ _T["3h268ovu"] }}</a></li>
+                                <li><a ng-click="updateReportLevel(1,'Acceptée');"><span class="type type-success"></span> {{ _T["thy7qevn"] }}</a></li>
+                                <li><a ng-click="updateReportLevel(2,'Acceptable');"><span class="type type-primary"></span> {{ _T["n4z3y60g"] }}</a></li>
+                              </ul>
+                            </div>
+                        </div>
+
+
+                      <div class="clearfix"></div>
+                    </tab>
+
+                    <tab ng-repeat="bobine in mainRequest.report.bobines" heading="Bobine {{bobine[0].bobine || $index+1}}" active="bobine.active">
+                      <table class="table table-striped table-custom">
+                       <thead>
+                         <tr>
+                           <th>{{ _T["d2yetir4"] }}</th>
+                           <th>{{ _T["ewybz84r"] }}</th>
+                           <th>{{ _T["st4hqe2m"] }}</th>
+                           <th>{{ _T["5sdilxx7"] }}</th>
+                           <th>{{ _T["9yonx6b0"] }}</th>
+                         </tr>
+                       </thead>
+
+                       <tr ng-repeat="error in bobine">
+                         <td>
+                           {{ "IN : " + error.tc_in || _T["vbuon1j5"] }}
+                           -
+                           {{ "OUT : " + error.tc_out || _T["dkbcmohr"] }}
+                         </td>
+                         <td>
+                           {{ error.description || _T["jivcnvvm"] }}
+                         </td>
+                         <td>
+                           {{ error.vo && _T["st4hqe2m"] || _T["3w9hfdgg"] }}
+                         </td>
+                         <td>
+                           {{ error.track || {{ _T["sg9hrx01"] }} }}
+                         </td>
+                         <td>
+                             <div class="btn-group">
+                              <button type="button" class="btn btn-default btn-change">
+                                  <span ng-if="error.level == null">
+                                      <span class="type type-default"></span> {{ _T["fj98qsz4"] }}
+                                  </span>
+                                  <span  ng-if="error.level == 1">
+                                      <span class="type type-success"></span> {{ _T["eyk4c9a4"] }}
+                                  </span>
+                                  <span  ng-if="error.level == 2">
+                                      <span class="type type-primary"></span> {{ _T["n4z3y60g"] }}
+                                  </span>
+                                  <span  ng-if="error.level == 3">
+                                      <span class="type type-warning"></span> {{ _T["ap87beys"] }}
+                                  </span>
+                                  <span ng-if="error.level == 4">
+                                      <span class="type type-danger"></span> {{ _T["3h268ovu"] }}
+                                  </span>
+                              </button>
+                            </div>
+
+                         </td>
+                       </tr>
+                     </table>
+                   </tab>
+                   <tab ng-repeat="bobine in report.bobines" heading="Bobine {{bobine[0].bobine || $index+1}}" active="bobine.active">
+                     <table class="table table-hover table-custom table-condensed">
+                      <thead>
+                        <tr>
+                          <th>{{ _T["d2yetir4"] }}</th>
+                          <th>{{ _T["ewybz84r"] }}</th>
+                          <th>{{ _T["st4hqe2m"] }}</th>
+                          <th>{{ _T["5sdilxx7"] }}</th>
+                          <th>{{ _T["9yonx6b0"] }}</th>
+                          <th style="width:20px">{{ _T["km6j87uy"] }}</th>
+                        </tr>
+                      </thead>
+
+                      <tr ng-repeat="error in bobine">
+                        <td>
+                          <span e-form="rowform" e-style="width:100px !important" e-name="tc_in" e-placeholder="Tc in" blur="ignore" editable-text="error.tc_in" onbeforesave="checkTC($data, $index, 'tc_in')">
+                            {{ "IN : " + error.tc_in || _T["vbuon1j5"] }}
+                          </span>
+                          -
+                          <span e-form="rowform" e-style="width:100px !important" e-name="tc_out" e-placeholder="Tc out" blur="ignore" editable-text="error.tc_out" onbeforesave="checkTC($data, $index, 'tc_out')">
+                            {{ "OUT : " + error.tc_out || _T["dkbcmohr"] }}
+                          </span>
+                        </td>
+                        <td>
+                          <span e-form="rowform" e-name="description" e-placeholder="{{ _T['ewybz84r'] }}" blur="ignore" editable-textarea="error.description">
+                            {{ error.description || _T["jivcnvvm"] }}
+                          </span>
+                        </td>
+                        <td>
+                          <span e-form="rowform" e-name="vo" e-title="{{ _T['st4hqe2m'] }} ?" blur="ignore" editable-checkbox="error.vo">
+                            {{ error.vo && _T["st4hqe2m"] || _T["3w9hfdgg"] }}
+                          </span>
+                        </td>
+                        <td>
+                          <span e-form="rowform" e-name="track" e-placeholder="{{ _T['1vz2jleo'] }}" blur="ignore" editable-text="error.track">
+                            {{ error.track || _T["sg9hrx01"] }}
+                          </span>
+                        </td>
+                        <td>
+                          <span e-form="rowform" e-name="level" e-ng-options="l.value as l.text for l in levels" blur="ignore" editable-select="error.level">
+                            {{ showSelect(levels, error.level) }}
+                          </span>
+                        </td>
+                        <td class="text-right">
+                          <form class="form-buttons form-inline" blur="ignore" editable-form name="rowform" ng-show="rowform.$visible" onaftersave="updateReportObservation(error);" shown="inserted == error">
+                            <div class="btn-group btn-group-vertical btn-group-xs">
+                              <button class="btn btn-primary" ng-disabled="rowform.$waiting" type="submit">
+                                {{ _T["6n3679ox"] }}
+                              </button>
+                              <button class="btn btn-default" ng-click="rowform.$cancel()" ng-disabled="rowform.$waiting" type="button">
+                                {{ _T["ficbz281"] }}
+                              </button>
+                            </div>
+
+                          </form>
+                          <div class="btn-group btn-group-vertical btn-group-xs pull-right" ng-show="!rowform.$visible">
+                            <button class="btn btn-primary" ng-click="rowform.$show()">
+                              <i class="glyphicon glyphicon-edit"></i>
+                              {{ _T["rnr4bk5z"] }}</button>
+                            <button class="btn btn-danger" ng-click="removeRow(error)">
+                              <i class="glyphicon glyphicon-trash"></i>
+                              {{ _T["tc6j8t46"] }}</button>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+
+                    <button class="btn btn-default btn-sm pull-right" style="margin-bottom:10px; margin-right:10px" ng-click="addRow($index+1)">{{ _T["l93q69d7"] }}</button>
+                    <br>
+                    <div class="clearfix">
+                    </div>
+                   </tab>
+                   <tab heading="+" title="{{ _T['4ikiclc1'] }}" ng-click="addBobine(); report.bobines['Bobine ' + activePillReport].active = true"></tab>
+                </tabset>
+                <span ng-if="isReadOnly == true">
+                    <div class="panel-footer panel-footer-neutral" ng-if="report.level == null">{{ _T["s78rerhe"] }}</div>
+                    <div class="panel-footer panel-footer-success" ng-if="report.level == 1">{{ _T["5lhpmej6"] }}</div>
+                    <div class="panel-footer panel-footer-primary" ng-if="report.level == 2">{{ _T["wekslbuz"] }}</div>
+                    <div class="panel-footer panel-footer-warning" ng-if="report.level == 3">{{ _T["se8q3b3i"] }}</div>
+                    <div class="panel-footer panel-footer-danger" ng-if="report.level == 4">{{ _T["kb8au41i"] }}</div>
+                </span>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="qc">
+              <div>
+                <table id="qcInformations" class="table table-hover table-custom table-condensed">
+                  <thead>
+                    <tr style="display: flex;">
+                      <th style="font-size: 18px; font-weight: bold;">{{ _T["pjj0patk"] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="display: flex;">
+                      <td style="text-align: center">
+                        <input placeholder='{{ _T["4tqia6yu"] }}' type="text" class="form-control input-sm" ng-model="qc.program_informations.title" disabled>
+                      </td>
+                      <td style="text-align: center">
+                        <input placeholder='{{ _T["2tnd9dbj"] }}' type="text" class="form-control input-sm" ng-model="qc.program_informations.version_content" disabled>
+                      </td>
+                      <td style="text-align: center">
+                        <input placeholder='{{ _T["zwhmzeup"] }}' type="text" class="form-control input-sm" ng-model="qc.program_informations.episode_name">
+                      </td>
+                      <td style="text-align: center">
+                        <input placeholder='{{ _T["vbm5nljt"] }}' type="text" class="form-control input-sm" ng-model="qc.program_informations.episode">
+                      </td>
+                    </tr>
+                    <tr style="display: flex;">
+                      <td style="text-align: center">
+                        <input placeholder='Langue:' type="text" class="form-control input-sm" ng-model="qc.program_informations.language_config_langue">
+                      </td>
+                      <td style="text-align: center">
+                        <input placeholder='Format de mix:' type="text" class="form-control input-sm" ng-model="qc.program_informations.language_config_format_mix">
+                      </td>
+                      <td style="text-align: center">
+                        <input placeholder='Type de doublage:' type="text" class="form-control input-sm" ng-model="qc.program_informations.language_config_type_doublage">
+                      </td>
+                    </tr>
+                    <thead>
+                      <tr style="display: flex;">
+                        <th style="font-size: 18px; font-weight: bold;">{{ _T["sunlszn2"] }}</th>
+                      </tr>
+                    </thead>
+                    <tr style="display: flex;">
+                      <td style="text-align: center">
+                        <input placeholder='{{ _T["gzyhswri"] }}' type="text" class="form-control input-sm" id="date" ng-model="qc.qc_log.date" disabled>
+                      </td>
+                      <td style="text-align: center" ng-if="mainrequest.tech_writer_id != null">
+                        <input placeholder='{{ _T["9p2est9j"] }}' type="text" class="form-control input-sm" value="{{mainrequest.tech_writer_id}}" ng-model="qc.qc_log.operator">
+                      </td>
+                      <td style="text-align: center" ng-if="mainrequest.tech_writer_id == null">
+                        <input placeholder='{{ _T["9p2est9j"] }}' type="text" class="form-control input-sm" ng-model="qc.qc_log.operator">
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <ui-select ng-if="!qcExist" style="border: solid 1px red !important;"  ng-model="qc.qc_log.qc_type" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder='{{ _T["ap1p6d5h"] }}'>{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="qcType in qcTypeForSelect | magicFilter: $select.search" >
+                            <div ng-bind-html="qcType | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <ui-select ng-if="qcExist" ng-model="qc.qc_log.qc_type" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder='{{ _T["ap1p6d5h"] }}'>{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="qcType in qcTypeForSelect | magicFilter: $select.search" >
+                            <div ng-bind-html="qcType | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <span class="alert alert-danger mr-15" ng-if="errors.qc_log.qc_type">{{errors.qc_log.qc_type}}</span>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{qc.qc_log.qc_type}}</p>
+                      </td>
+                      <td style="text-align: center">
+                        <input placeholder='{{ _T["7e7cos3v"] }}' type="text" class="form-control input-sm" ng-model="qc.qc_log.operator_comments">
+                      </td>
+                    </tr>
+                    <thead>
+                      <tr style="display: flex;">
+                        <th style="font-size: 18px; font-weight: bold;">{{ _T["3qmxxr5l"] }}</th>
+                      </tr>
+                    </thead>
+                    <tr style="display: flex; flex-wrap: wrap;">
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["kpxpn4zo"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["kpxpn4zo"] }}' type="text" class="form-control input-sm" id="program_start"  name="program_start" ng-model="qc.technical_information.program_start" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist" placeholder='{{ _T["kpxpn4zo"] }}' type="text" class="form-control input-sm" id="program_start"  name="program_start" ng-model="qc.technical_information.program_start" timecode-input-enhanced maxlength="11">
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.program_start">{{errors.technical_information.program_start}}</span>
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["4rn446jo"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["4rn446jo"] }}' type="text" class="form-control input-sm" id="program_end" name="program_end" ng-model="qc.technical_information.program_end" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist"  placeholder='{{ _T["4rn446jo"] }}' type="text" class="form-control input-sm" id="program_end" name="program_end" ng-model="qc.technical_information.program_end" timecode-input-enhanced maxlength="11">
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.program_end">{{errors.technical_information.program_end}}</span>
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["e640uzrk"] }}</label>
+                        <input placeholder='{{ _T["e640uzrk"] }}' type="text" class="form-control input-sm" id="frame_rate" name="frame_rate" ng-model="qc.technical_information.frame_rate" disabled>
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.frame_rate">{{errors.technical_information.frame_rate}}</span>
+                      </td>
+                      <td style="text-align: center;">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["jbr7nk2x"] }}</label>
+                        <input placeholder='{{ _T["jbr7nk2x"] }}' type="text" class="form-control input-sm" ng-model="qc.technical_information.trt" disabled>
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.trt">{{errors.technical_information.trt}}</span>
+                      </td>
+                      </tr>
+                      <tr style="display: flex; flex-wrap: wrap;">
+                      <td style="text-align: center, padding-left: 30px;">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["6lzfehx2"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["6lzfehx2"] }}' type="text" class="form-control input-sm" id="video_start" name="video_start"  ng-model="qc.technical_information.video_start" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist" placeholder='{{ _T["6lzfehx2"] }}' type="text" class="form-control input-sm" id="video_start" name="video_start"  ng-model="qc.technical_information.video_start" timecode-input-enhanced maxlength="11">
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.video_start"></span>{{errors.technical_information.video_start}}</span>
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["96acarzq"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["96acarzq"] }}' type="text" class="form-control input-sm" id="video_end" name="video_end"  ng-model="qc.technical_information.video_end" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist" placeholder='{{ _T["96acarzq"] }}' type="text" class="form-control input-sm" id="video_end" name="video_end"  ng-model="qc.technical_information.video_end" timecode-input-enhanced maxlength="11">
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.video_end">{{errors.technical_information.video_end}}</span>
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["2w4j0elr"] }}</label>
+                        <input ng-if="!qcExist" placeholder='{{ _T["2w4j0elr"] }}' type="text" class="form-control input-sm" id="sync_pop" name="sync_pop" ng-model="qc.technical_information.sync_pop" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist" placeholder='{{ _T["2w4j0elr"] }}' type="text" class="form-control input-sm" id="sync_pop" name="sync_pop" ng-model="qc.technical_information.sync_pop" timecode-input-enhanced maxlength="11">
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["dgj9gc23"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["dgj9gc23"] }}' type="text" class="form-control input-sm" id="ffoa" name="ffoa" ng-model="qc.technical_information.ffoa" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist" placeholder='{{ _T["dgj9gc23"] }}' type="text" class="form-control input-sm" id="ffoa" name="ffoa" ng-model="qc.technical_information.ffoa" timecode-input-enhanced maxlength="11">
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.ffoa">{{errors.technical_information.ffoa}}</span>
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["vh0mppyn"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["vh0mppyn"] }}' type="text" class="form-control input-sm" id="first_frame_of_audio_modulation" name="first_frame_of_audio_modulation" ng-model="qc.technical_information.first_frame_of_audio_modulation" timecode-input-enhanced maxlength="11">
+                        <input ng-if="qcExist" placeholder='{{ _T["vh0mppyn"] }}' type="text" class="form-control input-sm" id="first_frame_of_audio_modulation" name="first_frame_of_audio_modulation" ng-model="qc.technical_information.first_frame_of_audio_modulation" timecode-input-enhanced maxlength="11">
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.first_frame_of_audio_modulation">{{errors.technical_information.first_frame_of_audio_modulation}}</span>
+                      </td>
+                      <td style="text-align: center">
+                        <label style="margin: 0px 10px; font-size: 12px;">{{ _T["92zru5qj"] }}</label>
+                        <input ng-if="!qcExist" style="border: solid 1px red !important;" placeholder='{{ _T["92zru5qj"] }}' type="text" class="form-control input-sm" id="lfoa" name="lfoa" ng-model="qc.technical_information.lfoa" timecode-input-enhanced maxlength="11">                      
+                        <input ng-if="qcExist" placeholder='{{ _T["92zru5qj"] }}' type="text" class="form-control input-sm" id="lfoa" name="lfoa" ng-model="qc.technical_information.lfoa" timecode-input-enhanced maxlength="11">                      
+                        <span class="alert alert-danger mr-15" ng-if="errors.technical_information.lfoa">{{errors.technical_information.lfoa}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <table class="table table-hover table-custom table-condensed" id="qcAssets">
+                  <thead>
+                    <tr>
+                      <th style="display: flex;">
+                        <p style="font-size: 18px; font-weight: bold; white-space: nowrap;">{{ _T["4o40hshs"] }}</p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th>{{ _T["d9d2ligi"] }}</th>
+                      <th>{{ _T["ys4uct9j"] }}</th>
+                      <th>{{ _T["eh22h0cq"] }}</th>
+                      <th>{{ _T["2a18flkk"] }}</th>
+                      <th>{{ _T["wr4k2avj"] }}</th>
+                      <th>{{ _T["p1ldvfkm"] }}</th>
+                      <th>{{ _T["2tuysmnl"] }}</th>
+                      <th>{{ _T["hvrdvsiq"] }}</th>
+                      <th ng-if="qcExist.qc.validate != 1">{{ _T["10grhk78"] }}</th>
+                    </tr>
+                  </thead>
+                    <tr ng-repeat="(key, asset) in assets track by $index">
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <ui-select ng-model="asset.audio_language" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder='{{ _T["d9d2ligi"] }}''>{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="audioLanguage in audioLanguageForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="audioLanguage | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.audio_language}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <ui-select ng-model="asset.config" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder='{{ _T["ys4uct9j"] }}'>{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="config in configForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="config | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.config}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <ui-select ng-model="asset.asset_type" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder='{{ _T["eh22h0cq"] }}'>{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="assetType in assetTypeForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="assetType | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.asset_type}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <input placeholder='{{ _T["2a18flkk"] }}' type=text class="form-control input-sm" ng-model="asset.version"/>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.version}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <input placeholder='{{ _T["wr4k2avj"] }}' type="date" class="form-control input-sm" ng-model="asset.date_received">
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <input placeholder='{{ _T["wr4k2avj"] }}' type="date" class="form-control input-sm" ng-model="asset.date_received" disabled style="text-align: center;">
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <input placeholder='{{ _T["p1ldvfkm"] }}' type="text" class="form-control input-sm" ng-model="asset.filename">
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.filename}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <input placeholder='{{ _T["2tuysmnl"] }}' type="text" class="form-control input-sm" ng-model="asset.lkfs">
+
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.lkfs}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <input placeholder='{{ _T["hvrdvsiq"] }}' type="text" class="form-control input-sm" ng-model="asset.tp">
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate == 1">
+                        <p class="pLikeInput">{{asset.tp}}</p>
+                      </td>
+                      <td style="text-align: center" ng-if="qcExist.qc.validate != 1">
+                        <button class="btn btn-danger btn-outline pull-right" ng-click="delAsset(key)"  data-toggle="tooltip" title="{{ _T['fbuaqnlt'] }}">
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                  <button ng-click="addAsset()" class="btn btn-success" style="margin-left: 10px;" ng-if="qcExist.qc.validate != 1">{{ _T["4b06p5ee"] }}</button>
+                  <div ng-if="qcExist == null">
+                    <button ng-disabled="(
+                     qc.technical_information.program_end && qc.technical_information.program_start
+                     && qc.technical_information.video_start && qc.technical_information.video_end
+                     && qc.technical_information.ffoa
+                     && qc.technical_information.first_frame_of_audio_modulation && qc.technical_information.lfoa
+                     && qc.qc_log.qc_type) ? false : true" class="btn btn-primary" style="display: block; margin: 2em auto; width: 10em; height: 4em; font-size: 18px;" ng-click="publishQcInfos(qc)">{{ _T["eugga5xj"] }}</button>
+                  </div>
+                  <div ng-if="qcExist != null" style="float:right">
+                    <button class="btn btn-primary" style="display: block; margin: 2em auto; width: 8em; height: 3em; font-size: 18px;" ng-click="qcModifyInfos(qc)" ng-if="qcExist.qc.validate != 1">{{ _T["6n3679ox"] }}</button>
+                  </div>
+
+                  <div style="display: flex;">
+                    <strong><p id="ti_head_label">{{ _T["oxtprlfn"] }}</p></strong>
+                  </div>
+                  <div>
+                    <div id="ti_head" ng-if="qcExist.qc.validate == 1">
+                      <div style="width: 10%;">
+                        <label>{{ _T["pqm3sevj"] }}</label>
+                      </div>
+                      <div style="width: 10%;">
+                        <label>{{ _T["mzikbmb1"] }}</label>
+                      </div>
+                      <div style="width: 10%;">
+                        <label>{{ _T["la2vk1zj"] }}</label>
+                      </div>
+                      <div style="width: 20%;">
+                        <label>{{ _T["9zbstvb5"] }}</label>
+                      </div>
+                      <div style="width: 40%;">
+                        <label>{{ _T["0utmj5bs"] }}</label>
+                      </div>
+                      <div style="width: 5%; text-align: center; padding-top: 12px; padding-left: 5px;">
+                        <label>{{ _T["ne7vjbah"] }}</label>
+                      </div>
+                    </div>
+
+                    <div id="ti_not_finalize_head" ng-if="qcExist.qc.validate == 0">
+                      <div style="width: 8%;">
+                        <label>{{ _T["pqm3sevj"] }}</label>
+                      </div>
+                      <div style="width: 8%;">
+                        <label>{{ _T["mzikbmb1"] }}</label>
+                      </div>
+                      <div style="width: 9%;">
+                        <label>{{ _T["la2vk1zj"] }}</label>
+                      </div>
+                      <div style="width: 20%;">
+                        <label>{{ _T["9zbstvb5"] }}</label>
+                      </div>
+                      <div style="width: 40%;">
+                        <label>{{ _T["0utmj5bs"] }}</label>
+                      </div>
+                      <div style="width: 5%;">
+                        <label>{{ _T["ne7vjbah"] }}</label>
+                      </div>
+                      <div style="width: 10%;">
+                        <label>{{ _T["10grhk78"] }}</label>
+                      </div>
+                    </div>
+                    <div ng-show="(qcExist.technical_issues | json) != '{}'" ng-repeat="(key, ti) in qcExist.technical_issues track by $index">
+                      <div ng-if="qcExist.qc.validate == 0"  id="ti_not_finalize">
+                        <div style="width: 8%;" class="ti_not_finalize_div">
+                          <input placeholder='{{ _T["pqm3sevj"] }}' type="text" class="form-control input-sm" name="tc_in" id="tc_in" ng-model="ti.tc_in" timecode-input=""><!-- timecode-input=""-->
+                        </div>
+                        
+                        <div style="width: 8%;" class="ti_not_finalize_div">
+                          <input placeholder='{{ _T["mzikbmb1"] }}' type="text" class="form-control input-sm" name="tc_out" id="tc_out" style="width:100px"  ng-model="ti.tc_out" timecode-input=""><!-- timecode-input=""-->
+                        </div>
+                        
+                        <div style="width: 9%;" class="ti_not_finalize_div">
+                          <ui-select ng-model="ti.channel" class="w-100" theme="bootstrap">
+                            <ui-select-match placeholder='{{ _T["la2vk1zj"] }}'>{{$select.selected}}</ui-select-match>
+                            <ui-select-choices group-by="'type'" repeat="channel in channelsForSelect | magicFilter: $select.search">
+                              <div ng-bind-html="channel | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+                        
+                        <div ng-repeat="return in qcExist.return track by $index" ng-if="ti.return_id == return.id" class="ti_not_finalize_div" style="width: 20%;">
+                          <ui-select ng-model="ti.return_element_type" on-select="selectReturnType(ti, $select)" class="w-100" theme="bootstrap">
+                            <ui-select-match  placeholder="{{ti.return_element_type}}" >{{$select.selected.element}}</ui-select-match>
+                            <ui-select-choices repeat="typeReturn in typesReturnForSelect | magicFilter: $select.search">
+                              <div ng-bind-html="typeReturn.value | highlight: $select.search">
+                              </div>
+                            </ui-select-choices>
+                          </ui-select>
+                          
+                        </div>
+
+                        <div style="width: 40%;" class="ti_not_finalize_div">
+                          <input placeholder='{{ _T["0utmj5bs"] }}'  ng-disabled="canEnableComment()" type="text" style="width: -webkit-fill-available; margin: 0; height: 39px;" value="{{ti.comments}}" list="comments" ng-model="ti.comments" comment-input="{{typesCommentForSelect}}" />
+                        </div>
+                        
+                        <div style="width: 5%;" class="ti_not_finalize_div">
+                          <ui-select ng-model="ti.severity" class="w-100" theme="bootstrap">
+                            <ui-select-match placeholder="{{ti.severity}}">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices group-by="'type'" repeat="severity in severityForSelect | magicFilter: $select.search">
+                              <div ng-bind-html="severity | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+
+                        <div style="width: 10%; display: flex; align-items: center;" class="ti_not_finalize_div">
+                          <button style="height: 80%;" ng-disabled="ti.tc_out.length != 11 || ti.tc_in.length != 11" ng-click="modifyTi(ti.id, ti.return_id, ti.tc_in, ti.tc_out, ti.channel, ti.return_element_type, ti.comments, ti.severity, mainRequest.id)" class="btn btn-warning">modifier</button>
+                          <button style="height: 80%;" class="btn btn-danger btn-outline pull-right" ng-click="delTi(ti.id, ti.return_id, mainRequest.id)"  data-toggle="tooltip" title="{{ _T['fbuaqnlt'] }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div ng-if="qcExist.qc.validate == 1" id="ti_finalize">
+                        <div style="width: 10%;">
+                          <p>{{ti.tc_in}}</p>
+                        </div>
+                        <div style="width: 10%;">
+                          <p>{{ti.tc_out}}</p>
+                        </div>          
+                        <div style="width: 10%;">
+                          <p>{{ti.channel}}</p>
+                        </div>
+                        <div ng-repeat="return in qcExist.return track by $index" ng-if="ti.return_id == return.id" style="width: 20%;">
+                            <p>{{return.type}}</p>
+                        </div>
+                        <div style="width: 40%; word-wrap: break-word">
+                          <p>{{ti.comments}}</p>
+                        </div>
+                        <div style="width: 5%;">
+                          <p>{{ti.severity}}</p>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                <table class="table table-striped table-custom" ng-if="canPublishQcReturns(mainRequest)">
+                  <thead>
+                    <th>{{ _T["czxyx2v6"] }}</th>
+                    <th>{{ _T["lmwlyuq5"] }}</th>
+                    <th>{{ _T["eq9spk3x"] }}</th>
+                    <th>{{ _T["jvieoza0"] }}</th>
+                    <th>{{ _T["k82q1zyu"] }}</th>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="aReturn in mainRequest.qcReturns" ng-if="aReturn.id.includes('tmp')">
+                      <td ng-if="!aReturn.is_protools">
+                          <label for="{{$index}}" style="cursor:pointer; font-size: 0.875rem; margin-bottom:0;">{{ _T["3ljtj91t"] }} ?</label>
+                          <input type="checkbox" ng-model="aReturn.tc_global"  class="inputCheckBox">
+                        <span ng-if="aReturn.tc_global != 1">
+                          <input class="form-control input-sm" id="ret_tc_in" name="tc_in" ng-disabled="return.tc_global" ng-model="aReturn.tc_in" pattern="\d{2}:\d{2}:\d{2}(:\d{2})?" title="{{ _T['2x7fn7q0'] }}" placeholder="TC IN" style="width:100px" timecode-input="" type=text/>
+                          <div class="clearfix"></div>
+                          <input class="form-control input-sm" id="ret_tc_out" name="tc_out" ng-disabled="return.tc_global" ng-model="aReturn.tc_out" pattern="\d{2}:\d{2}:\d{2}(:\d{2})?" title="{{ _T['2x7fn7q0'] }}" placeholder="TC OUT" style="width:100px" timecode-input="" type=text/>
+                        </span>
+                        <p class="alert alert-danger mr-15" ng-if="error.includes('TC')">{{ _T["y43zftwq"] }}</p>
+                      </td>
+                      <td ng-if="aReturn.is_protools">
+                        <span>{{aReturn.tc_in}}</span>
+                        <span ng-if="aReturn.tc_out">{{aReturn.tc_out}}</span>
+                      </td>
+                      <td>
+                        <ui-select ng-model="aReturn.type_element" on-select="saveLastTypeElement($model, aReturn)" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['r6tdef7w'] }}">{{$select.selected.value}}</ui-select-match>
+                          <ui-select-choices repeat="typeReturn in typesReturnForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="typeReturn.value | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <button class="btn btn-info btn-outline btn-block btn-xs" ng-if="lastTypeElement" ng-click="aReturn.type_element = lastTypeElement">{{ _T["z14ein99"] }}</button>
+                        <p class="alert alert-danger mr-15" ng-if="error.includes('type_return')">{{ _T["y43zftwq"] }}</p>
+                      </td>
+                      <td>
+                        <input placeholder='{{ _T["0utmj5bs"] }}' ng-disabled="canEnableComment()" type="text" style="width: 100%; height: 39px;" list="comments" ng-model="aReturn.comment" comment-input="{{typesCommentForSelect}}" />
+                        <p class="alert alert-danger mr-15" ng-if="error.includes('comments')">{{ _T["y43zftwq"] }}</p>
+                      </td>
+                      <td>
+                        <table ng-repeat="techIssue in mainRequest.techIssues | filter: {return_id: aReturn.id}">
+                          <tr>
+                            <td>
+                              <ui-select ng-model="techIssue.channel" class="w-100" theme="bootstrap">
+                                <ui-select-match placeholder="{{ _T['jvieoza0'] }}">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices group-by="'type'" repeat="channel in channelsForSelect | magicFilter: $select.search">
+                                  <div ng-bind-html="channel | highlight: $select.search"></div>
+                                </ui-select-choices>
+                              </ui-select>
+                              <p class="alert alert-danger mr-15" ng-if="error.includes('channel')">{{ _T["y43zftwq"] }}</p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td>
+                        <table ng-repeat="techIssue in mainRequest.techIssues | filter: {return_id: aReturn.id}">
+                          <tr>
+                            <td>
+                              <ui-select ng-model="techIssue.severity" class="w-100" theme="bootstrap">
+                                <ui-select-match placeholder="{{ _T['k82q1zyu'] }}">{{$select.selected}}</ui-select-match>
+                                <ui-select-choices group-by="'type'" repeat="severity in severityForSelect | magicFilter: $select.search">
+                                  <div ng-bind-html="severity | highlight: $select.search"></div>
+                                </ui-select-choices>
+                              </ui-select>
+                            </td>
+                          </tr>
+                        </table>
+                        <p  class="alert alert-danger mr-15" ng-if="error.includes('severity')">{{ _T["y43zftwq"] }}</p>
+                      </td>
+                      
+                      <td>
+                        <button class="btn btn-danger btn-xs btn-outline pull-right" ng-click="deleteThisQcRet(aReturn, $index, mainRequest)"  data-toggle="tooltip" title="{{ _T['fbuaqnlt'] }}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td> 
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="mb-10 mr-15 mt-10 ml-15" ng-if="qcExist.qc.validate == 0">
+
+                  
+
+                <button class="btn btn-primary btn-big-shadow" ng-click='addQcReturns(mainRequest);' ng-if="canDisplayButtonAddReturn()"><i class="c-icon c-icon-add"></i> {{ _T["22kijz7l"] }}</button>
+                </div>
+                <div class="mb-10 mr-15 mt-10 ml-15" style="float:right; font-size: 16px;" ng-if="qcExist.qc.validate == 0">
+                  <button class="btn btn-success btn-sm btn-big-shadow" ng-click="publishQcRet(mainRequest);" ng-if="canPublishQcReturns(mainRequest) && isReadOnly == false">
+                    <i class="fa fa-check"></i> {{ _T["dgjyo57d"] }}</button>
+                  <span class="alert alert-danger pull-right mr-17" ng-if="errorTypeElementReturn">{{ _T["vqqqt6zc"] }}</span>
+                  <button class="btn btn-primary " ng-click="finalizeQC(qcExist.qc.id, mainRequest.id);" ng-if="qcExist.qc.validate == 0" style="display: block; margin: 2em auto; width: 10em; height: 3em; font-size: 18px;">{{ _T["74y9ug99"] }}</button>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div ng-if="uploader[0] != null">
+                      <div class="panel-body">
+                        <h4>{{ _T["q13emtya"] }}</h4>
+                        <div nv-file-drop="" uploader="uploader[0]">
+                          <div class="col-md-12">
+                            <div ng-show="uploader[0].isHTML5">
+                              <div class="upload-text-box text-center" nv-file-over="" uploader="uploader[0]">
+                                {{ _T["ne14tf07"] }}
+                                <br><br>
+                                <div class="btn btn-primary upload-file-container">
+                                  <input multiple nv-file-select="" type="file" uploader="uploader[0]"/>
+                                  {{ _T["6q8stqsy"] }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="qcexport">
+              <table class="table table-striped table-custom">
+                <tr ng-repeat="qc_export in qcs_export">
+                  <td>
+                    <input id="qcExport_{{$index}}" name="{{qc_export.type_qc}}" ng-if="qc_export.status == 'PASS'" class="inputQcExport" type="checkbox">
+                  </td>
+                  <td style="font-size: 18px;">{{qc_export.type_qc}} (request id : {{qc_export.request_id}})</td>
+                  <td ng-if="qc_export.status == 'PASS'" style="font-size: 18px; color: green;">{{qc_export.status}}</td>
+                  <td ng-if="qc_export.status == 'FAILED'" style="font-size: 18px; color: red;">{{qc_export.status}}</td>
+                </tr>
+              </table>
+              <button class="btn btn-primary" ng-click="exportQC(qcs_export.length)" style="display: block; margin: 2em auto; width: 10em; height: 3em; font-size: 18px;">{{ _T["y17e086y"] }}</button>
+            </div>
+            <!-- enf of qc panel-->
+            <div role="tabpanel" class="tab-pane" id="retoursOnDemand">
+                <table class="table table-striped table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width:300px">{{ _T["0xc7nggs"] }}</th>
+                            <th style="width:300px">{{ _T["6nhvzrz1"] }}</th>
+                            <th colspan="2">{{ _T["qiqskta9"] }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="aReturn in mainRequest.ownReturn | orderBy : ['tc_global', 'tc_in', 'tc_out']" ng-if="aReturn.id != null">
+                            <td>
+                                <div class="row">
+                                  <div ng-if="aReturn.tc_global != 1 && aReturn.tc_in && aReturn.tc_out" class="label-group">
+                                    <span class="label label-default">IN {{aReturn.tc_in}}</span>
+                                    <span class="label label-default label-group-border">OUT {{aReturn.tc_out}}</span>
+                                  </div>
+                                  <span ng-if="aReturn.tc_global != 1 && aReturn.tc_in && !aReturn.tc_out" class="label label-default">IN {{aReturn.tc_in}}</span>
+                                  <span ng-if="aReturn.tc_global != 1 && !aReturn.tc_in && aReturn.tc_out" class="label label-default">OUT {{aReturn.tc_out}}</span>
+                                  <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                                </div>
+                                <div class="row">
+                                    <div class="label-group">
+                                        <span class="label label-info">{{aReturn.type}}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="save-text-p">{{aReturn.comment}}</p>
+                            </td>
+                            <td>
+                                <div ng-if="aReturn.ownComment.length > 0">
+                                    <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                                      <strong>{{returnComment.user.person.firstname}}
+                                        {{returnComment.user.person.lastname}}
+                                        <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="Le {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>
+                                      -
+                                      {{returnComment.text}}
+                                    </div>
+                                    <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["y498pkdo"] }} ({{count(aReturn.ownComment)-1}})</button>
+                                    <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-close"></i> {{ _T["clfsvr5x"] }}</button>
+                                    <div>
+                                    <strong>{{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}}
+                                      {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                                      <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="Le {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>
+                                    -
+                                    {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                                  </div>
+                                </div>
+
+                                <div ng-if="aReturn.ownComment.length == 0">
+                                    {{ _T["3f1s9ufl"] }}
+                                </div>
+
+
+                            <form ng-submit="addCommentOnReturn(aReturn)">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" ng-model="aReturn.newComment" placeholder="{{ _T['8m4tsidm'] }}" style="width:100% !important" class="form-control"/>
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-success btn-lg" ng-click="addCommentOnReturn(aReturn)" type="button">{{ _T["zm0g3bdn"] }}</button>
+                                  </span>
+                                </div>
+                            </form>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped table-custom" ng-if="canPublishReturns(mainRequest)">
+                  <thead>
+                    <th>{{ _T["czxyx2v6"] }}</th>
+                    <th>{{ _T["lmwlyuq5"] }}</th>
+                    <th colspan="2">{{ _T["eq9spk3x"] }}</th>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="aReturn in mainRequest.myReturns" ng-if="aReturn.id == null">
+                      <td ng-if="!aReturn.is_protools">
+                          <label for="{{$index}}" style="cursor:pointer; font-size: 0.875rem; margin-bottom:0">{{ _T["3ljtj91t"] }} ?</label>
+                          <span style="float:right; cursor:pointer">
+                              <input type="checkbox" ng-model="aReturn.tc_global" ng-checked="aReturn.tc_global == 1" id="{{$index}}">
+                              <label for="{{$index}}"></label>
+                          </span>
+
+                        <div class="clearfix"></div>
+                        <span ng-if="aReturn.tc_global != 1">
+                          <input class="form-control input-sm" id="tc_in" name="tc_in" ng-disabled="return.tc_global" ng-model="aReturn.tc_in" pattern="\d{2}:\d{2}:\d{2}(:\d{2})?" title="{{ _T['2x7fn7q0'] }}" placeholder="TC IN" style="width:100%" timecode-input="" type=text/>
+                          <div class="clearfix"></div>
+                          <input class="form-control input-sm" id="tc_out" name="tc_out" ng-disabled="return.tc_global" ng-model="aReturn.tc_out" pattern="\d{2}:\d{2}:\d{2}(:\d{2})?" title="{{ _T['2x7fn7q0'] }}" placeholder="TC OUT" style="width:100%" timecode-input="" type=text/>
+                        </span>
+                        
+                      </td>
+                      <td ng-if="aReturn.is_protools">
+                        <span>{{aReturn.tc_in}}</span>
+                        <span ng-if="aReturn.tc_out">{{aReturn.tc_out}}</span>
+                      </td>
+                      <td>
+                          <ui-select ng-model="aReturn.type_element" on-select="saveLastTypeElement($model)" class="w-100" theme="bootstrap">
+                            <ui-select-match placeholder="{{ _T['r6tdef7w'] }}">{{$select.selected.value}}</ui-select-match>
+                            <ui-select-choices group-by="'type'" repeat="typeReturn in typesReturnForSelect | magicFilter: $select.search">
+                              <div ng-bind-html="typeReturn.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                          <button class="btn btn-info btn-outline btn-block btn-xs" ng-if="lastTypeElement" ng-click="aReturn.type_element = lastTypeElement">{{ _T["z14ein99"] }}</button>
+                      </td>
+                      <td>
+                        <div style="width: 40%;" class="ti_not_finalize_div">
+                          <input placeholder='{{ _T["0utmj5bs"] }}'  ng-disabled="canEnableComment()" type="text" style="width: -webkit-fill-available; margin: 0; height: 39px;" value="{{aReturn.comment}}" list="comments" ng-model="aReturn.comment" comment-input="{{typesCommentForSelect}}" />
+                        </div>
+
+                      </td>
+                      <td>
+                          <button class="btn btn-danger btn-xs btn-outline pull-right" ng-click="deleteThisRet(aReturn, $index, mainRequest)"  data-toggle="tooltip" title="{{ _T['fbuaqnlt'] }}">
+                              <span class="glyphicon glyphicon-trash"></span>
+                          </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="mb-10 mr-15 mt-10 ml-15">
+                  <button class="btn btn-success btn-sm btn-big-shadow pull-right" ng-click="publishRet(mainRequest)" ng-if="canPublishReturns(mainRequest)" ng-if="isReadOnly == false"><i class="fa fa-check"></i> {{ _T["dgjyo57d"] }}</button>
+                  <span class="alert alert-danger pull-right mr-15" ng-if="errorTypeElementReturn">{{ _T["vqqqt6zc"] }}</span>
+                  <button class="btn btn-default btn-primary-txt btn-big-shadow btn-sm" ng-click='addReturns(mainRequest);' ng-if="isReadOnly == false"><i class="c-icon c-icon-add"></i> {{ _T["22kijz7l"] }} </button>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div ng-if="uploader[0] != null">
+                      <div class="panel-body">
+                        <h4>{{ _T["q13emtya"] }}</h4>
+                        <div nv-file-drop="" uploader="uploader[0]">
+                          <div class="col-md-12">
+                            <div ng-show="uploader[0].isHTML5">
+                              <div class="upload-text-box text-center" nv-file-over="" uploader="uploader[0]">
+                                {{ _T["ne14tf07"] }}
+                                <br><br>
+                                <div class="btn btn-primary upload-file-container">
+                                  <input multiple nv-file-select="" type="file" uploader="uploader[0]"/>
+                                  {{ _T["6q8stqsy"] }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="retoursToCorrect">
+                <table class="table table-striped table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width:300px">{{ _T["0xc7nggs"] }}</th>
+                            <th style="width:300px">{{ _T["6nhvzrz1"] }}</th>
+                            <th>{{ _T["nxwlcy7f"] }}</th>
+                            <th>{{ _T["qiqskta9"] }}</th>
+                            <th>{{ _T["r48ex2km"] }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="aReturn in mainRequest.sharedReturn  | orderBy : ['tc_global', 'tc_in', 'tc_out']" ng-class="{returnResolved: aReturn.is_resolved == 1,returnMix: aReturn.to_mix == 1, returnIgnored: aReturn.is_ignored == 1, returnNotDone: aReturn.is_not_done == 1, returnToReview: aReturn.to_review == 1}">
+                        <td>
+                          <div class="row">
+                            <div ng-if="aReturn.tc_global != 1 && aReturn.tc_in && aReturn.tc_out" class="label-group">
+                              <span class="label label-default">IN {{aReturn.tc_in}}</span>
+                              <span class="label label-default label-group-border">OUT {{aReturn.tc_out}}</span>
+                            </div>
+                            <span ng-if="aReturn.tc_global != 1 && aReturn.tc_in && !aReturn.tc_out" class="label label-default">IN {{aReturn.tc_in}}</span>
+                            <span ng-if="aReturn.tc_global != 1 && !aReturn.tc_in && aReturn.tc_out" class="label label-default">OUT {{aReturn.tc_out}}</span>
+                            <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                          </div>
+                          <div class="row">
+                            <div class="label-group">
+                              <span class="label label-info">{{aReturn.type}}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="save-text-p">{{aReturn.comment}}</p>
+                        </td>
+                        <td>
+                          {{aReturn.type_correction}}
+                          <br>
+                          {{aReturn.type_correction_comment}}
+                        </td>
+                        <td>
+                          <div ng-if="aReturn.ownComment.length > 0">
+                            <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                              <strong>{{returnComment.user.person.firstname}}
+                              {{returnComment.user.person.lastname}}
+                              <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="Le {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>                            - {{returnComment.text}}
+                            </div>
+                            <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["y498pkdo"] }} ({{count(aReturn.ownComment)-1}})</button>
+                            <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-close"></i> {{ _T["clfsvr5x"] }}</button>
+                            <div>
+                              <strong>{{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}}
+                              {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                              <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="Le {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>                            - {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                            </div>
+                          </div>
+                          <div ng-if="aReturn.ownComment.length == 0">
+                            {{ _T["q7rxwhz5"] }}
+                          </div>
+                          <form ng-submit="addCommentOnReturn(aReturn)">
+                              <input class="form-control" placeholder="{{ _T['8m4tsidm'] }}" ng-model="aReturn.newComment"/>
+                              <input type="submit" class="btn btn-xs btn-success btn-block" value="{{ _T['3iaza590'] }}">
+                          </form>
+                        </td>
+                        <td style="text-align: center;">
+                          <div class="dropdown">
+                            <!--Ce bouton permet d'afficher la valeur de l'action selon l'id de l'action
+                              du retour et donne une couleur spécifique au bouton-->
+                              <button id="actionButton" type="button" class="dropdown-toggle"
+                              ng-class="{'btn btn-warning': aReturn.action_id == 1 || aReturn.action_id == 2 ||
+                              aReturn.action_id == 3 || aReturn.action_id == 4 || aReturn.action_id == 5 ||
+                              aReturn.action_id == 6, 'btn btn-danger': aReturn.action_id == 7,
+                              'btn btn-yellow': aReturn.action_id == 8, 'btn btn-primary': aReturn.action_id == 9,
+                              'btn btn-success': aReturn.action_id == 10, 'btn btn-default': aReturn.action_id != 1 &&
+                              aReturn.action_id != 2 && aReturn.action_id != 3 && aReturn.action_id != 4 &&
+                              aReturn.action_id != 5 && aReturn.action_id != 6 && aReturn.action_id != 7 &&
+                              aReturn.action_id != 8 && aReturn.action_id != 9 && aReturn.action_id != 10 &&
+                              aReturn.action_id != 11}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span ng-if="aReturn.action_id == 1">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 2">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 3">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 4">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 5">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 6">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 7">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 8">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 9">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id == 10">{{actions[aReturn.action_id-1].value}}</span>
+                                <span ng-if="aReturn.action_id != 1 && aReturn.action_id != 2 &&
+                                aReturn.action_id != 3 && aReturn.action_id != 4 && aReturn.action_id != 5 &&
+                                aReturn.action_id != 6 && aReturn.action_id != 7 && aReturn.action_id != 8 &&
+                                aReturn.action_id != 9 && aReturn.action_id != 10">
+                                  {{ _T["r48ex2km"] }}
+                                </span>
+                                <i class="fa fa-caret-down"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li ng-repeat="action in actions">
+                                  <a href="" ng-click="actionClick(action.id, [aReturn])">{{action.value}}</a>
+                                </li>
+                              </ul>
+
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default" ng-if="uploader[mainRequest.id] != null">
+                <div class="panel-body">
+                    <div nv-file-drop="" uploader="uploader[mainRequest.id]">
+                        <div class="col-md-8">
+                            <h4 class="padd-30">
+                                <span class="glyphicon glyphicon-paperclip"></span>
+                                {{ _T["qg7rqxc7"] }}
+                            </h4>
+
+                            <h2 class="text-center" ng-show="uploader[mainRequest.id].queue.length == 0">
+                                {{ _T["3qh7nk7a"] }}
+                            </h2>
+
+                            <ul class="list-group">
+                              <li class="list-group-item" style="padding-bottom:0; border:none" ng-repeat="item in uploader[mainRequest.id].queue">
+                                  <div class="row">
+                                      {{item.file.name}}
+                                      <span class="pull-right">
+                                          {{ item.file.size / 1024 / 1024|number:2 }} MB
+
+                                          <button class="btn btn-primary btn-xs" ng-click="download(item)" ng-disabled="item.isUploading" type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['0kyhuafp'] }}">
+                                              <span class="glyphicon glyphicon-download"></span>
+                                          </button>
+                                          <button class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-if="item.isUploading" type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['t5lz1qb1'] }}">
+                                              <span class="glyphicon glyphicon-ban-circle"></span>
+                                          </button>
+                                          <button class="btn btn-danger btn-xs" ng-click="remove(item)" ng-if="!item.isUploading" type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['tc6j8t46'] }}">
+                                              <span class="glyphicon glyphicon-trash"></span>
+                                          </button>
+                                      </span>
+                                  </div>
+                                  <div class="row"  style="margin-bottom: 0;">
+                                      <div class="progress-upload" style="margin-bottom: 0;">
+                                          <div class="progress-bar-upload" ng-style="{ 'width': item.progress + '%' }" role="progressbar"></div>
+                                      </div>
+                                  </div>
+                              </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <div ng-show="uploader[mainRequest.id].isHTML5">
+                                <div class="upload-text-box text-center" nv-file-over="" uploader="uploader[mainRequest.id]">
+                                    {{ _T["ob68vuzl"] }}
+                                    <br><br>
+                                    <div class="btn btn-primary upload-file-container">
+                                        <input multiple nv-file-select="" type="file" uploader="uploader[mainRequest.id]"/>
+                                        {{ _T["6q8stqsy"] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4 class="col-md-8 padd-30">
+                        {{ _T["3j35hqts"] }}
+                    </h4>
+                    <button class="btn btn-primary btn-sm" ng-click="addObservations();" ng-if="isReadOnly == false"><i class="glyphicon glyphicon-plus"></i> {{ _T["kx5evj42"] }}</button>
+                    <button class="btn btn-success btn-sm" ng-click="publishObs()" ng-if="canPublishObs()"><i class="glyphicon glyphicon-ok"></i> {{ _T["5crtdw23"] }}</button>
+
+                    <h2 class="text-center" ng-show="myObservations.length == 0">
+                        {{ _T["8c71kx2n"] }}
+                    </h2>
+
+                    <div class="clearfix"></div>
+                    <div class="panel panel-default panel-bg panel-shadow" ng-repeat="observation in myObservations" style="width:400px; float:left;" ng-if="observation.id != null">
+                        <div class="panel-body" style="padding:15px; padding-bottom:0; min-height:180px; " ng-if="observation.id != null">
+                                <span class="label label-info">{{observation.categorie}}</span>
+                            <span class="text-label pull-right">
+                                {{observation.date_creation | asDate | date:'dd MMM yyyy'}}
+                                <span class="btn-circle c-icon c-icon-close" ng-click='deleteThisObs($index)'  data-toggle="tooltip" title="{{ _T['e8ivkum3'] }}" role="button"></span>
+                            </span>
+                            <h3 class="card-title">{{ _T["eq9spk3x"] }} </h3>
+                            <p class="card-description save-text-p">{{observation.comment}}</p>
+                        </div>
+                    </div>
+                    <div class="panel panel-default panel-bg panel-shadow" ng-repeat="observation in myObservations" style="width:400px; float:left;" ng-if="observation.id == null">
+                        <div class="panel-body" style="padding:15px; padding-bottom:0; min-height:180px">
+                                <span class="label label-primary">{{ _T["1kynylxm"] }}</span>
+                            <span class="text-label pull-right">
+                                {{observation.date_creation | asDate | date:'dd MMM yyyy'}}
+                                <span class="btn-circle c-icon c-icon-close" ng-click='deleteThisObs($index)'  data-toggle="tooltip" title="{{ _T['e8ivkum3'] }}" role="button"></span>
+                            </span>
+                            <h3 class="card-title">
+                                <select class="form-control" ng-model="observation.categorie">
+                                  <option value="{{ _T['2ql6r5f0'] }}">{{ _T["2ql6r5f0"] }}</option>
+                                  <option value="{{ _T['nkpn3321'] }}">{{ _T["nkpn3321"]}}</option>
+                                </select>
+                            </h3>
+                            <p class="card-description">
+                                <textarea class="form-control" ng-model="observation.comment"></textarea>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="separator">
+                <p class="separator-label">{{ _T["dexrmdjp"] }}</p>
+                <hr>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="panel panel-default col-md-4 col-md-offset-4" ng-if="isReadOnly == false">
+      <div class="panel-body text-center">
+
+        <div ng-if="mainRequest.action_type.planning == 'farmer'">
+          <span>
+            <button class="btn btn-success" ng-click="validateFarmerRequest();" >{{ _T["rv3bsjby"] }}</button>
+          </span>
+        </div>
+        <div ng-if="mainRequest.action_type.planning == 'parallele'">
+          <span>
+            <button class="btn btn-success" ng-click="validateRequest();" ng-if="isReadOnly == false">{{ _T["nnkwqfkz"] }}</button>
+          </span>
+        </div>
+        <div ng-if="mainRequest.action_type.planning == 'volume'">
+          <span>
+            <button class="btn btn-success" ng-click="validateRequestVolume();" ng-if="isReadOnly == false">{{ _T["nnkwqfkz"] }}</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <datalist id="comments">
+    <option ng-repeat="comments in typesCommentForSelect" value="{{ comments.element ? comments.element + ': ' : ' &nbsp;  [' + comments.value + ']' }} " {{comments.value ? 'disabled' : ''}}>
+    </option>
+  </datalist>
+
+</div>

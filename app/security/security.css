@@ -1,0 +1,69 @@
+.stage {
+    /*height: 100px;*/
+    border: 1px solid #eee;
+    box-shadow: 0 2px 3px #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+    color: black;
+    padding:1px;
+}
+
+.stageName {
+    width: 100%;
+    text-align: center;
+    /* font-family: 'Century Gothic', Arial, helvetica, sans-serif; */
+    /*font-weight: bold;*/
+    border-radius: 5px 5px 0 0;
+    /*background-color: #cba675;*/
+    background-color: #234891;
+    color: white;
+    font-size: 1.7em;
+}
+
+.booking .hour{
+    position: relative;
+    font-family: 'Century Gothic', arial, helvetica, sans-serif;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: black;
+    color: white;
+    padding: 3px;
+    width: 130px;
+    border-radius: 0 0 0 5px;
+    float: right;
+    margin-bottom: 5px;
+}
+.ln-text-bold {
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.text-black {
+    color:black !important;
+}
+
+.stageImg {
+    float: left;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    border-radius: 0 0 5px 0px;
+    margin-right: 10px;
+    margin-top:0px;
+    width: 50px;
+    height: 50px;
+}
+
+.bookingTitle {
+    margin-top:10px;
+}
+
+.search-text {
+    position: absolute;
+    width: 100%;
+    bottom: -40px;
+}
+
+.mouse-link {
+    cursor: pointer;
+}

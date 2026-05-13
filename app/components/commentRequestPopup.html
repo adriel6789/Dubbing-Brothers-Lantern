@@ -1,0 +1,18 @@
+{{ $root._T["pnxl1scm"] }}
+<div class="row" style="margin-bottom: 25px; margin-right: 3px;">
+    <div class="col-md-12" ng-if="true">
+        <textarea placeholder="{{ $root._T['8m4tsidm'] }}" ng-model="newComment"></textarea>
+        <div style="padding-top: 5px; top: -23px; position: relative; background: white; border-radius: 0px 0px 5px 5px;">
+            <button class="col-md-2 btn btn-success btn-h-30 p-0" ng-class="{'btn-warning': !show_tech}" tooltip-placement="right"  data-toggle="tooltip" title="{{ $root._T['x3a5ryxz'] }}" ng-click="show_tech = !show_tech" style="position: absolute; bottom: 0; left: 0;">
+                <span class="fa-stack ">
+                    <i class="fa fa-users fa-stack-1x"></i>
+                    <i class="fa fa-ban fa-stack-2x text-danger" ng-show="!show_tech"></i>
+                </span>
+            </button>
+            <button class="btn btn-outline btn-success pull-right" ng-class="{'btn-warning': !show_tech}" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" ng-click="$ctrl.saveComment($ctrl.getSelectedRequests($ctrl.requests), newComment, show_tech); newComment = ''" style="position: absolute; bottom: 0; right: 0;">{{ $root._T["cefm3w2w"] }}</button>
+        </div>
+    </div>
+    <div class="col-md-12" ng-if="false">
+        {{ $root._T["vqt9115r"] }}
+    </div>     
+</div>

@@ -1,0 +1,11 @@
+<!-- Gestion des cas avec les request associées -->
+<div>
+	<div ng-switch="$ctrl.role">
+		<div ng-switch-when="preview">
+			<div ng-include="'partials/Components/suivi_preview_cells/suiviCellRequest.html'"></div>
+		</div>
+		<div ng-switch-default>
+			<div ng-include="'partials/Components/suivi_cells/suiviCellRequest.html'"></div>
+		</div>
+	</div>
+</div>

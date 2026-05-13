@@ -1,0 +1,21 @@
+.navbar-header a {
+	background: none;
+}
+
+.navbar-header a img {
+	width: 30px;
+}
+
+.menu.navbar-nav > li > a, .navbar-inverse .navbar-nav > li > a {
+    color: #d6d6d6;
+
+}
+.menu.navbar-nav > li > a:hover {
+   background: black;
+   transition-duration: .5s;
+   transition-timing-function: ease;
+}
+.menu.navbar-nav > li > a i, .navbar-inverse .navbar-nav > li.nav-item i  {
+    font-size: 30px
+}
+    

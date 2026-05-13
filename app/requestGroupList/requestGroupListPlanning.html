@@ -1,0 +1,155 @@
+<div class="page-requests-demands">
+    <header style="margin-bottom: 10px">
+        <div class="container-fluid container-fixed-nav-aside">
+            <div class="col-sm-12">  
+                <p ng-if="$root.state.name == 'app.requestGroupNonePlan'">
+                    {{ _T["dzbusvo7"] }}
+                </p>
+                <p ng-if="$root.state.name == 'app.requestGroupPlanned'">
+                    {{ _T["t5z2j04g"] }}
+                </p>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="row">
+            <ul class="nav nav-tabs" role="tablist" style="padding:0 30px">
+                <li ng-if="$root.canDisplay(7)"  ng-class="{'active' : $root.state.name == 'app.requestGroupNonePlan'}" style="width: 226px;"><a ui-sref="app.requestGroupNonePlan" >{{ _T["jl34h8o9"] }}</a></li>
+                <li ng-if="$root.canDisplay(5)" role="planned" ng-class="{'active' : $root.state.name == 'app.requestGroupPlanned'}"><a ui-sref="app.requestGroupPlanned" aria-controls="planned" >{{ _T["oc61aez7"] }}</a></li>
+                <li ng-if="$root.canDisplay(5)" role="manageTech"><a ui-sref="app.records.manageTechRequests" aria-controls="manageTech" >{{ _T["xag06kf0"] }}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="">
+
+                    <form class="col-sm-12 pt-5">
+                        <div class="form-group search-form col-sm-5 mb-0">
+                            <input type="text" class="form-control input-search" aria-label="Rechercher parmi vos demandes" placeholder="{{ _T['0tz0lzyz'] }}"
+                                   ng-model="textFilter" ng-change="saveSearch(textFilter)" ng-model-options="{debounce: 500}">
+                        </div>
+                        <div class="form-group search-form col-sm-3">
+                            <div class="btn-group btn-block">
+                                <button type="button" class="btn btn-default btn-change">
+                                    <span ng-if="getDateFilter().filterDate == 'range'">{{ _T["se6c5n54"] }}</span>
+                                    <span ng-if="!getDateFilter().filterDate"> {{ _T["sw658azy"] }} </span>
+                                    <span ng-if="getDateFilter().filterDate > 0 && getDateFilter().filterDate < 3">{{ _T["z0t6p7pd"] }} {{getDateFilter().startDateFormatted}}</span>
+                                    <span ng-if="getDateFilter().filterDate >= 3">{{ _T["mc051ilq"] }} {{getDateFilter().startDateFormatted}} {{ _T["f6vwmdfc"] }} {{getDateFilter().endDateFormatted}}</span>
+
+                                </button>
+                                <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret triangle"></span>
+                                </button>
+                                <ul class="dropdown-menu btn-block">
+                                    <li><a ng-click="setDateFilter('today', true)">{{ _T["ze7enx7x"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('yesterday', true)">{{ _T["0axqi4w1"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('tomorrow', true)">{{ _T["b3tjlldn"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('afterTomorrow', true)">{{ _T["iyeiy7is"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('inThreeDays', true)">{{ _T["7bpw1glu"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('current', true)">{{ _T["jpr9s3av"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('previous', true)">{{ _T["fzsd04mb"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('next', true)">{{ _T["ppnm1h7r"] }}</a></li>
+                                    <li><a ng-click="setDateFilter('all', true)">{{ _T["sw658azy"] }}</a></li>
+                                    <li><a ng-click="clearRangeDateFilter(true);">{{ _T["se6c5n54"] }}</a></li>
+                                </ul>
+                            </div>
+                            {{startDateDisplayed}} {{endDateDisplayed}}
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="checkbox" class='ios8-switch' id="enableFilterWorkflow" ng-model="enableFilterWorkflow" />
+                            <label style="padding-bottom: 0px; margin-bottom: 5px" for="enableFilterWorkflow"> {{_T["9m89toxz"]}} </label>
+                            <input type="checkbox" class='ios8-switch' id="hideRequests" ng-model="hideSendRequests" ng-change="setHideSendRequests(hideSendRequests, true)"/>
+                            <label for="hideRequests"> {{ _T["kt7iwsg2"] }}</label>
+                            <br />
+                            <div ng-show="seeTechTypeSelect">
+                            Missing Techs
+                                <ui-select ng-model="lostTechType"  ng-change="lookingForLostTech($select.selected)" style="font-size:.9;  width:100px; display: inline-table" theme="bootstrap">
+                                    <ui-select-match allow-clear="true" placeholder="">{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="techType in listOfTechTypes">
+                                    <div ng-bind-html="techType"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+
+                    </form>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-push-3 text-center" ng-show="rangeDateFilter.enable">
+                            <div class="col-md-12">
+                                <i class="fa fa-calendar fa-2x"></i>
+                                </span>
+                                <strong>{{ _T["nn8u62o3"] }}</strong>
+                                <!-- <span ng-show="rangeDateFilter.dateStart || rangeDateFilter.dateEnd " ng-click="clearRangeDateFilter(true);">
+                                    <i class="fa fa-times fa-2x"></i> -->
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                    </span> <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span> <input
+                                        ng-model="rangeDateFilter.dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;"
+                                        type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span
+                                        class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span> <input
+                                        ng-model="rangeDateFilter.dateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;"
+                                        type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span
+                                        class="input-group-btn">
+                                    </span>
+                                </div>
+                                <script>
+                                    $('input.calendar').datepicker({
+                                        format: "dd-mm-yyyy",
+                                        todayBtn: true,
+                                        language: $.cookie("language"),
+                                        orientation: "top",
+                                        multidateSeparator: " - ",
+                                        calendarWeeks: true,
+                                        todayHighlight: true
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center" ng-hide="$root.state.name == 'app.records.manageTechRequests'">
+                    <div class="row">
+                        <button ng-repeat="planning in plannings" type="button" class="btn btn-default btn-change" ng-show="showPill(planning.id)" ng-click="changePlanning(planning)">
+                            <span class="type" ng-class="{'type-success':getActivePlanning() == planning.id}"></span>{{planning.name}} ({{  getCountRequestPlanning(planning.id)}})
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div ng-if="isLoading()" class="text-center">
+                        <loader-rocket></loader-rocket>
+                        <div>
+                            <span class="alert alert-info">{{ _T["9guez456"] }}</span>
+                        </div>
+                    </div>
+                    <div ng-if="!isLoading()" class="page page-requests-demands">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <ul uib-pagination ng-if="totalItems" previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="pageSize" total-items="filteredItems.length"
+                                            ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged(currentPage)"></ul>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-md-12 parent equal" ng-show="filteredItems.length > 0">
+                                <project-card class="col-xs-12 col-sm-12 col-md-6 col-lg-3 child" ng-if="project.withRequests" project="project" 
+                                ng-repeat="project in (filteredItems = (requests | orderObjectBy:'date_order_project' | showGroupCard:textFilter : undefined: enableFilterWorkflow  | filter:query) | startFrom:current*pageSize | limitTo:pageSize)"></project-card>
+                            <div class="col-md-12 text-center" ng-show="filteredItems.length == 0">
+                                <span class="alert alert-info">{{ _T["hcjeewyq"] }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <ul uib-pagination ng-if="totalItems" previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="pageSize" total-items="filteredItems.length"
+                                            ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged(currentPage)"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+</div>

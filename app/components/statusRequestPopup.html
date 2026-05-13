@@ -1,0 +1,54 @@
+{{ $root._T["x57osw6q"] }} :
+<div class="row" style="margin-bottom: 25px;">
+    <div class="col-md-12">
+        <span class="col-md-4" ng-if="$root.canDisplay(3)">
+            <button type="button" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" class="btn btn-default btn-xs btn-text-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span > <span class="type type-primary"></span> {{ $root._T["4orz1fdr"] }} ?</span> <span class="caret triangle"></span>
+            </button>
+            <ul class="dropdown-menu ">
+                <li>
+                    <a ng-click="$ctrl.setStatusRequests('not_important', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-success"></span> {{ $root._T["adoyhyi2"] }}</a>
+                </li>
+                <li>
+                    <a ng-click="$ctrl.setStatusRequests('important', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-danger"></span> {{ $root._T["w7redrmn"] }}</a>
+                </li>
+            </ul>
+        </span>
+        <span class="col-md-4" ng-if="$root.canDisplay(3)">
+            <button type="button" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" class="btn btn-default btn-xs btn-text-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span > <span class="type type-primary"></span> {{ $root._T["4hg9pyo9"] }} ?</span> <span class="caret triangle"></span>
+            </button>
+            <ul class="dropdown-menu ">
+                <li>
+                    <a ng-click="$ctrl.setStatusRequests('not_on_hold', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-success"></span> {{ $root._T["adoyhyi2"] }}</a>
+                </li>
+                <li>
+                    <a ng-click="$ctrl.setStatusRequests('on_hold', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-danger"></span> {{ $root._T["w7redrmn"] }}</a>
+                </li>
+            </ul>
+        </span>
+        <span class="col-md-4 ">
+            <button type="button" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" class="btn btn-default btn-xs btn-text-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span > <span class="type type-danger"></span> {{ $root._T["chhvw0gw"] }} ?</span> <span class="caret triangle"></span>
+            </button>
+            <ul class="dropdown-menu ">
+                <li>
+                    <a ng-click="$ctrl.setStatusRequests('finished', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-danger"></span> {{ $root._T["p8wzgt60"] }}</a>
+                </li>
+                <li>
+                    <a ng-click="$ctrl.setStatusRequests('unplanned', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-success"></span> {{ $root._T["yu4v0zox"] }}</a>
+                </li>
+                <li ng-if="$root.canDisplay(3)">
+                    <a ng-click="$ctrl.setStatusRequests('cancel', $ctrl.getSelectedRequests($ctrl.requests))">
+                        <span class="type type-danger"></span> {{ $root._T["ficbz281"] }}</a>
+                </li>
+            </ul>
+        </span>
+    </div>
+</div>

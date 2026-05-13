@@ -1,0 +1,33 @@
+
+<ul class="nav nav-tabs" role="tablist">
+	<li role="validated" ng-class="{'active' : $root.state.name == 'app.requestsValidated'}" ng-show="!$root.canDisplay(784)">
+		<a ui-sref="app.requestsValidated" aria-controls="validated" role="tab" data-toggle="tab" data-target="#">{{ _T["rtvfshg3"] }}</a>
+	</li>
+	<li role="volume" ng-class="{'active' : $root.params.service == 'digital-media'}" ng-show="$root.canDisplay(17)" >
+		<a ui-sref="app.requestsAutoTech({ service: 'digital-media'})" ui-sref-opts="{reload: true}" aria-controls="digi" role="tab" data-toggle="tab" data-target="#digi">Digital media</a>
+	</li>
+	<li role="volume" ng-class="{'active' : $root.params.service == 'qc'}" ng-show="$root.canDisplay(257)" >
+		<a ui-sref="app.requestsAutoTech({ service: 'qc'})" ui-sref-opts="{reload: true}" aria-controls="qc" role="tab" data-toggle="tab" data-target="#">QC</a>
+	</li>
+	<li role="volumeprepa" ng-class="{'active' : $root.params.service == 'prepa'}" ng-show="$root.canDisplay(513)" >
+		<a ui-sref="app.requestsAutoTech({ service: 'prepa'})" ui-sref-opts="{reload: true}" aria-controls="prepa" role="tab" data-toggle="tab" data-target="#">Prepa</a>
+	</li>
+	<li role="previsional" ng-class="{'active' : $root.state.name == 'app.recordsPrevisionalTech'}" ng-show="!$root.canDisplay(784)">
+		<a ui-sref="app.recordsPrevisionalTech" aria-controls="previsional" role="tab" data-toggle="tab" data-target="#">{{ _T["zn71kcrf"] }}</a>
+	</li>
+	<li role="historical" ng-class="{'active' : $root.state.name == 'app.historicalRequestsTech'}" ng-show="!$root.canDisplay(784)">
+		<a ui-sref="app.historicalRequestsTech" aria-controls="historical" role="tab" data-toggle="tab" data-target="#">{{ _T["vp1s994d"] }}</a>
+	</li>
+	<li role="account" ng-class="{'active' : $root.state.name == 'app.comptaTech'}" ng-show="techFreelance() || role == 'all'">
+		<a ui-sref="app.comptaTech" aria-controls="account" role="tab" data-toggle="tab" data-target="#">{{ _T["kwmv66nh"] }}</a>
+	</li>
+	<li role="historicalDigi" ng-class="{'active' : $root.state.name == 'app.historicalRequestsDigitalMedia'}" ng-show="$root.canDisplay(17)" >
+		<a ui-sref="app.historicalRequestsDigitalMedia({ service: 'digital-media'})" aria-controls="historicalDigi" ui-sref-opts="{reload: true}" role="tab" data-toggle="tab" data-target="#">Historique Digital media</a>
+	</li>
+	<li role="historicalDigi" ng-class="{'active' : $root.state.name == 'app.historicalRequestsDigitalMedia'}" ng-show="$root.canDisplay(257)" >
+		<a ui-sref="app.historicalRequestsDigitalMedia({ service: 'QC'})" aria-controls="historicalDigi" ui-sref-opts="{reload: true}" role="tab" data-toggle="tab" data-target="#">Historique QC</a>
+	</li>
+	<li role="historicalDigi" ng-class="{'active' : $root.state.name == 'app.historicalRequestsDigitalMedia'}" ng-show="$root.canDisplay(513)" >
+		<a ui-sref="app.historicalRequestsDigitalMedia({ service: 'prepa'})" aria-controls="historicalDigi" ui-sref-opts="{reload: true}" role="tab" data-toggle="tab" data-target="#">Historique Prepa</a>
+	</li>
+</ul>

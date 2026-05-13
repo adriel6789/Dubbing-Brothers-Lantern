@@ -1,0 +1,261 @@
+<header class="header-with-tabs">
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <p>
+        {{ _T["5tkpc5to"] }} {{::projet.name}} -
+        <span ng-if="subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] + ' ' + subproject.season}}</span>
+        <span ng-if="subproject.nature.name != 'serie'">{{subproject.nature.value}}</span> ({{subproject.nature.value}})
+        <a href="" ng-click="editSubproject(subproject)"><i class="glyphicon glyphicon-edit" style="font-size:20px;"></i></a>
+      </p>
+    </div>
+  </div>
+</header>
+<div class="container-fluid container-fixed-nav-aside">
+  <h2 class="sub-header">
+    <div class="btn-group btn-big-shadow btn-group-vertical pull-right">
+      <button class="btn btn-default btn-text-primary" ng-click="createProduct()">
+      <span class="c-icon c-icon-add"></span>
+      {{ _T["yztihdqz"] }}
+      </button>
+      <button class="btn btn-default btn-text-primary" ng-click="createSubProject()">
+      <span class="c-icon c-icon-add"></span>
+      {{ _T["vxcilqtw"] }}
+      </button>
+      <button class="btn btn-default btn-text-primary" ng-click="createWorkflow()">
+      <span class="c-icon c-icon-add"></span>
+      {{ _T["nexhhzu4"] }}
+      </button>
+    </div>
+  </h2>
+  <div class="row text-center">
+    <h4>{{ _T["14b5uwjf"] }} :</h4>
+    <div class="btn-group" ng-repeat="workflow in subproject_workflows">
+      <button class="btn btn-sm" data-placement="bottom" data-toggle="tooltip" ng-class="{'workflowUnselect': !workflow.isSelected && !allWorkflowsSelected}" ng-click="workflowSelected(workflow);" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')', 'font-weight':'bold'}"
+        style="color:{{workflow.color.font}}" title="{{workflow.description}}">
+      <span ng-if="workflow.workflow_type_id == 1">
+      <span class="fa fa-microphone"></span>
+      {{ _T["i5tk31xb"] }}
+      </span>
+      <span ng-if="workflow.workflow_type_id == 2">
+      <span class="fa fa-archive"></span>
+      {{ _T["z20ge21k"] }}
+      </span>
+      <span ng-if="workflow.workflow_type_id == 3">
+      <span class="fa fa-briefcase"></span>
+      {{ _T["1egq4x9k"] }}
+      </span>
+      <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.doublage_type.value}}
+      </span>
+      <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.language.value}}
+      </span>
+      <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+      -
+      {{workflow.norme_mix.value}}
+      </span>
+      <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+      -
+      {{workflow.servicing_type.value}}
+      </span>
+      <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+      -
+      {{workflow.resolution.value}}
+      </span>
+      <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+      -
+      {{workflow.diffuseur.name}}
+      </span>
+      <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+        - {{workflow.speed.value}}
+      </span>
+      <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+        - {{workflow.resolution.value}}
+      </span>
+      <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+        - {{workflow.prod_version}}
+      </span>
+      </button>
+      <button class="btn btn-sm" data-placement="bottom" data-toggle="tooltip" ng-class="{'workflowUnselect': !workflow.isSelected && !allWorkflowsSelected}" ng-click="editWorkflow(workflow)" ng-style="{'background-color':'rgb('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+')', 'font-weight':'bold'}"
+        style="color:{{workflow.color.font}}" title="{{ _T['g799mppu'] }}">
+      |
+      <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+      <script>
+        $(function() {
+          $('[data-toggle="tooltip"]').tooltip({
+            html: true
+          })
+        })
+      </script>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="list-group">
+        <a class="list-group-item" ng-class="{'active':allProductsSelected}" ng-click="selectAllProducts()">
+        {{ _T["pfin1nzb"] }}
+        </a>
+        <a class="list-group-item" ng-class="{'active': product.isProductSelected}" ng-click="selectProduct(product)" ng-repeat="product in subproject.ownProduct | orderBy:'episode_number'">
+          <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }}
+          {{product.episode_number}}</span>
+          <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+          <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+          <div>
+            <span ng-repeat="workflow in product.sharedWorkflow">
+              <button class="btn btn-sm badge" data-content="
+                {{workflow.content}}
+                " data-placement="auto" data-toggle="popover" ng-click="$event.stopPropagation();" ng-if="workflow.ownRequests.length == 0" ng-style="{'background-color':'rgb('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+')'}" style="min-width: 30px; margin-right: 5px; color:{{workflow.color.font}};">
+                <script>
+                  $(function() {
+                    $('[data-toggle="popover"]').popover({
+                      html: true
+                    })
+                  })
+                </script>
+              </button>
+              <button class="btn btn-sm badge" data-content="
+                {{workflow.content}}
+                " data-placement="bottom" data-toggle="popover" ng-click="$event.stopPropagation();" ng-if="workflow.ownRequests.length > 0" ng-style="{'background-color':'rgb('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+')'}" style="min-width: 30px; margin-right: 5px; color:{{workflow.color.font}};">
+                {{workflow.requestsNotDone}}
+                <script>
+                  $(function() {
+                    $('[data-toggle="popover"]').popover({
+                      html: true
+                    })
+                  })
+                </script>
+              </button>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="panel panel-default animate-repeat animate-show" ng-repeat="product in subproject.ownProduct | orderBy:'episode_number'" ng-show="(product.isProductSelected == true || allProductsSelected)">
+        <a ui-sref="app.products({id : product.id})">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }}
+              {{product.episode_number}}</span>
+              <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+              <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+        <a class="btn btn-default btn-xs pull-right" ui-sref="app.products({id : product.id})"><i class="glyphicon glyphicon-film"></i> {{ _T["7hsxi6xf"] }}</a>
+        </h2>
+        </div>
+        </a>
+        <ul class="list-group">
+          <li class="list-group-item animate-repeat animate-show" ng-repeat="workflow in product.sharedWorkflow" ng-show="(isWorkflowSelected(workflow) || allWorkflowsSelected)">
+            <div class="row">
+              <div class="col-md-2">
+                <label>
+                  <h4>
+                    <span ng-if="workflow.workflow_type_id == 1" class="label" style="color:{{workflow.color.font}}" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', 0.7)'}">
+                    <span class="fa fa-microphone"></span>
+                    {{ _T["i5tk31xb"] }}
+                    <br>
+                    </span>
+                    <span ng-if="workflow.workflow_type_id == 2" class="label" style="color:{{workflow.color.font}}" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', 0.7)'}">
+                    <span class="fa fa-archive"></span>
+                    {{ _T["z20ge21k"] }}
+                    <br>
+                    </span>
+                    <span ng-if="workflow.workflow_type_id == 3" class="label" style="color:{{workflow.color.font}}" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', 0.7)'}">
+                    <span class="fa fa-briefcase"></span>
+                    {{ _T["1egq4x9k"] }}
+                    <br>
+                    </span>
+                  </h4>
+                  <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                  {{workflow.doublage_type.value}}
+                  </span>
+                  <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                  -
+                  {{workflow.language.value}}
+                  </span>
+                  <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                  <br>
+                  {{workflow.norme_mix.value}}
+                  </span>
+                  <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                  -
+                  {{workflow.servicing_type.value}}
+                  </span>
+                  <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                  -
+                  {{workflow.resolution.value}}
+                  </span>
+                  <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                  -
+                  {{workflow.diffuseur.name}}
+                  </span>
+                  <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                    - {{workflow.speed.value}}
+                  </span>
+                  <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                    - {{workflow.resolution.value}}
+                  </span>
+                  <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                    - {{workflow.prod_version}}
+                  </span>
+                </label>
+              </div>
+              <div class="col-md-10" ng-if="workflow.ownRequests.length == 0">
+                <label style="color:{{workflow.color.font}}">{{ _T["ghtye08d"] }}</label>
+              </div>
+              <div class="col-md-10" ng-if="workflow.ownRequests.length > 0">
+                <a ui-sref="app.requestsDetail({id : request.id})" ng-if="!$root.canDisplay(4) && request.is_done == 0" ng-repeat="request in workflow.ownRequests">
+                <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{request.tooltipFlag}}" type="button">
+                <span class="glyphicon glyphicon-flag" ng-if="request.ownReturn.length != 0" style="color: red"></span>
+                <span class="glyphicon glyphicon-record" ng-if="request.is_planned == 0 && request.is_in_progress == 0 && request.is_not_done == 0" style="color: black"></span>
+                <span class="glyphicon glyphicon-record" ng-if="request.is_done == 1" style="color: green"></span>
+                <span class="glyphicon glyphicon-record" ng-if="request.is_not_done == 1" style="color: darkorange"></span>
+                <span class="glyphicon glyphicon-record" ng-if="(request.is_planned == 1 || request.is_in_progress == 1) &&
+                  !(request.is_done == 1 || request.is_not_done == 1)" style="color: deepskyblue"></span>
+                {{request.action_type.etape_type.value}}
+                -
+                {{request.action_type.value}}
+                </button>
+                </a>
+                <a ui-sref="app.requestsDetail({id : request.id})" ng-if="$root.canDisplay(4) && request.is_done == 0" ng-repeat="request in workflow.ownRequests">
+                <button class="btn btn-sm btn-default" type="button">
+                <span class="glyphicon glyphicon-flag" ng-if="request.ownReturn.length != 0" style="color: red"></span>
+                <span class="glyphicon glyphicon-record" ng-if="request.is_planned == 0 && request.is_in_progress == 0 && request.is_not_done == 0" style="color: black"></span>
+                <span class="glyphicon glyphicon-record" ng-if="request.is_done == 1" style="color: green"></span>
+                <span class="glyphicon glyphicon-record" ng-if="request.is_not_done == 1" style="color: darkorange"></span>
+                <span class="glyphicon glyphicon-record" ng-if="(request.is_planned == 1 || request.is_in_progress == 1) &&
+                  !(request.is_done == 1 || request.is_not_done == 1)" style="color: deepskyblue"></span>
+                {{request.action_type.etape_type.value}}
+                -
+                {{request.action_type.value}}
+                </button>
+                </a>
+                <script>
+                  $(function() {
+                    $('[data-toggle="tooltip"]').tooltip({
+                      html: true
+                    })
+                  })
+                </script>
+              </div>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-sm btn-primary" ng-click="workflow.showTimeline = true" ng-show="workflow.showTimeline == false || workflow.showTimeline == null">
+              <i class="glyphicon glyphicon-eye-open"></i>
+              {{ _T["ttxy805j"] }} ({{workflow.ownRequests.length}})</button>
+              <button class="btn btn-sm btn-primary" ng-click="workflow.showTimeline = false;" ng-show="workflow.showTimeline == true">
+              <i class="glyphicon glyphicon-eye-close"></i>
+              {{ _T["k6lgafhj"] }} ({{workflow.ownRequests.length}})</button>
+            </div>
+            <div class="row" ng-if="workflow.showTimeline == true" style="background-color: white">
+              <vis-timeline data="workflow.data" options="options"></vis-timeline>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="col-md-4">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">{{ field.title }}<em ng-hide="!field.required">*</em></label>
+        <span ng-switch on="field.type.view">
+            <span ng-switch-when="ui-select-project">
+                <div class="col-sm-10">
+                    <ui-select on-select="showSelectedProject($item,$model)" ng-model="entity[field.name]" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                        <ui-select-match placeholder="{{field.placeholder}}">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="f.id as f in field.type.options | propsFilter: {name: $select.search, id: $select.search}">
+                            <div ng-bind-html="f.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </span>
+            <span ng-switch-when="ui-select-season">
+                <div class="col-sm-10">
+                    <ui-select on-select="showSelectedSeason($item,$model)" ng-model="entity[field.name]" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                        <ui-select-match placeholder="{{field.placeholder}}">{{$select.selected.season}}</ui-select-match>
+                        <ui-select-choices repeat="f.id as f in field.type.options | propsFilter: {season: $select.search, id: $select.search}">
+                            <div ng-bind-html="f.season | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </span>
+
+            <span ng-switch-when="ui-select-episode">
+                <div class="col-sm-10">
+                    <ui-select on-select="showSelectedEpisode($item,$model)" multiple close-on-select="false" ng-model="entity[field.name]" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                        <ui-select-match placeholder="{{field.placeholder}}">{{$item.episode_number}}</ui-select-match>
+                        <ui-select-choices repeat="field in field.type.options | propsFilter: {episode_number: $select.search, id: $select.search}">
+                            <div ng-bind-html="field.episode_number | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </span>
+
+            <span ng-switch-default>
+              <span>{{ _T["in5wmy49"] }}</span>
+          </span>
+        </span>
+    </div>
+</div>

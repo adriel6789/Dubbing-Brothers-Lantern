@@ -1,0 +1,35 @@
+<div class="page-requests-demands">
+  <!-- <div class="mask" ng-show="showMore"></div> -->
+  <header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>
+          {{title}}
+        </p>
+      </div>
+    </div>
+  </header>
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+      <ul class="nav nav-tabs" role="tablist">
+        <li  ng-class="{'active' : $root.state.name == 'app.requestGroupNonePlan'}"><a ui-sref="app.requestGroupNonePlan" ng-click="hideRequestFn(false, false)" style="width: 226px;" >{{ _T["jl34h8o9"] }}</a></li>
+        <li role="planned" ng-class="{'active' : $root.state.name == 'app.requestGroupPlanned'}"><a ui-sref="app.requestGroupPlanned" aria-controls="planned" >{{ _T["oc61aez7"] }}</a></li>
+        <li role="manageTech"><a ui-sref="app.records.manageTechRequests" aria-controls="manageTech" >{{ _T["xag06kf0"] }}</a></li>
+      </ul>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="loading-container" ng-if="loading">
+                <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+              </div>
+              <div ng-if="!loading">
+                <div ui-view></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

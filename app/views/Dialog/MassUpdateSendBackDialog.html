@@ -1,0 +1,232 @@
+<header style="margin-bottom:0px">
+    <div class="container-fluid">
+        <p>
+            {{ _T["65xcplvm"] }}
+        </p>
+    </div>
+</header>
+
+<div class="container-fluid descrip-dialog">
+    <h3>{{ _T["rqfob68v"] }}
+        <div class="btn-group">
+          <button type="button" class="btn btn-default btn-change">
+              <span ng-if="send_back_btn_state < 1"><span class="type type-default"></span> <i>{{ _T["uzl2bs5m"] }}</i></span>
+              <span ng-if="send_back_btn_state == 1"><span class="type type-success"></span> {{ _T["6n6bf6dk"] }}</span>
+              <span ng-if="send_back_btn_state == 2"><span class="type type-warning"></span> {{ _T["lnzulifx"] }}</span>
+
+          </button>
+          <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret triangle"></span>
+            <span class="sr-only">{{ _T["n9j6zrd5"] }}</span>
+          </button>
+          <ul class="dropdown-menu">
+              <li><a ng-click="send_back_btn_state = 1"><span class="type type-success"></span> {{ _T["6n6bf6dk"] }}</a></li>
+            <li><a ng-click="send_back_btn_state = 2"><span class="type type-warning"></span> {{ _T["lnzulifx"] }}</a></li>
+          </ul>
+        </div>
+    </h3>
+</div>
+
+<div class="container-fluid" style="min-height:500px">
+    <div class="row text-center">
+        <div class="col-md-offset-3 col-md-6">
+            <div class="well well-sm" style="background-color:white">
+                <div class="col-md-12">
+                    <strong>{{ _T["accxtuf4"] }}</strong>
+                </div>
+                <div class="input-group input-group-sm">
+                    <input class="form-control" style="width:100%" placeholder="{{ _T['8m4tsidm'] }}" ng-model="newComment"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" ng-click="addCommentOnAllRequests(newComment, true)">
+                            <span class="glyphicon glyphicon-comment"></span>
+                            {{ _T["zm0g3bdn"] }}</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default" ng-repeat="request in massRequestsToUpdate | orderBy:'product.human_description'" >
+        <table class="table table-no-border" >
+            <tbody>
+                <tr>
+                    <td>
+                            <img class="img img-circle" width=50 height=50 style="margin-right: 5px; border:1px black solid;" ng-src="{{::request.product.subproject.project.client.url || '../app/img/no-customer.png'}}">
+                    </td>
+                    <td>
+                        <div>
+                            <i class="fa fa-film"></i>
+                            <a data-toggle="collapse" href="#collapseMass{{request.id}}" target="_self">
+                                {{::request.product.human_description}}
+                                -
+                                {{::request.workflow.language.value}}
+                            </a>
+                        </div>
+                        <div>
+                            <span class="label label-info label-squared">
+                                <span ng-if="request.workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+                                <span ng-if="request.workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+                                <span ng-if="request.workflow.workflow_type.id == 3" class="fa fa-briefcase"></span>
+                                {{::request.action_type.etape_type.workflow_type.value}} - {{::request.workflow.doublage_type.value}}
+                            </span>
+                            &nbsp;
+                            <label>
+                                <i class="fa fa-tags"></i>
+                                <a href="#/requests/detail/{{request.id}}" target="_blank"  data-toggle="tooltip" title="{{ _T['u5gb76mh'] }}" tooltip-placement="bottom">
+                                    {{::request.action_type.etape_type.value}} - {{::request.action_type.value}}
+                                </a>
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="btn-circle margin-right-50" data-toggle="collapse" href="#collapseMass{{request.id}}" target="_self"  data-toggle="tooltip" title="{{ _T['8vnlqixe'] }}">
+                            <i class="c-icon c-icon-videoFile"></i> {{request.itemsInRequest.length}} {{ _T["0to1cmv6"] }}
+                        </span>
+                        <span class="btn-circle margin-right-50" data-toggle="collapse" href="#collapseMass{{request.id}}" target="_self" uib-tooltip-html="request.lastComment">
+                            <i class="fa fa-comments"></i> {{ _T["d8ywdjwr"] }}
+                        </span>
+                        <span class="btn-circle glyphicon glyphicon-menu-down btn-collapse" role="button" data-toggle="collapse" href="#collapseMass{{request.id}}" aria-expanded="false" aria-controls="collapseMass{{request.id}}"  data-toggle="tooltip" title="{{ _T['1v7vl2tu'] }}" tooltip-placement="bottom"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="collapse" id="collapseMass{{request.id}}">
+            <div class="row" ng-if="uploader[request.id] != null">
+                <div class="col-md-12">
+                    <div nv-file-drop="" uploader="uploader[request.id]">
+                        <div class="col-md-8">
+                            <h4 class="padd-30">
+                                <span class="glyphicon glyphicon-paperclip"></span>
+                                {{ _T["qg7rqxc7"] }}
+                            </h4>
+
+                            <h2 class="text-center" ng-show="uploader[request.id].queue.length == 0">
+                                {{ _T["3qh7nk7a"] }}
+                            </h2>
+
+                            <ul class="list-group">
+                              <li class="list-group-item" style="padding-bottom:0; border:none" ng-repeat="item in uploader[request.id].queue">
+                                  <div class="row">
+                                      {{item.file.name}}
+                                      <span class="pull-right">
+                                          {{ item.file.size / 1024 / 1024|number:2 }} MB
+
+                                          <button class="btn btn-primary btn-xs" ng-click="download(item)" ng-disabled="item.isUploading" type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['0kyhuafp'] }}">
+                                              <span class="glyphicon glyphicon-download"></span>
+                                          </button>
+                                          <button class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-if="item.isUploading" type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['t5lz1qb1'] }}">
+                                              <span class="glyphicon glyphicon-ban-circle"></span>
+                                          </button>
+                                          <button class="btn btn-danger btn-xs" ng-click="remove(item)" ng-if="!item.isUploading" type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['tc6j8t46'] }}">
+                                              <span class="glyphicon glyphicon-trash"></span>
+                                          </button>
+                                      </span>
+                                  </div>
+                                  <div class="row"  style="margin-bottom: 0;">
+                                      <div class="progress-upload" style="margin-bottom: 0;">
+                                          <div class="progress-bar-upload" ng-style="{ 'width': item.progress + '%' }" role="progressbar"></div>
+                                      </div>
+                                  </div>
+                              </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <div ng-show="uploader[request.id].isHTML5">
+                                <div class="upload-text-box text-center" nv-file-over="" uploader="uploader[request.id]">
+                                    {{ _T["ob68vuzl"] }}
+                                    <br><br>
+                                    <div class="btn btn-primary upload-file-container">
+                                        <input multiple nv-file-select="" type="file" uploader="uploader[request.id]"/>
+                                        {{ _T["6q8stqsy"] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-custom ">
+                <thead>
+                <tr>
+                    <th>{{ _T["h5bglkgi"] }}</th>
+                    <th style="width:300px !important">{{ _T["zh4fsex6"] }}</th>
+                    <th>{{ _T["zts71n39"] }}</th>
+                    <th><button class="btn btn-link pull-right" ng-click="addNewMediaItem(request)"><i class="c-icon c-icon-add"></i>{{ _T["k21nsxlx"] }}</a></th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="item in request.itemsInRequest">
+                <tr class="table-custom-bordered">
+                    <td>
+                        <strong>
+                            <a e-ng-options="support.support as support.support for support in supports" blur="ignore" editable-select="item.support" href="#" onaftersave="editMediaItem(item, request, true)">
+                              {{ item.support || _T["fj98qsz4"] }}
+                            </a>
+                        </strong>
+                    </td>
+                    <td>
+                        <i class="c-icon c-icon-link"></i>
+                        <a blur="ignore" style="word-break: break-word" editable-text="item.path" href="#" onaftersave="editMediaItem(item, request)">
+                          {{ item.path || _T["fj98qsz4"] }}
+                        </a>
+                    </td>
+                    <td>
+                        <p>
+                            {{ _T["dz8plzyk"] }} :
+                            <a e-ng-options="speed.name as speed.name for speed in speeds" blur="ignore" editable-select="item.speed" href="#" onaftersave="editMediaItem(item, request)">
+                              {{ item.speed || '...' }}
+                            </a>
+
+                            <span ng-if="item.nature == 'Audio'" class="pull-right">
+                                {{ _T["8izp2is4"] }} :
+                              <a e-ng-options="layout.name as layout.name for layout in layouts" blur="ignore" editable-select="item.layout" href="#" onaftersave="editMediaItem(item, request)">
+                                {{ item.layout || '...' }}
+                              </a>
+                            </span>
+                        </p>
+                        <p>
+                            {{ _T["34ou49b2"] }} :
+                            <a e-ng-options="speed.name as speed.name for speed in speeds" blur="ignore" editable-select="item.speed" href="#" onaftersave="editMediaItem(item, request)">
+                              {{ item.speed || '...' }}
+                            </a>
+                        </p>
+                    </td>
+                    <td>
+                        {{(item.date_creation | amDateFormat:"DD MMM YYYY").toUpperCase()}}{{$index}}
+                          <span ng-if="item.date_creation == null" ng-click="removeNewMediaItem(request, $index)"  data-toggle="tooltip" title="{{ _T['eqdd3dtb'] }}" tooltip-placement="bottom" class="btn-circle fa fa-trash-o"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=4 style="text-align:center !important;">
+                        <a blur="ignore" editable-text="item.comment" href="#" onaftersave="editMediaItem(item, request)">
+                          {{ item.comment || _T["zj219353"] }}
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <script type="text/javascript">
+        $('.collapse').on('show.bs.collapse', function () {
+            var ariaControls = $(this).attr('id');
+
+            $('.btn-collapse[aria-controls=' + ariaControls + ']').addClass('rotate180');
+
+            });
+
+            $('.collapse').on('hide.bs.collapse', function () {
+            var ariaControls = $(this).attr('id');
+
+            $('.btn-collapse[aria-controls=' + ariaControls + ']').removeClass('rotate180');
+            });
+        </script>
+    </div>
+</div>
+
+<div class="container-fluid footer-dialog vertical-align">
+    <div class="col-sm-6">
+        <h3>{{massRequestsToUpdate.length}} {{ _T["mbimc445"] }}</h3>
+    </div>
+    <div class="col-sm-6">
+        <button ng-show="send_back_btn_state != 0" ng-click="saveChange('send_back')" class="btn btn-primary btn-block"> {{ _T["3tft39g8"] }}</button>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="page-popup page-custom-template">
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="template-h1">{{ _T["l1scmxqa"] }}</h1>
+      <div class="step text-center">
+        <form class="ng-pristine ng-valid">
+          <div ng-show="isLoading()" class="spinner-container">
+            <div class="spinner">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+          </div>
+          <div ng-hide="isLoading()">
+            <div class="col-md-8 col-md-offset-2">
+              <h2>{{ _T["x5t6muv1"] }}</h2>
+              <hr style="border-color: rgba(53, 112, 225, 0.5);">
+            </div>
+            <div class="col-md-10 col-md-offset-1">
+              <h2 class="text-center" ng-show="getRequests().length == 0">
+                {{ _T["ata907vv"] }}
+              </h2>
+              <ul class="list template-list" style="height: 650px;">
+                <li ng-repeat="request in getRequests()" class="col-md-8 col-md-offset-2">
+                  <div class="col-md-10 text-left">
+                    <a href="#/requests/detail/{{request.id}}" target="_blank"  data-toggle="tooltip" title="{{ _T['erzckqgl'] }}" tooltip-placement="bottom">#{{request.id}} : {{request.action_type.etape_type.value}} - {{request.action_type.value}}</a>
+                    <span ng-if="request.sharedReturn.length > 0" class="label label-info">{{request.sharedReturn.length}} retour{{request.sharedReturn.length > 1 ? 's' : ''}}</span>
+                  </div>
+                  <div class="col-md-2 text-right">
+                    <button class="btn btn-primary btn-xs" ng-click="addReturnsToSelectedRequest(request)" type="button" ng-disabled="isDisableButtons()"><i class="fa fa-plus-circle"></i> {{ _T["zm0g3bdn"] }}</button>
+                  </div>
+                  <div class="col-md-12 text-left mt-5">
+                    <date-wish data="request" small="true" hide="true"></date-wish>
+                  </div>
+                  <div class="clearfix"></div>
+                  <hr style="border-color: rgb(237, 8, 83);">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog('cancelButton');" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

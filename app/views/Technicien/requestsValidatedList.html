@@ -1,0 +1,527 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["nn1ybal3"] }}
+                  <small>
+                    <span ng-if="requestsInternal.length > 0">{{requestsInternal.length}}
+                      {{ _T["wh3wdu9p"] }}</span>
+                    -
+                    <span ng-if="farmerEntities.length > 0">{{farmerEntities.length}}
+                      {{ _T["6gaeaxyb"] }}</span>
+                  </small>
+            </p>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+        <div ng-include="'views/partials/nav-requests.html'"></div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="">
+                <form>
+                    <div class="form-group search-form search-form-tabs form-select">
+                        <input type="text" class="form-control input-search input-search-tabs large-input" aria-label="Rechercher parmi les demandes" placeholder="{{ _T['wqfkzdw6'] }}" ng-model="textFilter">
+                    </div>
+                </form>
+
+  <div class="alert alert-info text-center col-md-offset-3 col-md-6 in fade" ng-if="isRequestsFarmersNotDone().found">
+    {{ _T["6cg9tbhl"] }} <strong>{{ _T["nw97ppjd"] }}</strong>.<br>
+    {{ _T["etizpuxc"] }} <strong><u>{{ _T["4wycljca"] }}</u></strong> {{ _T["kvb12ilx"] }} ?<br>
+    <button class="btn btn-sm btn-link" ng-click="requestsFarmersFinished()" data-dismiss="alert" aria-label="Close"> {{ _T["jidtxhd1"] }} </button> - <button class="btn btn-sm btn-link" data-dismiss="alert" aria-label="Close"> {{ _T["qjufx8gc"] }} </button>
+  </div>
+
+  <div class="clearfix"></div>
+
+
+
+  <section class="row" ng-if="requestsInternal.length > 0">
+    <h3 class="col-md-12 text-center">{{ _T["qr58og51"] }}</h3>
+      <section class="well well-sm col-md-offset-2 col-md-8" style="position:fixed; top:70px; z-index:10000; background-color: white;
+      -webkit-box-shadow: 0px 0px 200px rgba(0,0,0,0.5);
+      -moz-box-shadow: 0px 0px 200px rgba(0,0,0,0.5);
+      box-shadow: 0px 0px 200px rgba(0,0,0,0.5);"  ng-if="getSelectedRequests().length > 0">
+        <div class="text-center">
+          <h4>{{ _T["xphmrimm"] }}</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            <div class="btn-group btn-group-justified">
+              <div class="btn btn-success" ng-click="actionToSelectionInternal(1,0,0)">
+                <i class="glyphicon glyphicon-ok-sign"></i>
+                {{ _T["vs2682km"] }}
+              </div>
+              <div class="btn btn-warning" ng-click="actionToSelectionInternal(1,1,0)">
+                <i class="glyphicon glyphicon-minus-sign"></i>
+                {{ _T["aibs1n22"] }}
+              </div>
+              <div class="btn btn-default" ng-click="actionToSelectionInternal(0,0,1)">
+                <i class="glyphicon glyphicon-remove-sign"></i>
+                {{ _T["ym0900vq"] }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class=" col-md-12">
+        <div class="col-md-4"  ng-repeat="request in requestsInternal | orderBy:'date_send_tech' | magicFilterRequest:textFilter" ng-if="request.display == 1">
+          <div class="panel panel-default" style="min-height:210px">
+            <div class="panel-body">
+              <div class="col-md-1">
+
+              <div ng-if="request.from_group == null" class="checkboxTech pull-left" data-placement="bottom" data-toggle="tooltip" title="{{ _T['p1i4vgsv'] }}">
+                <script>
+                    $(function() {
+                        $('[data-toggle="tooltip"]').tooltip({html: true})
+                    });
+                </script>
+                <input type="checkbox" ng-model="request.selected" id="checkboxTechInput{{request.id}}" name="" />
+                <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">request_id: {{request.id}}</span>
+                <label for="checkboxTechInput{{request.id}}"></label>
+              </div>
+
+              <div ng-if="request.from_group != null" class="checkboxTech pull-left" data-placement="bottom" data-toggle="tooltip" title="{{ _T['p1i4vgsv'] }}">
+
+
+                <script>
+                    $(function() {
+                        $('[data-toggle="tooltip"]').tooltip({html: true})
+                    });
+                </script>
+                <input type="checkbox" ng-model="request.all_selected" ng-change="selectRequestsGroup(request,true)" id="checkboxTechInput{{request.id}}_{{request.group.id}}" name="" />
+                <label for="checkboxTechInput{{request.id}}_{{request.group.id}}"></label>
+                <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">req_id_gr_id: {{request.id}}_{{request.group.id}}</span>
+              </div>
+            </div>
+
+              <div class="col-md-11">
+                <h4 class="pull-right">
+                    <span class="label label-info" ng-show="request.on_hold == 1">{{ _T["2ctuc541"] }}</span>
+                  <section ng-if="request.in_group == 1">
+                    <div ng-show="globalStatusRequest(request.group.requests).status == 0">
+                      <span class="label label-success">{{ _T["12oo80fo"] }}</span>
+                    </div>
+                    <div ng-show="globalStatusRequest(request.group.requests).status == 1">
+                      <span class="label label-warning">{{ _T["xv6517nh"] }}</span>
+                    </div>
+                    <div ng-show="globalStatusRequest(request.group.requests).status == 2">
+                      <span class="label label-default">{{ _T["233gy56h"] }}</span>
+                    </div>
+                    <div ng-show="globalStatusRequest(request.group.requests).status == 3">
+                      <span class="label label-primary">{{ _T["7g6cqlrg"] }}</span>
+                    </div>
+                    <span class="label label-danger" ng-show="globalStatusRequest(request.group.requests).returns != 0">
+                      {{globalStatusRequest(request.group.requests).returns}}
+                      {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-success" ng-show="globalStatusRequest(request.group.requests).returns == 0">{{ _T["2p6l5c54"] }}</span>
+                </section>
+                <section ng-if="request.in_group == 0">
+                  <div ng-show="request.is_done == 1 && request.is_partial != 1">
+                    <span class="label label-success">{{ _T["fmwww439"] }}</span>
+                  </div>
+                  <div ng-show="request.is_done == 1 && request.is_partial == 1">
+                    <span class="label label-warning">{{ _T["1x01sncl"] }}</span>
+                  </div>
+                  <div ng-show="request.is_not_done == 1">
+                    <span class="label label-default">{{ _T["ndbsjpnx"] }}</span>
+                  </div>
+                  <div ng-show="request.is_not_done != 1 && request.is_done != 1">
+                    <span class="label label-primary">{{ _T["zqkux1rx"] }}</span>
+                  </div>
+                  <span class="label label-danger" ng-show="count(request.ownReturn) != 0">
+                    {{count(request.ownReturn)}}
+                    {{ _T["f7du1if8"] }}</span>
+                  <span class="label label-success" ng-show="count(request.ownReturn) == 0 || request.ownReturn.length == null">{{ _T["2p6l5c54"] }}</span>
+                </section>
+                </h4>
+              </div>
+
+              <div class="text-center">
+
+              <strong>
+                <i class="fa fa-ticket"></i>
+                {{ _T["z0t6p7pd"] }} {{request.date_send_tech | asDate | date:"dd/MM/yyyy \à HH\'h\'mm"}}
+              </strong>
+              <br>
+
+
+              <a ng-if="request.from_group == null" href="#/requestsTech/{{request.id}}">
+                {{request.product.subproject.project.client.name}} -
+                <span>{{request.product.human_description}} - {{request.workflow.language.value}}</span>
+              </a>
+              <a ng-if="request.from_group != null" href="" ng-click="request.showGroup = !request.showGroup" style="color:#6200FF">
+                {{request.product.subproject.project.client.name}} -
+                <span>{{request.product.subproject.project.name}} -</span>
+                <span ng-if="request.product.subproject.nature.name == 'serie'">
+                  {{ _T["6vwtywcc"] }}
+                  {{request.product.subproject.season}}
+                  -
+                </span>
+                <span ng-if="request.product.subproject.nature.name != 'serie'">
+                  {{request.product.subproject.nature.value}}
+                  -
+                </span>
+                <span>
+                  {{ _T["5sar2sqw"] }}
+                  {{request.number_request}}
+                  {{ _T["ba0heyvu"] }}
+                </span>
+              </a>
+              <span ng-if="request.from_group != null" ng-show="request.showGroup">
+                <br/>
+                <div ng-repeat="aRequest in request.group.requests | orderBy:'product.human_description'" ng-show="aRequest.is_sent_back != 1">
+                  <span>
+                    <input type="checkbox" ng-model="aRequest.selected" ng-change="changeInputUnit(aRequest)" id="checkboxTechInput_unit_{{aRequest.id}}" name="" />
+                    <label for="checkboxTechInput_unit_{{aRequest.id}}"></label>
+                  </span>
+                  <a href="#/requestsTech/{{aRequest.id}}">
+                    {{aRequest.product.human_description}}
+                    -
+                    {{aRequest.workflow.language.value}}
+                    <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">-req_id -{{aRequest.id}}</span>
+                  </a>
+                  <span ng-show="aRequest.is_done == 1 && aRequest.is_partial != 1">
+                    <span class="label label-danger" ng-show="count(aRequest.ownReturn) > 0">
+                      {{count(aRequest.ownReturn)}}
+                      {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-success" ng-show="count(aRequest.ownReturn) == 0">
+                      0 {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-success">{{ _T["w5t0ije4"] }}</span>
+                  </span>
+                  <span ng-show="aRequest.is_done == 1 && aRequest.is_partial == 1">
+
+                    <span class="label label-danger" ng-show="count(aRequest.ownReturn) > 0">
+                      {{count(aRequest.ownReturn)}}
+                      {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-success" ng-show="count(aRequest.ownReturn) == 0">
+                      0 {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-warning">{{ _T["tqh0neff"] }}</span>
+                  </span>
+                  <span ng-show="aRequest.is_not_done == 1" class="label label-default">{{ _T["yocl86fr"] }}</span>
+                  <span ng-show="aRequest.is_not_done != 1 && aRequest.is_done != 1" class="label label-primary">{{ _T["r4thk494"] }}</span>
+                  <br/>
+                </div>
+              </span>
+                <br>
+              <i class="fa fa-television"></i> {{request.workflow.exploitation.value}}
+              <br>
+              <i class="fa fa-tags"></i>
+              {{request.action_type.etape_type.value}} - {{request.action_type.value}}
+              <span ng-if="request.workflow.doublage_type != null">-
+                <span class="fa fa-microphone"></span> {{request.workflow.doublage_type.value}}
+              </span>
+
+
+              </div>
+
+              <div ng-if="request.from_group == null" style="margin-top:10px">
+                <button ng-if="!(request.is_done != 1 && request.is_not_done != 1)" class="btn btn-xs btn-block btn-success" ng-click="requestFinishedSingle(request)">
+                  {{ _T["28yh92my"] }}
+                </button>
+              </div>
+              <div ng-if="request.from_group != null" style="margin-top:10px">
+                <button ng-if="globalStatusRequest(request.group.requests).status < 3" class="btn btn-xs btn-block btn-success" ng-click="requestFinishedGroup(request.group)">
+                  {{ _T["3tft39g8"] }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+</div>
+
+</section>
+
+<div class="row">
+  <h3 class="text-center">{{ _T["mqic3sbz"] }}</h3>
+
+  <section class="well well-sm col-md-offset-2 col-md-8" style="position:fixed; top:70px; z-index:10000;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 200px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0px 0px 200px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 200px rgba(0,0,0,0.5);" ng-if="getFarmersSelected().length > 0">
+    <div class="row" >
+        <div class="text-center">
+          <h4>{{ _T["5d9rs12z"] }}</h4>
+        </div>
+        <div class="col-md-12">
+        <div class="btn-group btn-group-justified">
+          <div class="btn btn-success" ng-click="actionToSelectionFarmer(1,0,0)">
+            <i class="glyphicon glyphicon-ok-sign"></i>
+            {{ _T["vs2682km"] }}
+          </div>
+          <div class="btn btn-warning" ng-click="actionToSelectionFarmer(1,1,0)">
+            <i class="glyphicon glyphicon-minus-sign"></i>
+            {{ _T["aibs1n22"] }}
+          </div>
+          <div class="btn btn-default" ng-click="actionToSelectionFarmer(0,0,1)">
+            <i class="glyphicon glyphicon-remove-sign"></i>
+            {{ _T["ym0900vq"] }}
+          </div>
+        </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" ng-if="getFarmersSelected().length > 0" ng-show="time"> 
+        <div class="input-group input-group-sm">
+          <span class="input-group-addon" id="basic-addon1">{{ _T["jeepc9om"] }}</span>
+          <input ng-if="mode == 'basic'" class="form-control" style="width:100%" time-input=""  ng-model="hours.startWorkingTime"  maxlength="5" type="text" placeholder="{{placeHolderDateFormat('start')}}" pattern="{{patternDateFormat()}}" aria-describedby="basic-addon1"/>    
+          <input ng-if="mode == 'us'" class="form-control" style="width:100%" ng-model="hours.startWorkingTime"  maxlength="8" type="text" placeholder="{{placeHolderDateFormat('start')}}" aria-describedby="basic-addon1"/>        
+          <span class="input-group-addon" id="basic-addon2">{{ _T["v9l0r966"] }}</span>
+          <input ng-if="mode == 'basic'" class="form-control" style="width:100%"  time-input=""  ng-model="hours.endWorkingTime" maxlength="5" type="text" placeholder="{{placeHolderDateFormat('end')}}" pattern="{{patternDateFormat()}}" aria-describedby="basic-addon2"/>
+          <input ng-if="mode == 'us'" class="form-control" style="width:100%"  time-input=""  ng-model="hours.endWorkingTime" maxlength="8" type="text" placeholder="{{placeHolderDateFormat('end')}}" aria-describedby="basic-addon2"/>
+          <span class="input-group-addon" id="basic-addon3">
+            <i class="glyphicon glyphicon-cutlery"></i>
+            {{ _T["7efqgpfl"] }}</span>
+          <input type="text" class="form-control" style="width:100%" ng-model="hours.breakTime" placeholder="{{$root._T['m4llr5qq']}}" aria-describedby="basic-addon3"/>
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ng-click="insertTimeFarmerMultiple()">{{ _T["fwxi3klo"] }}</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="col-md-12">
+    <div ng-repeat="day in days" class="col-md-4" >
+      <div  style="min-height:750px;background:#FFF; " class="panel panel-default "
+      ng-style="$index == 1 && {'background-color':'#F0FFEB'} ||
+        $index == 0 && (farmerEntities | MilkManDateInWeekFarmerValidated: day ).length != 0 && {'background-color':'#ffbbbb'} ||
+        $index == 0 && (farmerEntities | MilkManDateInWeekFarmerValidated: day ).length == 0 && {'background-color':'#c8f4e2'}">
+          <h3 style="text-align: center">
+            <span ng-if="$index == 0">{{ _T["73adr4pv"] }}</span>
+            <span ng-if="$index == 1">{{ _T["ze7enx7x"] }}</span>
+            <span ng-if="$index == 2">{{ _T["b3tjlldn"] }}</span>
+            <span ng-if="$index == 3">{{ _T["iyeiy7is"] }}</span>
+            <span ng-if="$index > 3"> {{day.format("dddd").capitalizeFirstLetter()}}</span>
+            <br>
+            <small class="label label-primary" ng-if="$index > 0">{{day.format("DD MMMM YYYY")}}</small>
+            <small class="label label-danger"  ng-if="$index == 0">{{ _T["7o21jf48"] }}</small>
+          </h3>
+          <p ng-if="role_of_user == 'technicien' && $index == 1" style="text-align: center; font-size: 17px;">
+            <span>
+              <span id='note' style=" font-weight: bold;">{{ _T["ugbxtkax"] }}</span><br>
+              <span id="techNote" style="width: 400px; display: inline-block; border-radius: 20px; color: #3570E1; border: solid 1px #e17035">{{_T['1gs1ik8l']}}</span>
+            </span>
+          </p>
+          <ul class="list-group" >
+            <li class="list-group-item text-center"
+            ng-style="$index == 1 && {'background-color':'#F0FFEB'} ||
+              $index == 0 && (farmerEntities | MilkManDateInWeekFarmerValidated: day ).length != 0 && {'background-color':'#ffbbbb'} ||
+              $index == 0 && (farmerEntities | MilkManDateInWeekFarmerValidated: day ).length == 0 && {'background-color':'#c8f4e2'}"
+            ng-if="(farmerEntities | MilkManDateInWeekFarmerValidated: day ).length == 0 || (farmerEntities | MilkManDateInWeekFarmerValidated: day | magicFilterRequest:textFilter).length == null"
+            >
+              <p ng-show="$index != 0 || !($index == 0 && (textFilter == '' || textFilter == null))">
+                {{ _T["8f1b79kk"] }} <span ng-show="textFilter != '' && textFilter != null">{{ _T["z2xwheum"] }} « {{textFilter}} »</span>
+              </p>
+              <h3 ng-show="$index == 0 && (textFilter == '' || textFilter == null)">
+                {{ _T["7cil4jn5"] }}<br><br>
+                <i class="fa fa-thumbs-o-up fa-5x"></i>
+              </h3>
+            </li>
+            <li class="list-group-item" style="border-top: black 1px solid" ng-repeat="farmerEntity in farmerEntities | orderBy:['start_day_farmer','start_time_farmer'] | MilkManDateInWeekFarmerValidated: day | magicFilterRequest:textFilter " ng-class="{'request-reader':user_entity.id == farmerEntity[0].request.tech_reader_id}" ng-show="farmerEntity.hide != 1" >
+              <div class="row">
+                  <div class="col-md-1" ng-show="user_entity.id == farmerEntity[0].request.tech_reader_id">
+                      <span class="label label-default">{{ _T["npaxq3f4"] }}</span>
+                  </div>
+                <div class="col-md-1" ng-show="user_entity.id != farmerEntity[0].request.tech_reader_id">
+                  <div class="checkboxTech pull-left" data-placement="bottom" data-toggle="tooltip" title="{{ _T['p1i4vgsv'] }}">
+                    <script>
+                        $(function() {
+                            $('[data-toggle="tooltip"]').tooltip({html: true})
+                        });
+                    </script>
+                    <input type="checkbox" ng-model="farmerEntity.selected" ng-click="selectFarmers(farmerEntity,true)" id="checkboxTechInput{{farmerEntity[0].id}}" name="" />
+                    <label for="checkboxTechInput{{farmerEntity[0].id}}"></label>
+                    <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">{{ _T["7d4s6cbt"] }} ID : {{farmerEntity[0].id}}</span>
+                  </div>
+                </div>
+
+                <div class="col-md-11">
+                  <h4 class="pull-right">
+
+                    <span ng-show="globalStatusFarmer(farmerEntity).status == 0">
+                      <!-- <span class="label label-success">Séance<span ng-if="farmerEntity.length > 1">s</span>
+                        finie<span ng-if="farmerEntity.length > 1">s</span>
+                      </span> -->
+                      <span class="label label-success" ng-if="farmerEntity.length == 1">{{ _T["fmwww439"]}}</span>
+                      <span class="label label-success" ng-if="farmerEntity.length > 1">{{ _T["12oo80fo"]}}</span>
+                    </span>
+
+                    <span ng-show="globalStatusFarmer(farmerEntity).status == 1">
+                      <!-- <span class="label label-warning">Séance<span ng-if="farmerEntity.length > 1">s</span>
+                        non finie<span ng-if="farmerEntity.length > 1">s</span>
+                      </span> -->
+                      <span class="label label-warning" ng-if="farmerEntity.length == 1">{{ _T["1x01sncl"]}}</span>
+                      <span class="label label-warning" ng-if="farmerEntity.length > 1">{{ _T["xv6517nh"]}}</span>
+                    </span>
+
+                    <span ng-show="globalStatusFarmer(farmerEntity).status == 2" class="label label-default">
+                      <!-- Séance<span ng-if="farmerEntity.length > 1">s</span>
+                      non faite<span ng-if="farmerEntity.length > 1">s</span> -->
+                      <span ng-if="farmerEntity.length == 1">{{ _T["ndbsjpnx"] }}</span>
+                      <span ng-if="farmerEntity.length > 1">{{ _T["233gy56h"] }}</span>
+                    </span>
+                    <span ng-show="globalStatusFarmer(farmerEntity).status == 3" class="label label-primary">
+                      <!-- Séance<span ng-if="farmerEntity.length > 1">s</span>
+                      non traitée<span ng-if="farmerEntity.length > 1">s</span> -->
+                      <span ng-if="farmerEntity.length == 1">{{ _T["zqkux1rx"] }}</span>
+                      <span ng-if="farmerEntity.length > 1">{{ _T["7g6cqlrg"] }}</span>
+                    </span>
+                    <span class="label label-danger" ng-show="farmerEntity.globalState.returns > 0">
+                      {{farmerEntity.globalState.returns}}
+                      {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-success" ng-show="farmerEntity.globalState.returns == 0">
+                      0 {{ _T["f7du1if8"] }}</span>
+                    <span class="label label-danger" ng-show="farmerEntity[0].request.on_hold == 1">{{ _T["2ctuc541"] }}</span>
+                  </h4>
+                </div>
+              </div>
+
+
+              <div style="text-align: center; border-bottom: 1px solid #DDD; padding-bottom:5px">
+                <strong>
+                  <i class="fa fa-ticket"></i>
+                  {{$root.allRoomsById[$root.allRoomsByName[farmerEntity[0].audit]].long_name || farmerEntity[0].audit}}
+                  <span>{{ _T["z0t6p7pd"] }} {{farmerEntity[0].day | asDate | date:"dd/MM/yyyy"}}</span>
+
+                  [{{transformHourInI18nFormat(farmerEntity[0].start_time)}}
+                  -
+                  {{transformHourInI18nFormat(farmerEntity[0].end_time)}}]
+                </strong>
+                <div class="label label-info label-block" ng-if="globalStatusFarmer(farmerEntity).status != 2 && farmerEntity[0].working_time_start != null && farmerEntity[farmerEntity.length-1].working_time_end != null">
+                  {{ _T["1uaq9w1d"] }} {{farmerEntity[0].working_time_start | asDate | date:"HH\'h\'mm"}}
+                  à {{farmerEntity[farmerEntity.length-1].working_time_end | asDate | date:"HH\'h\'mm"}}, {{ _T["7efqgpfl"] }} {{ _T["jeepc9om"] }}
+                  {{farmerEntity.break_time || calculBreakTimeFarmer(farmerEntity)}}
+                  min
+                </div>
+                <div>
+                  <a ng-if="farmerEntity.length == 1" href="#/requestsTech/{{farmerEntity[0].request.id}}?farmer={{farmerEntity[0].id}}">
+                    {{farmerEntity[0].request.product.human_description}}
+                    -
+                    {{farmerEntity[0].request.workflow.language.value}}
+                  <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">request_id: {{farmerEntity[0].request.id }}</span>
+                  </a>
+                  <span ng-if="farmerEntity.length > 1">
+                    <a href="" ng-click="farmerEntity.showGroup = !farmerEntity.showGroup" style="color:#6200FF">
+                      <span>{{farmerEntity[0].request.product.subproject.project.name}}
+                        -</span>
+                      <span ng-if="farmerEntity[0].request.product.subproject.nature.name == 'serie'">
+                        {{ _T["6vwtywcc"] }}
+                        {{farmerEntity[0].request.product.subproject.season}}
+                        -
+                      </span>
+                      <span ng-if="farmerEntity[0].request.product.subproject.nature.name != 'serie'">
+                        {{farmerEntity[0].request.product.subproject.nature.value}}
+                        -
+                      </span>
+                      <span>
+                        {{ _T["5sar2sqw"] }}
+                        {{farmerEntity.length}}
+                        {{ _T["ba0heyvu"] }}
+                      </span>
+                    </a>
+                    <span ng-show="farmerEntity.showGroup">
+                      <br/>
+                      <div ng-repeat="farmer in farmerEntity | orderBy:'request.product.human_description'" ng-show="farmer.request.is_sent_back != 1 && farmer.is_finished != 1">
+                         <span>
+                            <input type="checkbox" ng-model="farmer.selected" ng-change="changeInputUnit(farmer,'farmer')" id="checkboxfarmerInput_unit_{{farmer.id}}" name="" />
+                            <label for="checkboxfarmerInput_unit_{{farmer.id}}"></label>
+                        </span>
+                        <span >
+                          <a href="#/requestsTech/{{farmer.request.id}}?farmer={{farmer.id}}">
+                            {{farmer.request.product.human_description}}
+                            -
+                            {{farmer.request.workflow.language.value}}
+                            <span ng-if="superVerwalter.indexOf(user_entity.email) > -1">request_id: {{farmer.request.id }}</span>
+                          </a>
+                          <span class="label label-danger" ng-show="count(farmer.request.ownReturn) > 0">
+                            {{count(farmer.request.ownReturn)}}
+                            {{ _T["f7du1if8"] }}</span>
+                          <span class="label label-success" ng-show="count(farmer.request.ownReturn) == 0">
+                            0 {{ _T["f7du1if8"] }}</span>
+                          <span ng-show="farmer.is_done == 1 && farmer.is_partial != 1">
+                            <span class="label label-success">{{ _T["w5t0ije4"] }}</span>
+                          </span>
+                          <span ng-show="farmer.is_done == 1 && farmer.is_partial == 1">
+                            <span class="label label-warning">{{ _T["tqh0neff"] }}</span>
+                          </span>
+                          <span ng-show="farmer.is_not_done == 1" class="label label-default">{{ _T["jcrng616"] }}</span>
+                          <span ng-show="farmer.is_not_done != 1 && farmer.is_done != 1" class="label label-primary">{{ _T["r4thk494"] }}</span>
+
+                          <button ng-show="!(farmer.is_not_done != 1 && farmer.is_done != 1)"  data-toggle="tooltip" title="{{ _T['w2a3tcha'] }}" tooltip-placement="right" type="button" class="btn btn-default btn-text-primary btn-xs" ng-click="farmerFinishedSingle(farmer, false); "><i class="glyphicon glyphicon-send"></i></button>
+                        </span>
+                      </div>
+                    </span>
+                  </span>
+                </div>
+                <i class="fa fa-television"></i> {{farmerEntity[0].request.workflow.exploitation.value}}
+                <br>
+                <i class="fa fa-tags"></i>
+                {{farmerEntity[0].request.action_type.etape_type.value}}
+                -
+                {{farmerEntity[0].request.action_type.value}}
+                <span ng-if="farmerEntity[0].request.workflow.doublage_type != null">-
+                  <span class="fa fa-microphone"></span>
+                  {{farmerEntity[0].request.workflow.doublage_type.value}}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                <div ng-if="farmerEntity[0].ingenieur != null">
+                  <span class="glyphicon glyphicon-cog"></span> {{ _T["0y1qimug"] }} : {{farmerEntity[0].ingenieur}}
+                </div>
+                <div ng-if="farmerEntity[0].recorder != null">
+                  <span class="glyphicon glyphicon-record"></span> {{ _T["82k00at3"] }} : {{farmerEntity[0].recorder}}
+                </div>
+                <div ng-if="farmerEntity[0].artistic_director_id != null">
+                  <span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} : 
+                </div>
+                <div ng-repeat="item in a_Seance_note" ng-if="item.id == farmerEntity[0].id && item.id_technician == farmerEntity[0].tech_writer_id">
+                  <div ng-if="item.note != undefined">
+                    <div style="cursor: pointer;" data-placement="bottom" data-toggle="tooltip" title="{{item.note}}">       
+                      <i class="fa fa-commenting"></i>
+                      <span style="font-weight: bold;">Note</span>
+                    </div>           
+                    <script>
+                      $(function() {
+                        $('[data-toggle="tooltip"]').tooltip({html: true})
+                      });
+                    </script> 
+                  </div>             
+                </div>
+              </div>
+              <button class="btn btn-sm btn-success btn-block"
+                ng-if="globalStatusFarmer(farmerEntity).status <= 1
+                  && (farmerEntity[0].request.action_type.etape_type.name == 'enregistrement' || farmerEntity[0].request.action_type.etape_type.name == 'mixage' || farmerEntity[0].request.action_type.etape_type.name == 'montage')
+                  && (farmerEntity[0].working_time_start != null && farmerEntity[0].working_time_end != null)
+                  || globalStatusFarmer(farmerEntity).status <= 1
+                  && !(farmerEntity[0].request.action_type.etape_type.name == 'enregistrement' || farmerEntity[0].request.action_type.etape_type.name == 'mixage' || farmerEntity[0].request.action_type.etape_type.name == 'montage')
+                  || globalStatusFarmer(farmerEntity).status == 2"
+
+                ng-click="farmerFinishedEntity(farmerEntity)">
+                <span ng-if="farmerEntity.length == 1">{{ _T["dltorlyy"] }}</span>
+                <span ng-if="farmerEntity.length > 1">{{ _T["3yl7dbht"] }}</span>
+              </button>
+
+            </li>
+          </ul>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+        <div class="text-center" ng-cloak ng-if="requestsInternal.length == 0 && farmerEntities.length == 0">
+          <div class="alert alert-info" role="alert">
+            <h3>{{ _T["1qtk3tcv"] }}<br>{{ _T["zo8jou8w"] }} !
+              <span class="glyphicon glyphicon-sunglasses"></span>
+            </h3>
+          </div>
+        </div>
+    </div>
+</div>
+</div>

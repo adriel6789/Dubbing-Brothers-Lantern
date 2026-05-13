@@ -1,0 +1,90 @@
+<h2>{{ $root._T["49xrb0kk"] }}</h2>
+<!--Choix des séances-->
+<table class="table table-striped ">
+    <thead>
+        <tr>
+            <th>{{ $root._T["dahbw8c3"] }}</th>
+            <th>{{ $root._T["a2tucrf9"] }}</th>
+            <th>{{ $root._T["994zv55k"] }}</th>
+            <th ng-if="$ctrl.request.action_type.etape_type.name == 'enregistrement'">{{ $root._T["kup2m5xn"] }}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Ces conditions permettent d afficher les heures - une aide pour le planning. -->
+        <tr ng-repeat="farmer in $ctrl.request.ownFarmerbookings | orderBy:['day', 'start_time']" ng-if="(farmer.is_wish == 1 && ($ctrl.request.is_planned == false || $ctrl.request.is_not_done == true)) || farmer.booking_id != null" ng-class="{'farmer-selected' : farmer.selected, 'farmer-not-planned' : farmer.booking_id == null}"
+       >
+            <td  ng-click="$ctrl.selectFarmerbookings(farmer)">
+                <span class="type"  ng-class="{'type-success':(farmer.selected || farmer.is_selected == '1'), 'type-default': (!farmer.selected && farmer.is_selected != '1'), 'type-danger': !$ctrl.isAllSent(farmer) }"></span>
+                <span class="bold"> {{::farmer.day | amDateFormat:'DD/MM/YYYY'}} </span> -
+                <span ng-if="farmer.is_finished != 1 && (farmer.start_time || farmer.end_time)"> {{::$ctrl.transformHourInI18nFormat(farmer.start_time) || "-"}} to {{::$ctrl.transformHourInI18nFormat(farmer.end_time) || "-"}}</span>
+                <span ng-if="farmer.is_finished == 1 && (farmer.working_time_start || farmer.working_time_end)">{{::farmer.working_time_start| asDate | date:'HH\'h\'mm'}} to {{::farmer.working_time_end| asDate | date:'HH\'h\'mm'}} (P: {{::farmer.break_time|| "0"}} min)</span>
+            </td>
+            <td  ng-click="$ctrl.selectFarmerbookings(farmer)">
+                <span>
+                    <i class="c-icon c-icon-loc"></i>
+                    <span class="bold">{{$root.allRoomsById[$root.allRoomsByName[farmer.audit]].long_name || farmer.audit}}</span>
+                </span>
+                <span ng-if="false">
+                    <span class="bold" tooltip-placement="bottom" title="salles: disponibles/total">{{$ctrl.getRatioRooms(farmer)}}</span>
+                </span>                
+            </td>
+            <td  ng-click="$ctrl.selectFarmerbookings(farmer)">
+                <span ng-if="farmer.booking_id != null">
+                    <span class="c-icon c-icon-tech" tooltip-placement="bottom" uib-tooltip-html="farmer.description"></span>
+                    <span class="bold">
+                        <span ng-show="farmer.tech_writer_user.person.firstname != null">{{farmer.tech_writer_user.person.firstname}} {{farmer.tech_writer_user.person.lastname}}</span>
+                        <span ng-show="farmer.tech_writer_user.person.firstname == null">{{ $root._T["nvo32nvv"] }}</span>
+                    </span>
+                </span>
+            </td>
+            <td ng-if="$ctrl.request.action_type.etape_type.name == 'enregistrement'">
+              <span ng-if="farmer.booking_id != null">
+                    <i class="fa fa-bullhorn" title="da" style="cursor: pointer;"> 
+                    </i>
+                    <span ng-show="!$ctrl.is_song" ng-click="$ctrl.editDirector(farmer, 'artistic_director_id', $ctrl.is_song)">
+                        <span style="cursor: pointer;" ng-show="farmer.artistic_director.firstname != null" ng-click="$ctrl.showSelectNewDA()">{{farmer.artistic_director.firstname}} {{farmer.artistic_director.lastname}}</span>
+                        <span style="cursor: pointer;" ng-click="$ctrl.showSelectNewDA()" ng-show="farmer.artistic_director.firstname == null">{{ $root._T["nvo32nvv"] }}</span>
+                    </span> 
+                    <span ng-show="$ctrl.is_song" ng-click="$ctrl.editDirector(farmer, 'song_director_id', $ctrl.is_song)">
+                        <span style="cursor: pointer;" ng-show="farmer.song_director.firstname != null" ng-click="$ctrl.showSelectNewSongDA()">: {{farmer.song_director.firstname}} {{farmer.song_director.lastname}}</span>
+                        <span style="cursor: pointer;" ng-click="$ctrl.showSelectNewSongDA()" ng-show="$ctrl.is_song && farmer.song_director.firstname == null">no song director</span>
+                    </span> 
+                    <span ng-show="$ctrl.canDisplayStageManager()">
+                        <br />
+                        <i class="fa fa-binoculars" title="stage manager" style="cursor: pointer;"> </i>
+                        <span ng-click="$ctrl.editStageManager(farmer)">
+                            <span style="cursor: pointer;" ng-show="farmer.stage_manager.firstname != null" ng-click="$ctrl.showSelectNewStageManager()">: {{farmer.stage_manager.firstname}} {{farmer.stage_manager.lastname}}</span>
+                            <span style="cursor: pointer;" ng-click="$ctrl.showSelectNewStageManager()" ng-show="$ctrl.is_song && farmer.stage_manager.firstname == null">no stage manager</span>
+                        </span>
+                    </span>
+              </span>
+            </td >
+            <td class="text-right" ng-click="$ctrl.selectFarmerbookings(farmer, $ctrl.is_song)">
+                <span class="label label-default" ng-class="{'label-danger' : farmer.is_selected == 1 && farmer.is_finished != 1 && (farmer.is_done == 1 || farmer.is_partial == 1 || farmer.is_not_done == 1), 'label-success' : farmer.is_finished == 1 && farmer.is_done == 1 && farmer.is_partial != 1, 'label-warning' : farmer.is_finished == 1 && farmer.is_not_done == 1, 'label-info': farmer.is_finished == 1 && farmer.is_done == 1 && farmer.is_partial == 1, 'label-primary' : farmer.is_finished != 1 && farmer.is_selected == 1, 'label-black' : farmer.booking_id == null}">
+                    <span ng-if="farmer.is_finished == 1">{{ $root._T["k7su5zvx"] }}
+                        <span ng-if="farmer.is_partial == 1"> {{ $root._T["nklegfd9"] }}</span>
+                        <span ng-if="farmer.is_done == 1 && farmer.is_partial != 1"> {{ $root._T["chzc6mzc"] }}</span>
+                        <span ng-if="farmer.is_not_done == 1"> {{ $root._T["9dhghp3g"] }}</span>
+                    </span>
+                    <span ng-if="farmer.is_selected == 1 && farmer.is_finished != 1"> {{ $root._T["41wi3did"] }} </span>
+                    <span ng-if="farmer.booking_id != null && farmer.is_selected != 1"> {{ $root._T["p6z8tfxu"] }} </span>
+                    <span ng-if="farmer.booking_id == null"> {{ $root._T["5j1nv2tu"] }} </span>
+                </span>
+                <span ng-if="farmer.is_selected == 1 && farmer.is_finished != 1 && $root.canDisplay(5)">
+                    <button class="btn btn-xs btn-default btn-text-danger" style="margin-left: 7px;"  data-toggle="tooltip" title="{{ $root._T['vp452mud'] }}" uib-popover-template="'popover-cancel-tech.html'" popover-trigger="'outsideClick'" popover-placement="left"><i class="fa fa-eraser"></i></button>
+                    <script type="text/ng-template" id="popover-cancel-tech.html">
+                        <button class="btn btn-xs btn-default btn-block btn-text-danger btn-light-shadow" ng-click="$ctrl.cancelTechRequest2(farmer)">{{ $root._T["lh0c2gaa"] }}</button>
+                    </script>
+                </span>
+                <span ng-if="farmer.booking_id != null && farmer.is_selected != 1 && $root.canDisplay(5)">
+                    <button class="btn btn-xs btn-default btn-text-danger" style="margin-left: 7px;"  data-toggle="tooltip" title="{{ $root._T['ao7bh3z0'] }}" uib-popover-template="'popover-cancel-booking.html'" popover-trigger="'outsideClick'" popover-placement="left"><i class="fa fa-ban"></i></button>
+                    <script type="text/ng-template" id="popover-cancel-booking.html">
+                        <button class="btn btn-xs btn-default btn-block btn-text-danger btn-light-shadow" ng-click="$ctrl.cancelBooking2(farmer)">{{ $root._T["ao7bh3z0"] }}</button>
+                    </script>
+                </span>
+
+            </td>
+        </tr>
+    </tbody>
+</table>

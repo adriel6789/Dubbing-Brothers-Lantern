@@ -1,0 +1,118 @@
+<div class="container-fluid">
+    <section ng-if="subprojectToEdit != null">
+        <h3>{{ _T["unxhoz0w"] }} : </h3>
+        <div class="col-md-12 panel panel-default mt-10 p-10">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="col-md-4 text-right">{{ _T["0kckbj84"] }}</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="subprojectToEdit.nature" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                    <ui-select-match placeholder="{{ _T['0kckbj84'] }}">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="nature_type in nature_types | propsFilter: {value: $select.search, id: $select.search}">
+                    <div ng-bind-html="nature_type.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="subprojectToEdit.nature.name == 'serie'">
+            <div class="col-md-12">
+                <label class="col-md-4 text-right">{{ _T["x8cwplsg"] }}</label>
+                <div class="col-md-8">
+                    <input type="text" ng-model="subprojectToEdit.season">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label class="col-md-4 text-right">{{ _T["kup2m5xn"] }}</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="subprojectToEdit.artistic_director_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="{{ _T['kup2m5xn'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                            <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label class="col-md-4 text-right">directeur artistique chanson</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="subprojectToEdit.song_director_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="{{ _T['kup2m5xn'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                            <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-if="branchId == 2">
+            <div class="col-md-12">
+                <label class="col-md-4 text-right">Stage manager</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="subprojectToEdit.stage_manager_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="stage manager">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="stageManager.id as stageManager in stageManagers | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                            <div ng-bind-html="stageManager.firstname + ' ' + stageManager.lastname + ' ' + mainLocationList[stageManager.main_location].value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label class="col-md-4 text-right">{{ _T["7cww79hy"] }}</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="subprojectToEdit.co_artistic_director_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="{{ _T['7cww79hy'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                            <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <select-product-managers ng-if="subprojectToEdit.id" listpmanager="ctrl.users" element-id="subprojectToEdit.id" element-type="'subproject'" on-update="updateReferentPersons(selectedItem)" single-item="true">
+            </select-product-managers>
+        </div>
+        <div class="row" ng-if="subprojectToEdit.artistic_director_id && subprojectToEdit.co_artistic_director_id && subprojectToEdit.artistic_director_id == subprojectToEdit.co_artistic_director_id">
+            <div class="col-md-12" style="color: red"> 
+                {{ _T["24eprkqc"] }} 
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn btn-primary pull-right" style="margin-right:10px; " ng-click="updateSubproject()">{{ _T["d32u2mga"] }}</button>
+        </div>
+
+        </div>
+        
+        <div class="col-md-12 panel panel-default mt-10 p-10" ng-if="subprojectToEdit.project.client_id == 66 && (subprojectToEdit.project.title_phelix !='' || subprojectToEdit.nature.name == 'film')">
+            <div class="row" style="margin-bottom: 0; position:relative;" ng-if="subprojectToEdit.project.client_id == 66 && subprojectToEdit.project.title_phelix !='' && subprojectToEdit.nature.name == 'serie'" >
+                 <button class="btn btn-success pull-right" style="position: absolute; top:0; right:20px; z-index:1" ng-click="updatePhelixSeasonItem()">{{ _T["dsld7dxm"] }}</button>
+                 <!-- Module Link Titles season Phelix API -->
+                <module-phelix-api ng-if="blShowPhelixCompo && subprojectToEdit.nature.name == 'serie'" title-params ="{ phelix_choice: 1, phelix_season_title:subprojectToEdit.project.title_phelix }" element-type="'subproject'" element-data="subprojectToEdit" on-update="subprojectToEdit.title_phelix=selectedItem.Title;subprojectToEdit.record_job_id=selectedItem.Record_ID;"  ></module-phelix-api> 
+            </div>
+            <!-- Module to link all products with Phelix -->
+            <div class="row" style="margin-bottom: 0;margin-top: 5px;" ng-if="subprojectToEdit.project.client_id == 66 && ((subprojectToEdit.project.title_phelix !='' &&  subprojectToEdit.title_phelix !='') || subprojectToEdit.nature.name == 'film')" >
+                <products-links-phelix-api ng-if="blShowPhelixCompo && subprojectToEdit.id" subproject-id="subprojectToEdit.id"></products-links-phelix-api>    
+            </div>
+        </div>
+    </section>
+    <section ng-if="subprojectToEdit == null">
+        <h3>{{ _T["ioogccmu"] }} : </h3>
+        <div class="row">
+            <div class="col-md-12">
+                <label class="col-md-12">{{ _T["g9sp6d57"] }}</label>
+                <div class="col-md-12">
+                    <input type="text" class="form-control" ng-show="product.episode_number == null" ng-model="product.description_text">
+                    <input type="text" class="form-control" ng-show="product.episode_number != null" ng-model="product.episode_number">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn btn-primary pull-right" ng-click="updateProduct()">{{ _T["d32u2mga"] }}</button>
+        </div>
+    </section>
+</div>

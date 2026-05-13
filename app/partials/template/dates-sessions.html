@@ -1,0 +1,14 @@
+<div>
+  <span ng-repeat="date in allDates | orderBy:'timestamp'" class="message">
+    <div class="icon calendar" ng-class="date.class"
+    ng-style="{'background-color':date.badge}" uib-tooltip-html="date.tooltip" tooltip-placement="bottom" id="{{request.id}}-{{date.farmer_id}}">
+      <span class="month">{{date.timestamp | date:"MMM"}}</span>
+      <span class="day">{{date.timestamp | date:"dd"}}</span>
+    </div>
+  </span>
+  <small class="message">
+    <div ng-if="noDate">
+      <i class="fa fa-calendar-times-o"></i><span> {{ $root._T["03xzf0ab"] }}</span>
+    </div>
+  </small>
+</div>

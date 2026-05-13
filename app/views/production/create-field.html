@@ -1,0 +1,99 @@
+<div class="form-group">
+    <label class="col-sm-12 control-label">{{ field.title }}<em style="color: red;" ng-hide="!field.required">*</em></label>
+    <span ng-switch on="field.type.view">
+        <span ng-switch-when="input">
+            <div class="col-sm-12">
+                <input ng-model="method[field.name]" pattern="{{field.pattern}}" placeholder="{{field.placeholder}}" type="text" class="form-control"/>
+            </div>
+        </span>
+        <span ng-switch-when="checkbox">
+            <div class="col-sm-12">
+                <input class="form-control" ng-model="method[field.name]" ng-checked="method[field.name]" type="checkbox" />
+            </div>
+        </span>
+        <span ng-switch-when="switch">
+            <div class="col-sm-12">
+                <div class="onoffswitch">
+                    <input type="checkbox" ng-model="method[field.name]" ng-checked="method[field.name]" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </span>
+        <span ng-switch-when="textarea">
+            <div class="col-sm-12">
+                <textarea class="form-control" ng-model="method[field.name]"></textarea>
+            </div>
+        </span>
+        <span ng-switch-when="select">
+            <div class="col-sm-12">
+                <select class="form-control" ng-model="method[field.name]" ng-options="item.id as item.name for item in field.type.options"></select>
+            </div>
+        </span>
+        <span ng-switch-when="ui-select-global">
+            <div class="col-sm-12">
+                <ui-select ng-model="method[field.name]" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                    <ui-select-match placeholder="{{field.placeholder}}">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="f.id as f in field.type.options | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="f.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </span>
+
+        <span ng-switch-when="ui-select-multiple">
+            <div class="col-sm-12">
+
+                <ui-select multiple close-on-select="false" ng-model="method[field.name]" theme="bootstrap"
+                           ng-disabled="disabled" style="width: 100%;">
+                    <ui-select-match   placeholder="{{field.placeholder}}">{{$item.name}}</ui-select-match>
+                    <ui-select-choices repeat="f.id as f in field.type.options | propsFilter: {name: $select.search, id: $select.search}">
+                        <div ng-bind-html="f.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </span>
+
+        <span ng-switch-when="datepicker">
+            <div class="col-sm-12">
+                <input ng-model="method[field.name]" pattern="{{field.pattern}}" placeholder="{{field.placeholder}}"
+                       type="text" class="form-control datepicker"/>
+                <script>
+                    $('.datepicker').datepicker({
+                        format: "dd MM yyyy",
+                        todayBtn: true,
+                        language: $.cookie("language"),
+                        multidate: true,
+                        multidateSeparator: " - ",
+                        calendarWeeks: true,
+                        todayHighlight: true
+                    });
+                </script>
+            </div>
+        </span>
+
+
+        <span ng-switch-when="text_only">
+            <div class="col-sm-12">
+                <pre>{{ method[field.name] || {{ _T["fj98qsz4"] }} }}</pre>
+            </div>
+        </span>
+        <span ng-switch-when="label">
+            <div class="col-sm-12">
+                <label class="control-label">{{ field.text }}</label>
+            </div>
+        </span>
+        <span ng-switch-when="description">
+            <div class="col-sm-12">
+                <label class="control-label">{{ field.text }}</label>
+            </div>
+        </span>
+            <!--You can add more custom widget types needed for your project-->
+
+        <span ng-switch-default>
+            <span>{{ _T["in5wmy49"] }}</span>
+        </span>
+    </span>
+</div>

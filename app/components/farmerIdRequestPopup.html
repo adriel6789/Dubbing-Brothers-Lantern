@@ -1,0 +1,19 @@
+<div class="row" style="margin-bottom: 25px;">
+    <div class="col-md-12" style="margin-bottom: 5px;">
+        <button ng-if="$root.canDisplay(5)" type="button" class="btn btn-xs btn-block btn-primary" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" clipboard text="$ctrl.getFarmersToCopy($ctrl.getSelectedRequests($ctrl.requests))" on-copied="$ctrl.setAlertCopy(false)" on-error="$ctrl.setAlertCopy(true)">
+            <i class="fa fa-edit"></i> {{ $root._T["9o5z6vth"] }}
+        </button>
+    </div>
+    <div class="col-md-12" style="margin-bottom: 5px;">
+        <div class="btn-group-vertical btn-block">
+            <button type="button" class="btn btn-default btn-xs "
+                    ng-repeat="request in $ctrl.requests | orderBy:'product.human_description'"
+                    ng-show="$ctrl.displayBookedRequests(request)"
+                    ng-click="$ctrl.manageSelection(request)" >
+                <span class="type"  ng-class="{'type-success':request.isSelected, 'type-default': !request.isSelected}"></span>
+                    {{::$ctrl.productName(request)}} <small><i>({{request.farmer_id}})</i></small>
+                <span class="type pull-right type-info"  ng-show="request.is_planned == '0'"></span>
+            </button>
+        </div>
+    </div>
+</div>

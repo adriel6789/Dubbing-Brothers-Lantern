@@ -1,0 +1,1389 @@
+<section ng-show="!isMobile()">
+  <header class="no-margin-bottom">
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>
+          <!-- <a ng-if="$root.fromState.name != ''" class="btn btn-default btn-lg btn-big-shadow btn-text-primary" ui-sref="{{$root.fromState.name}}"
+            tooltip-placement="right"  data-toggle="tooltip" title="Revenir à la page précédente">
+            <i class="c-icon c-icon-arrowLeft"></i></a>  -->
+          <!-- <a class="btn btn-default btn-big-shadow btn-text-primary" ui-sref="{{$root.fromState.name}}" tooltip-placement="right"  data-toggle="tooltip" title="Accéder au groupe de demandes">
+            <i class="fa fa-list-alt" style="font-size:1.5em"></i></a> -->
+
+          <a class="btn btn-default btn-big-shadow btn-text-primary" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['st842u8q'] }}" ui-sref="app.requestsDetail({id:mainRequest.id, requestId:mainRequest.id})">
+              <i class="fa fa-list-alt" style="font-size:1.5em"></i>
+          </a>
+          {{ _T["m1z569lz"] }} {{::mainRequest.product.subproject.project.client.name}}
+          <small><i>{{ _T["6qfau07l"] }} {{::mainRequest.user.person.firstname}} {{::mainRequest.user.person.lastname}}</i></small>
+          <product-managers style="margin-left: 15% !important;" ng-if="mainRequest.product.subproject.project" pmanagers="ctrl.chargeprod"
+            project-data="mainRequest.product.subproject"></product-managers>
+          <span class="pull-right" ng-if="$root.canDisplay(5)">
+          <a ui-sref="app.requestGroupNonePlan" role="button" class="btn btn-default btn-text-primary btn-big-shadow">{{ _T["oc61aez7"] }} </a>
+          <a ui-sref="app.requestGroupPlanned" role="button" class="btn btn-default btn-text-primary btn-big-shadow">{{ _T["jl34h8o9"] }} </a>
+          </span>
+        </p>
+      </div>
+    </div>
+  </header>
+  <div class="container-fixed-nav-aside-activity" style="background-color:white">
+    <div class="descrip-dialog">
+      <div class="col-md-7">
+        <h2 style="color:black">{{ _T["5qvwxxzx"] }} <span class="notifs-detail text-center">{{mainRequest.ownComment.length}}</span></h2>
+      </div>
+      <div class="col-md-5">
+        <div class="pull-right">
+          <button class="btn btn-default" ng-click="showActivity = !showActivity" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['69o5dvna'] }}">
+          <span class="fa-stack ">
+          <i class="c-icon c-icon-activity fa-stack-2x" ></i>
+          <i class="fa fa-ban fa-stack-2x text-danger" ng-show="!showActivity"></i>
+          </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="container-activity" id="scrollToBottom">
+      <div class="text-activity">
+        <div class="col-md-12" ng-repeat="comment in mainRequest.ownComment | orderBy:'date_creation'">
+          <section class="text-center from-activity" ng-if="comment.activity_log == true && showActivity">
+            <!-- Activité log -->
+            <small>
+              <strong class="primary-font"><i class="fa fa-bell-o" aria-hidden="true"></i>
+              {{comment.date_creation | asDate | date:"dd MMMM à HH\'h\'mm"}}</strong><br>
+              <div style="word-wrap: break-word;">{{comment.text}}
+                {{ _T["6qfau07l"] }} {{comment.user.person.firstname}}
+                {{comment.user.person.lastname}}
+              </div>
+              <div style="word-wrap: break-word;">
+                <span ng-if="comment.old_value != null && comment.old_value != ''">
+                <i class="fa fa-minus-square"></i> {{ _T["s9ka8e0t"] }} : {{comment.old_value}} <br>
+                </span>
+                <span ng-if="comment.new_value != null && comment.new_value != ''">
+                <i class="fa fa-plus-square"></i> {{ _T["2r346aew"] }} : {{comment.new_value}}
+                </span>
+              </div>
+            </small>
+            <script type="text/javascript">
+              var objDiv = document.getElementById("scrollToBottom");
+              objDiv.scrollTop = objDiv.scrollHeight;
+            </script>
+          </section>
+          <section ng-if="comment.user.id == user_entity.id && !comment.activity_log">
+            <!-- Moi -->
+            <div class="from-me-text">
+              <span ng-if="comment.show_tech == true" uib-popover-template="'popover-change-visibility.html'" popover-trigger="'outsideClick'" popover-placement="left" style="cursor: pointer;"><i class="fa fa-cog"></i> {{ _T["4nb6u63i"] }}</span>
+              <span ng-if="comment.show_tech != true" uib-popover-template="'popover-change-visibility.html'" popover-trigger="'outsideClick'" popover-placement="left" style="cursor: pointer;"><i class="fa fa-cog"></i> {{ _T["aza590it"] }}</span>
+              <script type="text/ng-template" id="popover-change-visibility.html">
+                <button class="btn btn-xs btn-default btn-block btn-text-primary btn-light-shadow" ng-click="changeVisibility(comment)"> {{ _T["1bi8uy2u"] }} <span ng-if="comment.show_tech == true">{{ _T["nb6ghb0z"] }}</span> {{ _T["4nb6u63i"] }}</button>
+              </script>
+            </div>
+            <div class="bubbledRight" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+              <span class="save-text-p">{{comment.text}}</span>
+            </div>
+            <script type="text/javascript">
+              var objDiv = document.getElementById("scrollToBottom");
+              objDiv.scrollTop = objDiv.scrollHeight + 300;
+            </script>
+          </section>
+          <section ng-if="comment.user.id != user_entity.id && !comment.activity_log">
+            <!-- Eux -->
+            <div class="from-them-text">
+              {{comment.user.person.firstname}} {{comment.user.person.lastname}}
+              <span ng-if="comment.show_tech == true"> - {{ _T["4nb6u63i"] }}</span>
+              <span ng-if="comment.show_tech != true"> - {{ _T["aza590it"] }}</span>
+            </div>
+            <div class="bubbledLeft" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+              <span class="save-text-p">{{comment.text}}</span>
+            </div>
+            <script type="text/javascript">
+              var objDiv = document.getElementById("scrollToBottom");
+              objDiv.scrollTop = objDiv.scrollHeight;
+            </script>
+          </section>
+          <div class="clear">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-activity">
+      <form class="col-md-12" id="formComment" ng-submit="addCommentOnRequest(mainRequest, show_tech)">
+        <textarea style="background-color:#F2F6FA; width:100%; margin-top:10px;" id="commentTextarea" class="form-control autoExpand"
+          ng-model="mainRequest.newComment" placeholder="{{ _T['niay2jt0'] }}" rows="1" data-min-rows="1"></textarea>
+        <button class="col-md-2 btn btn-success btn-xs btn-h-30" ng-class="{'btn-warning': !show_tech}" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['x3a5ryxz'] }}" ng-click="show_tech = !show_tech">
+          <span class="fa-stack ">
+            <i class="fa fa-users fa-stack-1x"></i>
+            <i class="fa fa-ban fa-stack-2x text-danger" ng-show="!show_tech"></i>
+          </span>
+        </button>
+        <input type="submit" class="col-md-9 col-md-offset-1 btn btn-success btn-sm btn-outline" ng-class="{'btn-warning': !show_tech}" name="name" value="{{ _T['cefm3w2w'] }}">
+        <script type="text/javascript" language="javascript">
+              $(document)
+                .one('focus.textarea', '.autoExpand', function () {
+                  var savedValue = this.value;
+                  this.value = '';
+                  this.baseScrollHeight = this.scrollHeight;
+                  this.value = savedValue;
+                })
+                .on('input.textarea', '.autoExpand', function () {
+                  var minRows = this.getAttribute('data-min-rows') | 0,
+                    rows;
+                  this.rows = minRows;
+                  rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
+                  this.rows = minRows + rows;
+                });
+        </script>
+      </form>
+    </div>
+  </div>
+  <div class="container-fluid-detail container-fixed-nav-aside-detail descrip-dialog">
+    <img ng-src="{{clients[mainRequest.product.subproject.project.client.id].url || '../app/img/no-customer.png'}}" class="img-responsive img-rounded col-xs-3 col-md-1">
+    <div class="col-md-7">
+      <h2 style="margin-bottom:0">
+        <a tooltip-placement="bottom" href="#/suiviProd/{{::mainRequest.product.subproject.id}}"
+           data-toggle="tooltip" title="{{ _T['4182nz3u'] }}" style="color:black;">
+        {{::mainRequest.product.subproject.project.name}} -
+        <span ng-if="mainRequest.product.subproject.nature.name == 'serie'">
+        {{::_T["6vwtywcc"] + ' ' + mainRequest.product.subproject.season}}
+        </span>
+        <span ng-if="mainRequest.product.subproject.nature.name != 'serie'">
+        {{::mainRequest.product.subproject.nature.value}}
+        </span>
+        <small>({{::mainRequest.product.subproject.nature.value}})</small>
+        </a>
+      </h2>
+      <h3 style="margin-top:0">
+        <a href="#/products/{{mainRequest.product.id}}">
+          <i class="glyphicon glyphicon-film"></i> {{ (mainRequest.product.episode_number != null && (mainRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + mainRequest.product.episode_number)
+          || (mainRequest.product.description != null && _T["06djaui5"] + " " + mainRequest.product.description) || _T["06djaui5"] + " " + mainRequest.product.description_text}}</a>
+      </h3>
+      <h5>{{ _T["j9qn7439"] }} :
+        <i>
+          <span ng-if="mainRequest.product.duration">{{ mainRequest.product.duration }}  min</span>
+          <span ng-if="!mainRequest.product.duration">{{ _T["fj98qsz4"] }}</span>
+        </i>
+        <span ng-if="mainRequest.product.subproject.nature.name == 'film'">
+          | {{ _T["498x6toq"] }} :
+          <i>
+            <span>{{ mainRequest.product.number_reel || _T["fj98qsz4"] }}</span>
+          </i>
+        </span>
+      </h5>
+    </div>
+    <div class="col-md-4">
+
+      <a class="btn btn-default btn-big-shadow pull-right" href="#/products/{{mainRequest.product.id}}">
+        {{ _T["7hsxi6xf"] }}</a>
+    </div>
+  </div>
+  <div class="container-fluid-detail container-fixed-nav-aside-detail">
+    <section class="col-md-12 col-lg-12" ng-if="!isMobile()">
+      <h1>
+        {{::mainRequest.action_type.etape_type.value}} - {{::mainRequest.action_type.value}}
+        <small>
+        <span class="label label-danger" ng-if="mainRequest.is_canceled == 1"><i class="fa fa-ban" aria-hidden="true"></i> {{ _T["fotidtc6"] }}</span>
+        <span class="label label-success" ng-if="mainRequest.is_done == 1">{{ _T["46z910du"] }}</span>
+        <span class="label label-info" ng-if="mainRequest.is_planned == 1 && !(mainRequest.is_done == 1 || mainRequest.is_in_progress == 1 || mainRequest.is_not_done == 1)">{{ _T["5dd4lerz"] }}</span>
+        <span class="label label-primary" ng-if="mainRequest.is_in_progress == 1">{{ _T["xvyyayrz"] }}</span>
+        <span class="label label-warning" ng-if="mainRequest.is_not_done == 1">{{ _T["yxdfq1zn"] }}</span>
+        <span class="label label-danger" ng-if="mainRequest.important == 1">{{ _T["4orz1fdr"] }}</span>
+        <span class="label label-blue" ng-if="mainRequest.on_hold == 1"><i class="fa fa-pause" aria-hidden="true"></i> {{ _T["2ctuc541"] }}</span>
+        </small>
+        <span class="pull-right" ng-if="$root.canDisplay(7)">
+            <button class="btn btn-default" ng-if="mainRequest.is_done == 1" ng-click="changeRequestStatus('unplanned')"
+            tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['h1ga3xzt'] }}">
+              <span class="fa fa-retweet"></span>
+              </button>
+            <button class="btn btn-success" ng-if="mainRequest.is_done != 1" ng-click="changeRequestStatus('finished')"
+            tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['nnkwqfkz'] }}">
+            <span class="fa fa-check"></span>
+              </button>
+              <span ng-if="$root.canDisplay(3)">
+                  <button class="btn btn-info" ng-if="mainRequest.on_hold != 1 && mainRequest.is_done != 1  && mainRequest.is_canceled != 1" ng-click="mainRequest.on_hold = true; PutOnHold(true)" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['rrjwzuxn'] }}">
+                  <i class="fa fa-pause" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-primary" ng-if="mainRequest.on_hold == 1 && mainRequest.is_done != 1  && mainRequest.is_canceled != 1" ng-click="mainRequest.on_hold = false; PutOnHold(false)" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['h6bq4nxl'] }}">
+                  <i class="fa fa-play" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-danger" ng-if="mainRequest.is_done != 1"
+                    ng-click="cancelRequest();" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['1tkl3i60'] }}">
+                  <span class="fa fa-ban"></span>
+                  </button>
+                </span>
+        </span>
+
+      </h1>
+      <h2 ng-if="mainRequest.parent_request_id != null">
+        <a href="#/requests/detail/{{mainRequest.parent_request_id}}">
+        {{ _T["6k1b4xr8"] }} :
+        {{::parent_request.action_type.etape_type.value}}
+        -
+        {{::parent_request.action_type.value}}
+        </a>
+      </h2>
+      <div style="font-size:1.4em">
+        <span class="label label-squared label-info" ng-if="workflow.workflow_type.value != null" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')'}"
+          style="color: {{workflow.color.font}}" tooltip-placement="bottom" uib-tooltip-html="workflow.description">
+        <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+        <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+        <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{::workflow.workflow_type.value}} -
+        {{::workflow.doublage_type.value}}
+        </span>
+        &nbsp;
+        <span style="margin-left:10px" ng-if="workflow.exploitation.value != null">
+        <span class="c-icon c-icon-display"></span> {{::workflow.exploitation.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.language.value != null">
+        <span class="glyphicon glyphicon-flag"></span> {{::workflow.language.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.prod_version != null">
+        <span class="glyphicon glyphicon-user"></span> {{::workflow.prod_version}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.speed.value != null">
+        <span class="c-icon c-icon-format"></span> {{::workflow.speed.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.format_mix.value != null">
+        <span class="c-icon c-icon-sound"></span> {{::workflow.format_mix.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.norme_mix.value != null">
+        <span class="c-icon c-icon-activity"></span> {{::workflow.norme_mix.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.servicing_type != null">
+        <span class="glyphicon glyphicon-random"></span> {{::workflow.servicing_type.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.diffuseur != null">
+        <span class="glyphicon glyphicon-user"></span> {{::workflow.diffuseur.name}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.resolution != null">
+        <span class="glyphicon glyphicon-fullscreen"></span> {{::workflow.resolution.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.layout != null">
+        <span class="glyphicon glyphicon-sound-5-1"></span> {{::workflow.layout.value}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.dolbye != null && workflow.workflow_type_id == 3">
+        <span class="glyphicon glyphicon-sound-dolby"></span>
+        <span ng-show="workflow.dolbye == 1">{{ _T["e102wwz9"] }}</span>
+        <span ng-show="workflow.dolbye == 0 && workflow.workflow_type_id == 3">{{ _T["b5qjq23w"] }}</span>
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.type_audio_process != null">
+        <span class="glyphicon glyphicon-signal"></span> {{::workflow.type_audio_process}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.subtitle != null">
+        <span class="glyphicon glyphicon-font"></span> {{::workflow.subtitle}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.nature_subtitle != null">
+        <span class="glyphicon glyphicon-font"></span> {{::workflow.nature_subtitle}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.projector_aspect != null">
+        <span class="glyphicon glyphicon-facetime-video"></span> {{::workflow.projector_aspect}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.dcp_standard != null">
+        <span class="glyphicon glyphicon-film"></span> {{::workflow.dcp_standard}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.dynamic_process != null">
+        <span class="glyphicon glyphicon-headphones"></span> {{::workflow.dynamic_process}}
+        </span>
+        <!-- <span style="margin-left:10px" ng-if="workflow.doublage_type.value != null">
+          <span class="glyphicon glyphicon-volume-up"></span>
+          {{::workflow.doublage_type.value}}
+          </span> -->
+        <span style="margin-left:10px" ng-if="workflow.language_labo != null">
+        <span class="glyphicon glyphicon-flag"></span> {{::workflow.language_labo}}
+        </span>
+        <span style="margin-left:10px" ng-if="workflow.dub_place != null">
+        <span class="c-icon c-icon-loc"></span> {{::workflow.dub_place}}
+        </span>
+      </div>
+      <div class="col-md-12">
+        <div class="separator">
+          <p class="separator-label">{{ _T["1x4sbskx"] }}
+            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="$root.canDisplay(3) && showPanelDate != 1"
+              ng-click="showPanelDate = 1; dt = selectedDates[0]"><i class="fa fa-edit"></i> {{ _T["1kqg7d05"] }}</button>
+            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="showPanelDate == 1" ng-click="saveDesiredTime(); showPanelDate = 0"><i class="fa fa-check"></i> {{ _T["hvzykhtg"] }}</button>
+          </p>
+          <hr>
+        </div>
+        <div ng-show="showPanelDate == 1" style="float:left; margin-right:10px">
+          <div class="text-center">
+            <div uib-datepicker datepicker-options="options" template-url='views/Vendor/multi-datepicker.tpl.html' ng-model="dt" show-weeks="true" starting-day="1" multi-select="selectedDates" ng-change="changeDay(dt)"></div>
+          </div>
+          <button type="button" class="btn btn-xs btn-block btn-success" style="margin-bottom:10px" ng-show="showPanelDate == 1" ng-click="saveDesiredTime(); showPanelDate = 0"><i class="fa fa-check"></i> {{ _T["92fygym8"] }}</button>
+        </div>
+        <date-wish ng-if="mainRequest" data="mainRequest"></date-wish>
+
+        <div ng-if="showPanelDate == 1 && dateStartEnd.length > 0" class="col-md-12 p-0">
+          <label class="title">{{ _T["uw5q1ey6"] }}</label>
+          <div class="panel panel-default">
+            <div class="panel-heading p-10 mb-0" ng-if="dateStartEnd.length > 1">
+              <div class="row mb-0">
+                <div class="col-md-2">
+                  <label>{{ _T["sw658azy"] }}</label>
+                </div>
+                <div class="col-md-2">
+                  <label>{{ _T["1o3j35hq"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="allDates.start_time_h" ng-change="$ctrl.setAllTimes(1)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" style="font-size:.9;  width:80px; display: inline-table" ng-model="allDates.start_time_m" ng-change="setAllTimes(2)" min="0" max="45" step="15">
+                </div>
+                <div class="col-md-2">
+                  <label>{{ _T["tseq9spk"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="allDates.end_time_h" ng-change="$ctrl.setAllTimes(3)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" style="font-size:.9;  width:80px; display: inline-table" ng-model="allDates.end_time_m" ng-change="setAllTimes(4)" min="0" max="45" step="15">
+                </div>
+                <div class="col-md-6">
+                  <div class="btn-group">
+                    <button  ng-repeat="(key, name) in getPresetTimes" class="btn btn-default" ng-click="setTime(allDates, key)"> {{name}}</button>
+                    <button class="btn btn-default" ng-click="setTime(allDates)">{{ _T["f8exg9ee"] }}</button>
+                    <i class="fa fa-chevron-up pull-right cursor-pointer"  data-toggle="tooltip" title="{{ _T['3ncefm3w'] }}" ng-if="isShowDatesDetails" ng-click="showDatesDetails()"></i>
+                    <i class="fa fa-chevron-down pull-right cursor-pointer"  data-toggle="tooltip" title="{{ _T['2wzc2ovr'] }}" ng-if="!isShowDatesDetails" ng-click="showDatesDetails()"></i>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+            <div class="panel-body p-10" ng-show="isShowDatesDetails">
+              <div class="row" ng-class="{'mb-5' : !$last, 'mb-0' : $last}" ng-repeat="date in dateFiltered = (dateStartEnd | orderBy:'day') track by $index">
+                <div class="col-md-12" ng-if="!$first && isDifferentWeek(date.day, dateFiltered[$index-1].day)">
+                  <hr class="col-md-6 col-md-offset-3 mt-5 mb-10">
+                </div>
+                <div class="col-md-2">
+                  <label>{{date.day | asDate | date:'EEE d MMM yyyy'}}</label>
+                </div>
+                <div class="col-md-2">
+                  <label>{{ _T["1o3j35hq"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="date.start_time_h" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" style="font-size:.9;  width:80px; display: inline-table" ng-model="date.start_time_m" min="0" max="45" step="15" ng-disabled="isDayPlanned(date)">
+                </div>
+                <div class="col-md-2">
+                  <label>{{ _T["tseq9spk"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="date.end_time_h" style="font-size:.9; width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" style="font-size:.9;  width:80px; display: inline-table" ng-model="date.end_time_m" min="0" max="45" step="15" ng-disabled="isDayPlanned(date)">
+                </div>
+                <div class="col-md-6">
+                  <div class="btn-group">
+                    <button  ng-repeat="(key, name) in getPresetTimes" class="btn btn-default" ng-click="setTime(date, key)"> {{name}}</button>
+                    <button class="btn btn-default" ng-click="setTime(date)" ng-disabled="isDayPlanned(date)">{{ _T["f8exg9ee"] }}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section ng-if="mainRequest.action_type.planning != 'farmer' && mainRequest.action_type.service != 'digital-media'">
+          <div class="col-md-6">
+            <div class="separator">
+              <p class="separator-label">{{ _T["9dz4crm9"] }}
+              </p>
+              <hr>
+            </div>
+            <pre>{{mainRequest.date_start || _T["kl6nexv6"] }} {{mainRequest.date_start_time || ""}}</pre>
+          </div>
+          <div class="col-md-6">
+            <div class="separator">
+              <p class="separator-label">{{ _T["rcf56y1f"] }}
+              </p>
+              <hr>
+            </div>
+            <pre>{{mainRequest.date_end || _T["kl6nexv6"] }} {{mainRequest.date_end_time || ""}}</pre>
+          </div>
+        </section>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="separator">
+          <p class="separator-label">{{ _T["7vofm7gg"] }}
+            <button type="button" class="btn btn-xs btn-link text-gray" ng-show="$root.canDisplay(3) && showPanelInfoTech != 1"
+              ng-click="showEditInfoForTech()"><i class="fa fa-edit"></i> {{ _T["3xoocd81"] }}</button>
+            <button type="button" class="btn btn-xs btn-link text-gray" style="color:gray" ng-show="showPanelInfoTech == 1" ng-click="doneEditing('info_for_tech');"><i class="fa fa-check"></i> {{ _T["hvzykhtg"] }}</button>
+          </p>
+          <hr>
+        </div>
+        <textarea id="infoForTech"></textarea>
+        <div class="col-md-6">
+          <button ng-if="$root.canDisplay(3)" class="btn btn-default btn-block btn-text-primary btn-light-shadow"
+            ng-click="setImportant(); doneEditing('important')">
+          {{ _T["0aqrcc0y"] }}
+          <i class="c-icon c-icon-checked text-success pull-right" ng-show="mainRequest.important == 1"></i>
+          </button>
+          <div ng-if="mainRequest.action_type.planning == 'farmer' && $root.canDisplay(5)">
+            <h2 class="fa-2x"><i clipboard text="mainRequest.farmer_id" style="cursor:pointer" on-copied="copySuccess = true; copyError = false; showCopyToast();"
+                on-error="copySuccess = false; copyError = true;" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['qe21yq6y'] }}"
+                aria-hidden="true" class="c-icon c-icon-key"></i> <span class="id-farmer-element">{{::mainRequest.farmer_id}}</span></h2>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <button ng-if="techspec_id != null" class="btn btn-default btn-block btn-text-primary btn-light-shadow" ng-click="showTechnicalSpecModal()">
+          <i class="glyphicon glyphicon-list-alt"></i>
+          {{ _T["gbtguz3q"] }}
+          </button>
+        </div>
+        <div class="col-md-6" style="display: inline-flex;" ng-show="mainRequest.action_type.etape_type.name == 'enregistrement'">
+          <div class="f-22" style="margin-top: 25px;"><i class="fa fa-bullhorn"></i> DA</div>
+          <div style="width: 200px; margin: 20px 10px 0 10px;">
+            <ui-select ng-model="mainRequest.artistic_director_id" on-select="showSaveDirector()" theme="bootstrap">
+              <ui-select-match placeholder="{{ _T['kup2m5xn'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+              <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <div style="margin-top: 20px;">
+            <button class="btn btn-success btn-outline btn-sm mt-5" ng-show="isShowSaveDirector" ng-click="doneEditing('artistic_director_id')">{{ _T["6n3679ox"] }}</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12" ng-if="mainRequest.action_type.form != null">
+        <div class="separator">
+          <p class="separator-label">{{ _T["uh1dxak9"] }}</p>
+          <hr>
+        </div>
+        <div ng-repeat="field in masteringGeneralForm" style="margin-top:5px">
+          <div class="col-md-12" ng-if="field.type.view == 'description'" ng-include="'partials/production/edit-field.html'" style="min-height: 100px"></div>
+          <div class="col-sm-2 col-md-3" ng-if="field.type.view != 'description'" ng-include="'partials/production/edit-field.html'"
+            style="min-height: 100px"></div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <section ng-if="mainRequest.linked_requests != null && mainRequest.linked_requests.length > 0">
+        <div class="clearfix"></div>
+        <div class="col-md-12">
+          <div class="separator">
+            <p class="separator-label">{{ _T["nsxzn71k"] }}</p>
+            <hr>
+          </div>
+        <linked-requests data="mainRequest"></linked-requests>
+        </div>
+      </section>
+      <div class="clearfix">
+      </div>
+      <section ng-if="mainRequest.ownObservation.length != 0">
+        <h3>{{ _T["3j35hqts"] }}
+          <small>{{ _T["iuroeiyt"] }}</small>
+        </h3>
+        <div class="panel panel-primary" style="margin: 2px; width:400px; float:left;" ng-repeat="observation in mainRequest.ownObservation">
+          <div class="panel-body">
+            <label class="col-md-12">{{observation.categorie}}
+            {{ _T["mc051ilq"] }} {{observation.date_creation | asDate | date:"dd/MM/yyyy"}}</label>
+            <label class="col-md-12">{{ _T["eq9spk3x"] }}</label>
+            <div class="col-md-12 save-text-p">{{observation.comment}}</div>
+          </div>
+        </div>
+      </section>
+      <div class="clearfix"></div>
+      <hr>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="panel panel-default full-block">
+            <h4 class="padd-30">
+              <a href="#/products/{{mainRequest.product.id}}">
+                <i class="glyphicon glyphicon-film"></i> {{ (mainRequest.product.episode_number != null && (mainRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + mainRequest.product.episode_number)
+                || (mainRequest.product.description != null && _T["06djaui5"] + " " + mainRequest.product.description) || _T["06djaui5"] + " " + mainRequest.product.description_text}}</a>
+              <a class="btn btn-default btn-big-shadow pull-right" href="#/products/{{mainRequest.product.id}}">
+              {{ _T["7hsxi6xf"] }}</a>
+            </h4>
+            <section class="col-md-12" ng-if="mainRequest.action_type.form != null">
+              <div ng-repeat="field in masteringProductForm[0]">
+                <div class="col-md-12" ng-if="field.type.view == 'description'" ng-include="'partials/production/edit-field.html'" style="min-height: 100px"></div>
+                <div class="col-sm-2 col-md-3" ng-if="field.type.view != 'description'" ng-include="'partials/production/edit-field.html'"
+                  style="min-height: 100px"></div>
+              </div>
+            </section>
+            <table ng-show="mainRequest.ownFarmerbookings.length > 0" class="table table-striped table-custom">
+              <thead>
+                <tr>
+                  <th>{{ _T["dahbw8c3"] }} <a href="" ng-click="refreshFarmer(mainRequest.farmer_id)"><i class="fa fa-refresh"></i></a></th>
+                  <th>{{ _T["a2tucrf9"] }}</th>
+                  <th>{{ _T["ftakd60h"] }}</th>
+                  <th ng-if="mainRequest.action_type.etape_type.name == 'enregistrement'">{{ _T["kup2m5xn"] }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="farmer in mainRequest.ownFarmerbookings" ng-if="farmer.is_wish == 1 || farmer.booking_id != null" ng-class="{'farmer-not-planned' : farmer.booking_id == null}">
+                  <td><i class="c-icon c-icon-date"></i><span class="bold"> {{::farmer.day | amDateFormat:'dddd DD MMMM YYYY'}} </span>                    -
+                    <span ng-if="farmer.is_finished != 1 && (farmer.start_time || farmer.end_time)">
+                    {{::transformHourInI18nFormat(farmer.start_time) || "-"}}
+                    à
+                    {{::transformHourInI18nFormat(farmer.end_time) || "-"}}
+                    </span>
+                    <span ng-if="farmer.is_finished == 1 && (farmer.working_time_start || farmer.working_time_end)">
+                    {{::farmer.working_time_start| asDate | date:'HH\'h\'mm'}}
+                    à
+                    {{::farmer.working_time_end| asDate | date:'HH\'h\'mm'}}
+                    ({{ _T["7efqgpfl"] }} :
+                    {{::farmer.break_time|| "0"}}
+                    min)
+                    </span>
+                  </td>
+                  <td>
+                    <span ng-if="farmer.booking_id != null">
+                      <i class="c-icon c-icon-loc"></i><span class="bold">{{$root.allRoomsById[$root.allRoomsByName[farmer.audit]].long_name || farmer.audit}} </span>
+                    </span>
+                  </td>
+                  <td>
+                    <span ng-if="farmer.booking_id != null">
+                      <span class="c-icon c-icon-tech" tooltip-placement="bottom" uib-tooltip-html="farmer.description"></span>
+                      <span class="bold">
+                        <span ng-show="farmer.tech_writer_user.person.firstname != null">
+                        {{farmer.tech_writer_user.person.firstname}}
+                        {{farmer.tech_writer_user.person.lastname}}
+                        </span>
+                        <span ng-show="farmer.tech_writer_user.person.firstname == null">
+                        {{ _T["nvo32nvv"] }}
+                        </span>
+                      </span>
+                    </span>
+                  </td>
+                  <td ng-if="mainRequest.action_type.etape_type.name == 'enregistrement'">
+                    <span ng-if="farmer.booking_id != null">
+                      <span style="margin-top: -1px; float: left; margin-right: 10px;">
+                        <i class="fa fa-bullhorn" style="color: #A5B4BB; font-size: 18px; margin-top: -1px;margin-right: 10px;" ></i>
+                        <span ng-show="farmer.artistic_director.firstname != null">{{farmer.artistic_director.firstname}} {{farmer.artistic_director.lastname}}</span>
+                        <span ng-show="farmer.artistic_director.firstname == null">{{ _T["nvo32nvv"] }}</span>
+                      </span>
+                      <span ng-if="farmer.stage_manager" style="margin-top: -1px; margin-right: 10px;">
+                        <i class="fa fa-binoculars" style="color: #A5B4BB; font-size: 18px; margin-top: -1px; float: left; margin-right: 10px;"></i>
+                        <span ng-show="farmer.stage_manager.firstname != null">{{farmer.stage_manager.firstname}} {{farmer.stage_manager.lastname}}</span>
+                      </span>
+                    </span>
+
+                  </td>
+                  <td class="text-right">
+                    <span class="label label-default" ng-class="{'label-danger' : farmer.is_selected == 1 && farmer.is_finished != 1 && (farmer.is_done == 1 || farmer.is_partial == 1 || farmer.is_not_done == 1), 'label-success' : farmer.is_finished == 1 && farmer.is_done == 1 && farmer.is_partial != 1, 'label-warning' : farmer.is_finished == 1 && farmer.is_not_done == 1, 'label-info': farmer.is_finished == 1 && farmer.is_done == 1 && farmer.is_partial == 1, 'label-primary' : farmer.is_finished != 1 && farmer.is_selected == 1, 'label-black' : farmer.booking_id == null}">
+                    <span ng-if="farmer.is_finished == 1">
+                    {{ _T["k7su5zvx"] }}
+                    <span ng-if="farmer.is_partial == 1">
+                    {{ _T["jguzo1fd"] }}</span>
+                    <span ng-if="farmer.is_done == 1 && farmer.is_partial != 1">
+                    {{ _T["dbkkkv1w"] }}</span>
+                    <span ng-if="farmer.is_not_done == 1">
+                    {{ _T["pt07sq7v"] }}</span>
+                    </span>
+                    <span ng-if="farmer.is_selected == 1 && farmer.is_finished != 1">
+                    {{ _T["41wi3did"] }}
+                    </span>
+                    <span ng-if="farmer.booking_id != null && farmer.is_selected != 1">
+                    {{ _T["p6z8tfxu"] }}
+                    </span>
+                    <span ng-if="farmer.booking_id == null">
+                    {{ _T["5j1nv2tu"] }}
+                    </span>
+                    <span ng-if="farmer.is_not_farmer"style="text-decoration: line-through;">({{ _T["7d4s6cbt"] }})</span>
+                    </span>
+                    <div ng-if="farmer.is_selected == 1 && farmer.is_finished != 1 && (farmer.is_done == 1 || farmer.is_not_done == 1 || farmer.is_partial == 1)">
+                      <strong>{{ _T["fyri6uoj"] }}</strong>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br/>
+            <div ng-show="mainRequest.ownFarmerbookings.length == 0" class="alert alert-info ng-cloak">
+              {{ _T["swhpswkg"] }} <a href="" ng-click="refreshFarmer(mainRequest.farmer_id)"><i class="fa fa-refresh"></i></a>
+            </div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#elements" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["0to1cmv6"] }}</a></li>
+              <li role="presentation" ng-show="mainRequest.action_type.etape_type.name == 'prepa_audio' || mainRequest.action_type.name == 'montage_synchro_dial_confo'"><a class="col-sm-10" href="#rapports" target="_self" aria-controls="profile" role="tab" data-toggle="tab">{{ _T["j2uv8lq8"] }}</a>
+                <a class="col-sm-2" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['3eq6rndf'] }}" href="{{url_api}}/export/exportrapportvi?request_id={{mainRequest.id}}&isVI={{mainRequest.action_type.etape_type.name == 'prepa_audio'}}"
+                  target="_blank" class="btn btn-link btn-xs pull-right"><img ng-click="" width=20 class="pull-right" src="img/word.png" alt="" /> </a>
+              </li>
+              <li role="presentation" style="width: auto;" ng-if="mainRequest.ownReturn.length > 0"><a href="#retoursOnDemand" target="_self" aria-controls="messages" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{mainRequest.ownReturn.length}}</span> {{ _T["b0srx0g3"] }}</a></li>
+              <li role="presentation" ng-if="mainRequest.sharedReturn.length > 0"><a href="#retoursToCorrect" target="_self" aria-controls="messages" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{mainRequest.sharedReturn.length}}</span> {{ _T["7q4qael3"] }}</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="elements">
+                <form>
+                  <div class="form-group search-form form-select">
+                    <input type="text" class="form-control input-search large-input" ng-model="elementsFilter" placeholder="{{ _T['q2ffbx18'] }}">
+                  </div>
+                </form>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="padd-30">
+                      <div class="panel panel-default panel-bg panel-shadow" style="width:415px; float:left;">
+                        <div class="panel-body text-center" style="min-height:244px">
+                          <p class="text-center text-primary fa-2x">
+                            {{ _T["k7sfg7dm"] }}
+                          </p>
+                          <br>
+                          <div class="col-md-4" ng-click="loadMediaItemsFromProduct(mainRequest);">
+                            <button type="button" class="btn btn-primary" style="border-radius:50px; padding:10px">
+                            <i class="c-icon c-icon-product fa-3x"></i>
+                            </button>
+                            <p class="text-center text-primary">
+                              {{ _T["06djaui5"] }}
+                            </p>
+                          </div>
+                          <div class="col-md-4" ng-click="loadMediaItemsFromProject(product);">
+                            <button type="button" class="btn btn-primary" style="border-radius:50px; padding:10px">
+                            <i class="c-icon c-icon-projects fa-3x"></i>
+                            </button>
+                            <p class="text-center text-primary">
+                              {{ _T["r82ct91x"] }}
+                            </p>
+                          </div>
+                          <div ng-if="$root.canDisplay(3)" class="col-md-4">
+                            <a type="button" target="_blank" href="#/products/{{::mainRequest.product_id}}/mediaItems" class="btn btn-primary" style="border-radius:50px; padding:10px">
+                              <i class="fa fa-gears fa-3x"></i>
+                            </a>
+                            <p class="text-center text-primary">
+                              {{ _T["tp9x2vk5"] }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div ng-mouseenter="show = true" ng-mouseleave="show = false" class="panel panel-default panel-bg  panel-shadow" style="width:415px; float:left"
+                        ng-repeat="item in mainRequest.itemsInRequest | magicFilter:elementsFilter" ng-class="{'panel-item-tech':item.original_request_id == mainRequest.id}">
+                        <div class="panel-body" style="padding:15px; padding-bottom:0; min-height:200px; ">
+                          <div class="label-group">
+                            <span class="label label-info">{{::item.nature}}</span>
+                            <span class="label label-default label-group-border">{{::item.origin}}</span>
+                            <span class="label label-info">{{ (item.product.episode_number != null && (item.product.type == 0 ? _T["590wjx96"] : _T["h12xqsuf"]) + ' ' + item.product.episode_number) || (item.product.description != null && item.product.description) || item.product.description_text}}</span>
+                          </div>
+                          <span class="text-label pull-right">
+                          {{item.date_creation | asDate | date:'dd MMM yyyy'}}
+                          <span class="btn-circle c-icon c-icon-close" ng-click="removeMediaItem(mainRequest, item)"  data-toggle="tooltip" title="{{ _T['t4ajnuqr'] }}" role="button"></span>
+                          </span>
+                          <h3 class="card-title">{{::item.support}} </h3>
+                          <p class="card-description">
+                            {{::item.workflow}}
+                            <span class="infobull normal-infobull pull-right" ng-if="item.comment != null && item.comment != ''" tooltip-placement="bottom"
+                              uib-tooltip-html="item.comment">
+                            <i class="c-icon c-icon-comment c-icon-shadow "></i><span class="infobull-text">1</span>
+                            </span>
+                          </p>
+                          <div class="row">
+                            <div ng-show="item.nature == 'Audio'" class="col-xs-6 col-sm-6">
+                              <small>{{ _T["8izp2is4"] }} : {{item.layout || "..."}}</small>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                              <small>{{ _T["50304nwz"] }} : {{item.speed_reception || "..."}}</small>
+                            </div>
+                            <div class="col-xs-6 col-sm-6">
+                              <small>{{ _T["y5bxfkuj"] }} : {{item.speed || "..."}}</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div clipboard text="item.path" on-copied="showNotifSuccess( _T['f2eum0r2'] )" tooltip-placement="bottom"
+                           data-toggle="tooltip" title="{{ _T['yao0bcb4'] }}" class="panel-footer panel-footer-neutral">
+                          <p ng-show="!show">{{::item.path.truncLink(30)}} <span class="c-icon c-icon-link"></span></p>
+                          <p style="word-wrap: break-word; width:100%" ng-show="show">{{::item.path}} <span class="c-icon c-icon-link"></span></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="rapports">
+                <tabset type="pills" style="margin-top:10px">
+                  <tab heading="Informations générales">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <form class="padd-15" style="margin-top: 30px">
+                          <div class="text-center">
+                            <h4>
+                              <span class="label label-default text-center">
+                              {{ _T["w5x1jq2i"] }}
+                              </span>
+                            </h4>
+                          </div>
+                          <div class="form-group col-xs-3">
+                            <label>{{ _T["ljuqvitg"] }}</label>
+                            <p class="text-underline">
+                              <i>{{showSelect(varispeeds, mainRequest.report.varispeed)}}</i>
+                            </p>
+                          </div>
+                          <div class="form-group col-xs-3">
+                            <label>{{ _T["q45v0edp"] }}</label>
+                            <p class="text-underline">
+                              <i>{{showSelect(point_montages, mainRequest.report.point_montages)}}</i>
+                            </p>
+                          </div>
+                          <div class="form-group col-xs-6">
+                            <label>{{ _T["eq9spk3x"] }}</label>
+                            <p class="text-underline save-text-p"><i>{{ mainRequest.report.comment || _T["lqqqfh8u"] }}</i></p>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <form class="padd-15">
+                          <div class="form-group col-xs-12">
+                            <label>{{ _T["2ql6r5f0"] }}</label>
+                            <p class="text-underline save-text-p"><i>{{ mainRequest.report.remarks || _T["ryjvnejr"] }}</i></p>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="text-center">
+                    </div>
+                  </tab>
+                  <tab ng-repeat="bobine in mainRequest.report.bobines" heading="Bobine {{bobine[0].bobine || $index+1}}" active="bobine.active">
+                    <table class="table table-striped table-custom">
+                      <thead>
+                        <tr>
+                          <th>{{ _T["d2yetir4"] }}</th>
+                          <th>{{ _T["ewybz84r"] }}</th>
+                          <th>{{ _T["st4hqe2m"] }}</th>
+                          <th>{{ _T["5sdilxx7"] }}</th>
+                          <th>{{ _T["9yonx6b0"] }}</th>
+                        </tr>
+                      </thead>
+                      <tr ng-repeat="error in bobine">
+                        <td>
+                          {{ "IN : " + error.tc_in || _T["vbuon1j5"] }} - {{ "OUT : " + error.tc_out || _T["dkbcmohr"] }}
+                        </td>
+                        <td>
+                          {{ error.description || _T["jivcnvvm"] }}
+                        </td>
+                        <td>
+                          {{ error.vo && _T["st4hqe2m"] || _T["3w9hfdgg"] }}
+                        </td>
+                        <td>
+                          {{ error.track || _T["sg9hrx01"] }}
+                        </td>
+                        <td>
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-change">
+                            <span ng-if="error.level == null">
+                            <span class="type type-default"></span> {{ _T["fj98qsz4"] }}
+                            </span>
+                            <span  ng-if="error.level == 1">
+                            <span class="type type-success"></span> {{ _T["eyk4c9a4"] }}
+                            </span>
+                            <span  ng-if="error.level == 2">
+                            <span class="type type-primary"></span> {{ _T["n4z3y60g"] }}
+                            </span>
+                            <span  ng-if="error.level == 3">
+                            <span class="type type-warning"></span> {{ _T["ap87beys"] }}
+                            </span>
+                            <span ng-if="error.level == 4">
+                            <span class="type type-danger"></span> {{ _T["3h268ovu"] }}
+                            </span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </tab>
+                </tabset>
+                <div class="panel-footer panel-footer-neutral" ng-if="mainRequest.report.level == null">{{ _T["s78rerhe"] }}</div>
+                <div class="panel-footer panel-footer-success" ng-if="mainRequest.report.level == 1">{{ _T["5lhpmej6"] }}</div>
+                <div class="panel-footer panel-footer-primary" ng-if="mainRequest.report.level == 2">{{ _T["wekslbuz"] }}</div>
+                <div class="panel-footer panel-footer-warning" ng-if="mainRequest.report.level == 3">{{ _T["se8q3b3i"] }}</div>
+                <div class="panel-footer panel-footer-danger" ng-if="mainRequest.report.level == 4">{{ _T["kb8au41i"] }}</div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="qcexport">
+                <table class="table table-striped table-custom">
+                  <tr ng-repeat="qc_export in qcs_export">
+                    <td>
+                      <input id="qcExport_{{$index}}" name="{{qc_export.type_qc}}" ng-if="qc_export.status == 'PASS'" class="inputQcExport" type="checkbox">
+                    </td>
+                    <td style="font-size: 18px;">{{qc_export.type_qc}} (request id : {{qc_export.request_id}})</td>
+                    <td ng-if="qc_export.status == 'PASS'" style="font-size: 18px; color: green;">{{qc_export.status}}</td>
+                    <td ng-if="qc_export.status == 'FAILED'" style="font-size: 18px; color: red;">{{qc_export.status}}</td>
+                  </tr>
+                </table>
+                <button class="btn btn-primary" ng-click="exportQC(qcs_export.length)" style="display: block; margin: 2em auto; width: 10em; height: 3em; font-size: 18px;">{{ _T["y17e086y"] }}</button>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="retoursOnDemand">
+                <table class="table table-striped table-custom">
+                  <thead>
+                    <tr>
+                      <th style="width:300px">{{ _T["0xc7nggs"] }}</th>
+                      <th style="width:300px">{{ _T["6nhvzrz1"] }}</th>
+                      <th colspan="2">{{ _T["dkpnpeak"] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="aReturn in mainRequest.ownReturn | orderBy : ['tc_global', 'tc_in', 'tc_out']">
+                      <td>
+                        <div class="row">
+                          <div ng-if="aReturn.tc_global != 1 && aReturn.tc_in && aReturn.tc_out" class="label-group">
+                            <span class="label label-default">IN {{aReturn.tc_in}}</span>
+                            <span class="label label-default label-group-border">OUT {{aReturn.tc_out}}</span>
+                          </div>
+                          <span ng-if="aReturn.tc_global != 1 && aReturn.tc_in && !aReturn.tc_out" class="label label-default">IN {{aReturn.tc_in}}</span>
+                          <span ng-if="aReturn.tc_global != 1 && !aReturn.tc_in && aReturn.tc_out" class="label label-default">OUT {{aReturn.tc_out}}</span>
+                          <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                        </div>
+                        <div class="row">
+                          <div class="label-group">
+                            <span class="label label-info">{{aReturn.type}}</span>
+                            <span class="label label-warning label-group-border">{{aReturn.element}}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="save-text-p">{{aReturn.comment}}</p>
+                      </td>
+                      <td>
+                        <div ng-if="aReturn.ownComment.length > 0">
+                          <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                            <strong>{{returnComment.user.person.firstname}}
+                            {{returnComment.user.person.lastname}}
+                            <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>                            - {{returnComment.text}}
+                          </div>
+                          <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["y498pkdo"] }} ({{count(aReturn.ownComment)-1}})</button>
+                          <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-close"></i> {{ _T["clfsvr5x"] }}</button>
+                          <div>
+                            <strong>{{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}}
+                            {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                            <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>                            - {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                          </div>
+                        </div>
+                        <div ng-if="aReturn.ownComment.length == 0">
+                          {{ _T["3f1s9ufl"] }}
+                        </div>
+                        <form ng-submit="addCommentOnReturn(aReturn)">
+                          <div class="input-group input-group-sm">
+                            <input type="text" ng-model="aReturn.newComment" placeholder="{{ _T['8m4tsidm'] }}" style="width:100% !important" class="form-control"
+                            />
+                            <span class="input-group-btn">
+                            <button class="btn btn-success btn-lg" ng-click="addCommentOnReturn(aReturn)" type="button">{{ _T["zm0g3bdn"] }}</button>
+                            </span>
+                          </div>
+                        </form>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="retoursToCorrect">
+                <table class="table table-striped table-custom">
+                  <thead>
+                    <tr>
+                      <th style="width:300px">{{ _T["0xc7nggs"] }}</th>
+                      <th style="width:300px">{{ _T["6nhvzrz1"] }}</th>
+                      <th>{{ _T["nxwlcy7f"] }}</th>
+                      <th>{{ _T["qiqskta9"] }}</th>
+                      <th>{{ _T["r48ex2km"] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="aReturn in mainRequest.sharedReturn  | orderBy : ['tc_global', 'tc_in', 'tc_out']" ng-class="{returnResolved: aReturn.is_resolved == 1,returnMix: aReturn.to_mix == 1, returnIgnored: aReturn.is_ignored == 1, returnNotDone: aReturn.is_not_done == 1, returnToReview: aReturn.to_review == 1}">
+                      <td>
+                        <div class="row">
+                          <div ng-if="aReturn.tc_global != 1 && aReturn.tc_in && aReturn.tc_out" class="label-group">
+                            <span class="label label-default">IN {{aReturn.tc_in}}</span>
+                            <span class="label label-default label-group-border">OUT {{aReturn.tc_out}}</span>
+                          </div>
+                          <span ng-if="aReturn.tc_global != 1 && aReturn.tc_in && !aReturn.tc_out" class="label label-default">IN {{aReturn.tc_in}}</span>
+                          <span ng-if="aReturn.tc_global != 1 && !aReturn.tc_in && aReturn.tc_out" class="label label-default">OUT {{aReturn.tc_out}}</span>
+                          <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                        </div>
+                        <div class="row">
+                          <div class="label-group">
+                            <span class="label label-info">{{aReturn.type}}</span>
+                            <span class="label label-warning label-group-border">{{aReturn.element}}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="save-text-p">{{aReturn.comment}}</p>
+                      </td>
+                      <td>
+                        {{aReturn.type_correction}}
+                        <br>
+                        {{aReturn.type_correction_comment}}
+                      </td>
+                      <td>
+                        <div ng-if="aReturn.ownComment.length > 0">
+                          <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                            <strong>{{returnComment.user.person.firstname}}
+                            {{returnComment.user.person.lastname}}
+                            <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>                            - {{returnComment.text}}
+                          </div>
+                          <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["y498pkdo"] }} ({{count(aReturn.ownComment)-1}})</button>
+                          <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-close"></i> {{ _T["clfsvr5x"] }}</button>
+                          <div>
+                            <strong>{{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}}
+                            {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                            <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i></strong>                            - {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                          </div>
+                        </div>
+                        <div ng-if="aReturn.ownComment.length == 0">
+                          {{ _T["q7rxwhz5"] }}
+                        </div>
+                        <form ng-submit="addCommentOnReturn(aReturn)">
+                            <input class="form-control" placeholder="{{ _T['8m4tsidm'] }}" ng-model="aReturn.newComment"/>
+                            <input type="submit" class="btn btn-xs btn-success btn-block" value="{{ _T['3iaza590'] }}">
+                        </form>
+                      </td>
+                      <td style="text-align: center;">
+                        <div class="dropdown">
+                          <!--Ce bouton permet d'afficher la valeur de l'action selon l'id de l'action
+                          du retour et donne une couleur spécifique au bouton-->
+                          <button id="actionButton" type="button" class="dropdown-toggle"
+                          ng-class="{'btn btn-warning': aReturn.action_id == 1 || aReturn.action_id == 2 ||
+                          aReturn.action_id == 3 || aReturn.action_id == 4 || aReturn.action_id == 5 ||
+                          aReturn.action_id == 6, 'btn btn-danger': aReturn.action_id == 7,
+                          'btn btn-yellow': aReturn.action_id == 8, 'btn btn-primary': aReturn.action_id == 9,
+                          'btn btn-success': aReturn.action_id == 10, 'btn btn-default': aReturn.action_id != 1 &&
+                          aReturn.action_id != 2 && aReturn.action_id != 3 && aReturn.action_id != 4 &&
+                          aReturn.action_id != 5 && aReturn.action_id != 6 && aReturn.action_id != 7 &&
+                          aReturn.action_id != 8 && aReturn.action_id != 9 && aReturn.action_id != 10 &&
+                          aReturn.action_id != 11}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span ng-if="aReturn.action_id == 1">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 2">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 3">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 4">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 5">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 6">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 7">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 8">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 9">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id == 10">{{actions[aReturn.action_id-1].value}}</span>
+                            <span ng-if="aReturn.action_id != 1 && aReturn.action_id != 2 &&
+                            aReturn.action_id != 3 && aReturn.action_id != 4 && aReturn.action_id != 5 &&
+                            aReturn.action_id != 6 && aReturn.action_id != 7 && aReturn.action_id != 8 &&
+                            aReturn.action_id != 9 && aReturn.action_id != 10">
+                              {{ _T["r48ex2km"] }}
+                            </span>
+                            <i class="fa fa-caret-down"></i>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li ng-repeat="action in actions">
+                              <a href="" ng-click="actionClick(action.id, [aReturn])">{{action.value}}</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default" ng-if="uploader[mainRequest.id] != null">
+            <div class="panel-body">
+              <div nv-file-drop="" uploader="uploader[mainRequest.id]">
+                <div class="col-md-8">
+                  <h4 class="padd-30">
+                    <span class="glyphicon glyphicon-paperclip"></span> {{ _T["qg7rqxc7"] }}
+                  </h4>
+                  <h2 class="text-center" ng-show="uploader[mainRequest.id].queue.length == 0">
+                    {{ _T["3qh7nk7a"] }}
+                  </h2>
+                  <ul class="list-group">
+                    <li class="list-group-item" style="padding-bottom:0; border:none" ng-repeat="item in uploader[mainRequest.id].queue">
+                      <div class="row">
+                        {{item.file.name}}
+                        <span class="pull-right">
+                        <span ng-if="item.isError" style="color:red">
+                        <strong><i class="fa fa-warning"></i> {{ _T["phj00hfk"] }}</strong>
+                        </span> {{ item.file.size / 1024 / 1024|number:2 }} MB
+                        <button class="btn btn-primary btn-xs" ng-click="download(item)" ng-disabled="item.isUploading" type="button" tooltip-placement="bottom"
+                           data-toggle="tooltip" title="{{ _T['0kyhuafp'] }}">
+                        <span class="glyphicon glyphicon-download"></span>
+                        </button>
+                        <button class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-if="item.isUploading" type="button" tooltip-placement="bottom"
+                           data-toggle="tooltip" title="{{ _T['t5lz1qb1'] }}">
+                        <span class="glyphicon glyphicon-ban-circle"></span>
+                        </button>
+                        <button class="btn btn-danger btn-xs" ng-click="remove(item)" ng-if="!item.isUploading" type="button" tooltip-placement="bottom"
+                           data-toggle="tooltip" title="{{ _T['tc6j8t46'] }}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                        </span>
+                      </div>
+                      <div class="row" style="margin-bottom: 0;">
+                        <div class="progress-upload" style="margin-bottom: 0;">
+                          <div class="progress-bar-upload" ng-style="{ 'width': item.progress + '%' }" role="progressbar"></div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-md-4">
+                  <div ng-show="uploader[mainRequest.id].isHTML5">
+                    <div class="upload-text-box text-center" nv-file-over="" uploader="uploader[mainRequest.id]">
+                      {{ _T["ob68vuzl"] }}
+                      <br><br>
+                      <div class="btn btn-primary upload-file-container">
+                        <input multiple nv-file-select="" type="file" uploader="uploader[mainRequest.id]" /> {{ _T["6q8stqsy"] }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+<div class="container-fluid">
+  <section ng-show="!showActivityLog" ng-if="isMobile()" class="col-xs-12 col-sm-12">
+    <h3 class="row">
+      <div class="col-xs-12 col-sm-12">
+        <img style="max-height:50px; float:left; margin-right:10px; border:1px solid black;" ng-src="{{clients[mainRequest.product.subproject.project.client.id].url || '../app/img/no-customer.png'}}"
+          class="img-responsive img-circle"> {{mainRequest.product.subproject.project.name}}
+      </div>
+    </h3>
+    <h4 class="text-center">
+      <i class="fa fa-film"></i>
+      <span ng-if="mainRequest.product.subproject.nature.name == 'serie'">
+      {{_T["6vwtywcc"] + ' ' + mainRequest.product.subproject.season}}
+      </span>
+      <span ng-if="mainRequest.product.subproject.nature.name != 'serie'">
+      {{mainRequest.product.subproject.nature.value}}
+      </span> - {{(mainRequest.product.episode_number) && (mainRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + mainRequest.product.episode_number || mainRequest.product.description
+      || mainRequest.product.description_text}}
+    </h4>
+    <h4 class="text-center">
+      <i class="fa fa-tag"></i> {{mainRequest.action_type.etape_type.value}} - {{mainRequest.action_type.value}}
+    </h4>
+    <section class="row text-center">
+      <div class="text-center ">
+        <h4 class="btn btn-xs btn-link" ng-click="showWorkflowDescription = !showWorkflowDescription">
+          <span ng-if="workflow.workflow_type.value != null">
+          <span ng-if="workflow.workflow_type.id == 1" class="fa fa-microphone"></span>
+          <span ng-if="workflow.workflow_type.id == 2" class="fa fa-archive"></span>
+          <span ng-if="workflow.workflow_type.id == 3" class="fa fa-briefcase"></span> {{workflow.workflow_type.value}}
+          </span>
+          <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+          - {{workflow.doublage_type.value}}
+          </span>
+          <span ng-if="workflow.language != null && workflow.workflow_type_id == 1">
+          - {{workflow.language.value}}
+          </span>
+          <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+          - {{workflow.norme_mix.value}}
+          </span>
+          <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+          - {{workflow.servicing_type.value}}
+          </span>
+          <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+          - {{workflow.resolution.value}}
+          </span>
+          <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+          - {{workflow.diffuseur.name}}
+          </span>
+          <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+            - {{workflow.speed.value}}
+          </span>
+          <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+            - {{workflow.resolution.value}}
+          </span>
+          <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+            - {{workflow.prod_version}}
+          </span>
+        </h4>
+      </div>
+      <div ng-show="showWorkflowDescription">
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.servicing_type != null">
+          <span class="glyphicon glyphicon-random"></span> {{workflow.servicing_type.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.diffuseur != null">
+          <span class="glyphicon glyphicon-user"></span> {{workflow.diffuseur.name}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.resolution != null">
+          <span class="glyphicon glyphicon-fullscreen"></span> {{workflow.resolution.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.layout != null">
+          <span class="glyphicon glyphicon-sound-5-1"></span> {{workflow.layout.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.dolbye != null && workflow.workflow_type_id == 3">
+          <span class="glyphicon glyphicon-sound-dolby"></span> {{ _T["aq9ar5xy"] }}
+          <span ng-show="workflow.dolbye == 1">{{ _T["w7redrmn"] }}</span>
+          <span ng-show="workflow.dolbye == 0 && workflow.workflow_type_id == 3">{{ _T["adoyhyi2"] }}</span>
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.dynamic_process != null">
+          <span class="glyphicon glyphicon-headphones"></span> {{workflow.dynamic_process}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.type_audio_process != null">
+          <span class="glyphicon glyphicon-signal"></span> {{workflow.type_audio_process}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.subtitle != null">
+          <span class="glyphicon glyphicon-font"></span> {{workflow.subtitle}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.nature_subtitle != null">
+          <span class="glyphicon glyphicon-font"></span> {{workflow.nature_subtitle}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.projector_aspect != null">
+          <span class="glyphicon glyphicon-facetime-video"></span> {{workflow.projector_aspect}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.dcp_standard != null">
+          <span class="glyphicon glyphicon-film"></span> {{workflow.dcp_standard}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.format_mix.value != null">
+          <span class="glyphicon glyphicon-sound-dolby"></span> {{workflow.format_mix.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.norme_mix.value != null">
+          <span class="glyphicon glyphicon-unchecked"></span> {{workflow.norme_mix.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.exploitation.value != null">
+          <span class="glyphicon glyphicon-random"></span> {{workflow.exploitation.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.doublage_type.value != null">
+          <span class="glyphicon glyphicon-volume-up"></span> {{workflow.doublage_type.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.language != null">
+          <span class="glyphicon glyphicon-flag"></span> {{workflow.language.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.language_labo != null">
+          <span class="glyphicon glyphicon-flag"></span> {{workflow.language_labo}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.speed.value != null">
+          <span class="glyphicon glyphicon-dashboard"></span> {{workflow.speed.value}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.dub_place != null">
+          <span class="glyphicon glyphicon-map-marker"></span> {{workflow.dub_place}}
+        </div>
+        <div class="col-xs-6 col-sm-6" ng-if="workflow.prod_version != null">
+          <span class="glyphicon glyphicon-user"></span> {{workflow.prod_version}}
+        </div>
+      </div>
+    </section>
+    <section class="row ">
+      <u>
+        <h4 class="text-center">{{ _T["wh6867yq"] }}</h4>
+      </u>
+      <div>
+        <span ng-repeat="date in selectedDates | orderBy:date" tooltip-placement="bottom" uib-tooltip-html="date | date:'EEEE'">
+          <div class="icon calendar">
+            <span class="month">{{date | date:"MMM"}}</span>
+        <span class="day">{{date | date:"dd"}}</span>
+      </div>
+      </span>
+</div>
+<!-- <ul class="list-group">
+        <li class="list-group-item">
+
+          <span class="col-xs-6 col-sm-6" ng-repeat="date in selectedDates | orderBy:date">
+            <i>Le {{date | date:"dd MMMM yyyy"}}</i>
+          </span>
+          <div class="clearfix"></div>
+        </li>
+        </ul> -->
+</section>
+<section ng-if="mainRequest.action_type.planning != 'farmer' && mainRequest.action_type.service != 'digital-media'" class="row text-center">
+  <u>
+    <h4>{{ _T["ofbuhb3l"] }}</h4>
+  </u>
+  <div class="row">
+    <ul class="list-group col-xs-6 col-sm-6">
+      <li class="list-group-item">
+        <h6>{{ _T["1o3j35hq"] }}</h6>
+        <i>{{mainRequest.date_start || _T["7oogynud"] }} {{mainRequest.date_start_time || ""}}</i>
+      </li>
+    </ul>
+    <ul class="list-group col-xs-6 col-sm-6">
+      <li class="list-group-item">
+        <h6>{{ _T["tseq9spk"] }}</h6>
+        <i>{{mainRequest.date_end || _T["9yzsavxq"] }} {{mainRequest.date_end_time || ""}}</i>
+      </li>
+    </ul>
+  </div>
+</section>
+<section class="row">
+  <u>
+    <h4 class="text-center">{{ _T["qlr1dxpa"] }}</h4>
+  </u>
+  <ul class="list-group">
+    <a class="list-group-item" ng-click="changeShowActivity(true)">{{ _T["l20mas2g"] }} <i class="fa fa-chevron-right pull-right" style="margin-top:3px"></i></a>
+  </ul>
+</section>
+<section class="row text-center">
+  <u>
+    <h4>{{ _T["7vofm7gg"] }}
+      <button ng-show="!editInfoForTech" type="button" class="btn btn-link btn-xs" ng-click="editInfoForTech = true"><i class="fa fa-edit"></i></button>
+      <button ng-show="editInfoForTech" type="button" class="btn btn-link btn-xs" ng-click="editInfoForTech = false; doneEditing('info_for_tech')"><i class="fa fa-check"></i></button>
+    </h4>
+  </u>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <span ng-show="!editInfoForTech">{{ mainRequest.info_for_tech || _T["yqhpp52b"] }}</span>
+      <textarea ng-show="editInfoForTech" ng-model="mainRequest.info_for_tech" style="width:100%; border-color: gainsboro; border-radius: 4px; height: 200px;"
+        rows="10"></textarea>
+    </li>
+  </ul>
+</section>
+<!-- Séance farmer -->
+<section class="row" ng-repeat="p in requests" ng-if="p.ownFarmerbookings.length != 0">
+  <u>
+    <h4 class="text-center">{{ _T["3p6r9on1"] }}</h4>
+  </u>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="farmer in p.ownFarmerbookings">
+      <div style="text-align: center; border-bottom: 1px solid #DDD; padding-bottom:5px" style="">
+        <strong>
+            <i class="fa fa-ticket"></i>
+            {{$root.allRoomsById[$root.allRoomsByName[farmer.audit]].long_name || farmer.audit}} [{{transformHourInI18nFormat(farmer.start_time)}} - {{transformHourInI18nFormat(farmer.end_time)}}]
+            </strong>
+      </div>
+      <div ng-if="farmer.ingenieur != null">
+        <span class="glyphicon glyphicon-cog"></span> {{ _T["0y1qimug"] }} : {{farmer.ingenieur}}
+      </div>
+      <div ng-if="farmer.recorder != null">
+        <span class="glyphicon glyphicon-record"></span> {{ _T["82k00at3"] }} : {{farmer.recorder}}
+      </div>
+      <div ng-if="farmer.artistic_director_id != null">
+        <!--<span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} : directeur artistique -->
+      </div>
+      <div>
+        <span ng-if="farmer.is_finished == 1" class="label label-success">{{ _T["k7su5zvx"] }}</span>
+        <span ng-if="farmer.is_selected == 1 && farmer.is_finished != 1" class="label label-primary" ng-class="{'label-danger': farmer.is_done == 1 || farmer.is_partial == 1 || farmer.is_not_done == 1}">{{ _T["41wi3did"] }}</span>
+        <span ng-if="farmer.is_partial == 1" class="label label-info">
+            {{ _T["jguzo1fd"] }}</span>
+        <span ng-if="farmer.is_done == 1 && farmer.is_partial != 1" class="label label-success">
+            {{ _T["dbkkkv1w"] }}</span>
+        <span ng-if="farmer.is_not_done == 1" class="label label-warning">
+            {{ _T["pt07sq7v"] }}</span>
+        <span ng-if="farmer.is_selected != 1" class="label label-default">
+            {{ _T["p6z8tfxu"] }}
+            </span>
+      </div>
+    </li>
+  </ul>
+</section>
+<!-- Éléments de travail -->
+<section class="row">
+  <u>
+    <h4 class="text-center">{{ _T["0to1cmv6"] }}</h4>
+  </u>
+  <ul class="list-group">
+    <li class="list-group-item text-center" ng-if="mainRequest.itemsInRequest.length == 0">{{ _T["rqtlp4kd"] }}</li>
+    <li class="list-group-item" ng-repeat="item in mainRequest.itemsInRequest">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12">
+          <span class="label label-default">{{item.nature}}</span>
+          <span class="label label-primary">{{item.support}}</span>
+          <span class="pull-right"><i class="fa fa-clock-o"></i> {{item.date_creation | asDate | date:"dd/MM/yyyy"}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 col-sm-6">
+          <small>{{ _T["2w7jtwr8"] }} : {{item.workflow || "..."}}</small>
+        </div>
+        <div ng-show="item.nature == 'Audio'" class="col-xs-6 col-sm-6">
+          <small>{{ _T["8izp2is4"] }} : {{item.layout}}</small>
+        </div>
+        <div class="col-xs-6 col-sm-6">
+          <small>{{ _T["noa1wtgc"] }} : {{item.speed || "..."}}</small>
+        </div>
+        <div class="col-xs-6 col-sm-6">
+          <small>{{ _T["ok6vs9k2"] }} : {{item.speed_reception || "..."}}</small>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+  </ul>
+</section>
+<section class="row">
+  <ul class="list-group">
+    <li class="list-group-item">
+      {{ _T["0aqrcc0y"] }}
+      <label class="ios7-switch pull-right">
+          <input id="coucou" type="checkbox" ng-model="mainRequest.important == 1" ng-change="doneEditing('important')" ng-checked="mainRequest.important == 1 || mainRequest.important == 1">
+          <span></span>
+          </label>
+    </li>
+    <li class="list-group-item">
+      {{ _T["my0fatew"] }}
+      <label class="ios7-switch pull-right">
+          <input type="checkbox" ng-model="mainRequest.on_hold" ng-change="PutOnHold(mainRequest.on_hold)" ng-checked="mainRequest.on_hold == 1 || mainRequest.on_hold == true">
+          <span></span>
+          </label>
+    </li>
+    <a class="list-group-item" ng-if="mainRequest.is_planned == 1 && mainRequest.is_canceled != 1 && mainRequest.is_done != 1"
+      ng-click="cancelRequest();">
+      <span class="fa fa-ban fa-2x text-danger pull-right" style="    margin-top: -4px;"></span>
+      <span class="text-danger">{{ _T["9rrfrrx7"] }}</span>
+    </a>
+  </ul>
+</section>
+</section>
+<section class="col-xs-12 col-sm-12" ng-show="showActivityLog" ng-if="isMobile()">
+  <div class="row">
+    <div class="" style="background-color:white; position:fixed; z-index:1000">
+      <ul class="list-group" style="margin-bottom:0px">
+        <a ng-click="changeShowActivity(false)" class="list-group-item"><i class="fa fa-chevron-left"></i> {{ _T["4xr0olfk"] }} {{product.subproject.project.name}}</a>
+      </ul>
+      <div class="input-group input-group-lg">
+        <input class="form-control" style="width:100%" placeholder="{{ _T['8m4tsidm'] }}" ng-model="mainRequest.newComment" />
+        <span class="input-group-btn">
+          <button class="btn  btn-outline btn-primary" ng-click="addCommentOnRequest(mainRequest, show_tech)">
+          <i class="fa fa-comment "></i>
+          </button>
+          </span>
+      </div>
+    </div>
+    <div class="" style="background-color:white; margin-top:87px">
+      <div class="">
+        <div title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}" class="col-md-12" ng-repeat="comment in mainRequest.ownComment | orderBy:'date_creation':true">
+          <section class="text-center from-activity" ng-if="comment.activity_log == true && showActivity">
+            <!-- Activité log -->
+            <small>
+                <small>
+                  <strong class="primary-font"><i class="fa fa-bell-o" aria-hidden="true"></i>
+                  {{comment.date_creation | asDate | date:"dd MMMM à HH\'h\'mm"}}</strong><br>
+                  <div style="word-wrap: break-word;">{{comment.text}}
+                    {{ _T["6qfau07l"] }} {{comment.user.person.firstname}}
+                    {{comment.user.person.lastname}}
+                  </div>
+                  <div style="word-wrap: break-word;">{{comment.old_value}} <i class="fa fa-arrow-circle-right" ng-if="comment.old_value != null && comment.new_value != null"></i> {{comment.new_value}}</div>
+                </small>
+            </small>
+          </section>
+          <section ng-if="comment.user.id == user_entity.id && !comment.activity_log">
+            <!-- Moi -->
+            <div class="from-me-text">
+              <span ng-if="comment.show_tech">{{ _T["4nb6u63i"] }}</span>
+              <span ng-if="comment.show_tech != true">{{ _T["aza590it"] }}</span>
+            </div>
+            <div class="bubbledRight">
+              {{comment.text}}
+            </div>
+          </section>
+          <section ng-if="comment.user.id != user_entity.id && !comment.activity_log">
+            <!-- Eux -->
+            <div class="from-them-text">
+              {{comment.user.person.firstname}} {{comment.user.person.lastname}}
+              <span ng-if="comment.show_tech"> - {{ _T["4nb6u63i"] }}</span>
+              <span ng-if="comment.show_tech != true"> - {{ _T["aza590it"] }}</span>
+            </div>
+            <div class="bubbledLeft">
+              {{comment.text}}
+            </div>
+          </section>
+          <div class="clear"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>

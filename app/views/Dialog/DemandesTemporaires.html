@@ -1,0 +1,33 @@
+<div>
+
+    <h3 style="border-bottom: 1px solid #bbb; padding-bottom: 10px;">{{ _T["9x2vk56n"] }}</h3>
+
+    <h4>{{ _T["3679oxsf"] }}</h4>
+    <i>{{ _T["nxzcv2fq"] }}</i>
+
+    <div class="row">
+        <div class="panel panel-body col-md-4" ng-repeat="request in allRequests" ng-click="toogleRequest(request)" ng-class="{'tech-request-close': request.disabled == true}">
+            <div>
+                {{request.product.description}}
+            </div>
+            <div>
+                <span class="label label-success" ng-if="request.state == 'finished'">{{ _T["nw6uvcud"] }}</span>
+                <span class="label label-warning" ng-if="request.state == 'in_progress'">{{ _T["vvijhgr1"] }}</span>
+                <span class="label label-default" ng-if="request.state == 'not_done'">{{ _T["hsqsk7z1"] }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="hasFinalisedRequests()">
+        <label style='width:100px' for='horairesStart'>{{ _T["2lq5g7zj"] }}</label>
+        {{ _T["jeepc9om"] }} &nbsp; &nbsp; <input time-input="" maxlength="5" style='width:85px'  ng-model='working_time_start' type='text' placeholder="09:00" pattern="\d{2}:\d{2}" /> &nbsp; &nbsp; à &nbsp; &nbsp;
+        <input time-input="" maxlength="5" style='width:85px' ng-model='working_time_end' type='text' pattern="\d{2}:\d{2}" placeholder="18:00" />
+        <br /> <br />
+        <label style='width:100px' for='pauseStart'>{{ _T["7efqgpfl"] }}</label>
+        <input maxlength="3" style='width:70px' ng-model='break_time' placeholder="15" type='text'   /> 
+        <br /><br />
+    </div>
+
+    <input ng-click="validate();" style='bottom: 20px; position: absolute; right: 15px;' id='validate' name='validate' type='button' value="{{ _T['d32u2mga'] }}"   />
+
+</div>

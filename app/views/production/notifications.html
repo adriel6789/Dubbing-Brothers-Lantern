@@ -1,0 +1,70 @@
+<div class="alert alert-info text-center" ng-if="!showLoadMoreNotif && notifs.length == 0">
+  {{ _T["356sjeby"] }}
+</div>
+<div class="col-xs-12 col-sm-12">
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="notif in notifs">
+      <div class="row">
+        <div class="col-xs-6 col-sm-6">
+          <small> {{notif.subject}}</small>
+        </div>
+
+        <div class="col-xs-6 col-sm-6">
+          <span class="pull-right">
+            <small><small><span class="glyphicon glyphicon-time"></span> {{notif.date_creation_moment.calendar()}}</small></small>
+            <span class="close" ng-click="deleteNotification(notif.id, $index);">×</span>
+          </span>
+
+        </div>
+
+      </div>
+      <div class="row text-center" ng-if="notif.requests == null">
+        <div class="col-xs-12 col-sm-12" >
+          <i class="fa fa-film"></i> {{notif.product_desc}}<br>
+          <a ng-if="notif.request_id != null" href="#/requests/detail/{{notif.request_id}}"><i class="fa fa-tag"></i> {{notif.etape_action}}</a>
+        </div>
+      </div>
+      <div class="row text-center" ng-if="notif.requests != null">
+        <div class="col-xs-12 col-sm-12" >
+            {{notif.requests[0].product.subproject.project.name}} -
+            <span ng-if="notif.requests[0].product.subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] }} {{notif.requests[0].product.subproject.season}} -</span>
+            <span ng-if="notif.requests[0].product.subproject.nature.name != 'serie'">{{notif.requests[0].product.subproject.nature.value}} -</span>
+            <a  href="" ng-click="notif.showGroup = !notif.showGroup" style="color:#6200FF">
+              <span>{{notif.requests.length}} {{ _T["ba0heyvu"] }}</span>
+            </a>
+          <span ng-show="notif.showGroup">
+              <br/>
+              <div ng-repeat="aRequest in notif.requests | orderBy:'product.human_description'">
+                <i class="fa fa-film"></i>
+                {{ (aRequest.product.episode_number != null && (aRequest.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + aRequest.product.episode_number) || (aRequest.product.description != null && _T["06djaui5"] + " " + aRequest.product.description) || _T["06djaui5"] + " " + aRequest.product.description_text}}
+                <span ng-if="aRequest.workflow.language != null">- {{aRequest.workflow.language.value}}</span> -
+                <span ng-if="aRequest.workflow.format_mix != null">- {{aRequest.workflow.format_mix.value}}</span> -
+                  <a href="#/requests/detail/{{aRequest.id}}">
+                      {{ _T["8wk4rg65"] }}
+                  </a>
+                  <br/>
+              </div>
+          </span>
+        </div>
+        <div class="col-xs-12 col-sm-12">
+          <i class="fa fa-tag"></i> {{notif.etape_action}}
+        </div>
+      </div>
+
+      <div class="row text-center">
+        <button ng-show="!notif.showDescription" type="button" class="btn btn-xs btn-link" ng-click="notif.showDescription = !notif.showDescription">
+          {{ _T["y6pwq4mp"] }}
+        </button>
+        <p ng-if="notif.showDescription" ng-bind-html="notif.description"></p>
+
+      </div>
+    </li>
+  </ul>
+</div>
+
+    <div  ng-show="showLoadMoreNotif" class="notification-footer text-center">
+        <h4 style="margin:0px !important;">
+            <button class="btn btn-block btn-link" ng-click="loadMoreNotif();">{{ _T["x4el02m5"] }}</button>
+        </h4>
+    </div>
+</ul>

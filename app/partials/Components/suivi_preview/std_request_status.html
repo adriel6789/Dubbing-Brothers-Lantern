@@ -1,0 +1,16 @@
+<div>
+  <span ng-if="$ctrl.request.is_done == 1">
+    <i class="glyphicon glyphicon-record" style="color:green"></i>
+    <i>{{ $root._T["5b1ahqpf"] }} {{$ctrl.request.closing_date | asDate | date:'dd/MM/yyyy'}}</i>
+  </span>
+  <span ng-if="$ctrl.request.is_planned == 1 && $ctrl.request.is_done != 1">
+    <i class="glyphicon glyphicon-record" style="color:deepskyblue"></i>
+    <i>{{ $root._T["t74sa69p"] }} {{$ctrl.request.planification_date | asDate | date:'dd/MM/yyyy'}}</i>
+  </span>
+  <span ng-if="$ctrl.request.is_planned != 1 && $ctrl.request.is_done != 1">
+    <i class="glyphicon glyphicon-record" style="color:black"></i>
+    <i>{{ $root._T["sh2zqnlf"] }} {{$ctrl.request.date_creation | asDate | date:'dd/MM/yyyy'}}</i>
+    <!-- Demande à replanifier {{$ctrl.request.date_creation | asDate | date:'dd/MM/yyyy'}} -->
+  </span>
+
+</div>

@@ -1,0 +1,241 @@
+<div class="page-popup page-custom-template dragresize" data-x=0 data-y=0>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="template-h1 poignee">{{ _T["o3r3a9mw"] }}</h1>
+      <div class="step">
+        <form class="ng-pristine ng-valid">
+          <div style="max-height: 720px; overflow: auto;">
+
+            <div class="pull-right mr-15">
+              <button class="btn btn-default" ng-click="showHiddenColumns = !showHiddenColumns">{{showHiddenColumns ? _T["o811z5dv"] : _T["20jrve91"] }} {{ _T["xerk5npo"] }}</button>
+            </div>
+
+            <div>
+              <div class="col-md-12 mb-10 mt-10">
+                <span class="label label-squared label-info">{{ _T["18d7jpgj"] }}</span>
+                <button class="btn btn-default btn-xs pull-right" ng-click="selectAllInfos()">
+                  <div class="col-md-9 p-0">{{ _T["466gs99c"] }}</div>
+                  <div class="col-md-3 p-0 pl-5 text-center">
+                    <i class="fa fa-check" aria-hidden="true" ng-class="{'element-selected' : isSelectAllInfos}" style="font-size: 15px; line-height: 15px;"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="">
+                <div class="col-md-4" ng-repeat="info in productInfos" ng-class="{'element-selected' : info.isSelected}">
+                  <div class="panel panel-default mr-0" ng-click="selectColumn(info, 'productInfo')">
+                    <div class="panel-body creation panel-export">
+                      <div class="col-md-10">{{info.name}}</div>
+                      <div class="col-md-2 text-center">
+                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ng-repeat="workflow in workflowsExport">
+              <div class="col-md-12 mb-10">
+                <workflow data="workflow" tooltiphidden="true" class="col-md-8 p-0"></workflow>
+                <button class="btn btn-default btn-xs pull-right" ng-click="selectAllColumns(workflow)">
+                  <div class="col-md-9 p-0">{{ _T["466gs99c"] }}</div>
+                  <div class="col-md-3 p-0 pl-5 text-center">
+                    <i class="fa fa-check" aria-hidden="true" ng-class="{'element-selected' : workflow.isAllSelected}" style="font-size: 15px; line-height: 15px;"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="">
+                <div class="col-md-4" ng-repeat="column in workflow.columns | filter: filterHiddenColumns" ng-class="{'element-selected' : column.isSelected}">
+                  <div class="panel panel-default mr-0" ng-click="selectColumn(column, workflow)">
+                    <div class="panel-body creation panel-export">
+                      <div class="col-md-10">
+                        <span ng-if="column.action != null">{{column.action.etape_type.value}} - {{column.action.value}}</span>
+                        <span ng-if="column.action == null">{{column.name}}</span>
+                      </div>
+                      <div class="col-md-2 text-center">
+                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ng-if="commentColumns.length > 0">
+              <div class="col-md-12 mb-10">
+                <span class="label label-squared label-info" style="background-color: rgba(28, 81, 183, 0.3); color: #2A2A2A;">{{ _T["y1x0n3vu"] }}</span>
+                <button class="btn btn-default btn-xs pull-right" ng-click="selectAllCommentColumns()">
+                  <div class="col-md-9 p-0">{{ _T["466gs99c"] }}</div>
+                  <div class="col-md-3 p-0 pl-5 text-center">
+                    <i class="fa fa-check" aria-hidden="true" ng-class="{'element-selected' : isSelectAllComments}" style="font-size: 15px; line-height: 15px;"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="">
+                <div class="col-md-4" ng-repeat="column in commentColumns | filter: filterHiddenColumns" ng-class="{'element-selected' : column.isSelected}">
+                  <div class="panel panel-default mr-0" ng-click="selectColumn(column, 'comment')">
+                    <div class="panel-body creation panel-export">
+                      <div class="col-md-10">{{column.name}}</div>
+                      <div class="col-md-2 text-center">
+                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="exportable" class="col-md-12" ng-show="false">
+              <!--marqué false depuis 09/2018 donc jamais utilisé sans que ça gêne :)-->
+              <div style="font-size: 25px;">
+                {{subproject.project.name}} -
+                <span ng-if="subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] + ' ' + subproject.season}}</span>
+                <span ng-if="subproject.nature.name != 'serie'">{{subproject.nature.value}}</span>
+              </div>
+              <div>&nbsp;</div>
+              <table style="border: thin solid;">
+                <thead>
+                  <th style="border: thin solid; vertical-align: middle; text-align: center; background-color: #7ca2ec;">{{ _T["ajcovy1u"] }}</th>
+                  <th ng-repeat="column in allColumnsExport" style="border: thin solid; vertical-align: middle; text-align: center; color: {{column.workflow.color.font}};" ng-style="{'background-color': column.workflow ? 'rgba('+column.workflow.color.r+', '+column.workflow.color.g+', '+column.workflow.color.b+', 1)' : '#7ca2ec'}">
+                    <span ng-if="column.action != null"><span ng-if="column.action.etape_type.name != 'production' && column.action.etape_type.name != 'prepa_enregistrement'">{{column.action.etape_type.value}} - </span>{{column.action.value}}</span>
+                    <span ng-if="column.action == null">{{column.name}}</span>
+                    <span ng-if="column.workflow">
+                      <br style="mso-data-placement:same-cell;">
+                      <span ng-if="column.workflow.workflow_type.name == mastering" >
+                        ({{column.workflow.workflow_type.value}})
+                      </span>
+                      <span ng-if="column.workflow.doublage_type.value != null && column.workflow.workflow_type_id == 1">
+                         ({{column.workflow.doublage_type.value}}
+                      </span>
+                      <span ng-if="column.workflow.format_mix.value != null && column.workflow.workflow_type_id == 1">
+                        - {{column.workflow.format_mix.value}}
+                      </span>
+                      <span ng-if="column.workflow.language != null && column.workflow.workflow_type_id == 1">
+                        - {{column.workflow.language.value}}
+                      </span>
+                      <span ng-if="column.workflow.norme_mix.value != null && column.workflow.workflow_type_id == 1">
+                        - {{column.workflow.norme_mix.value}})
+                      </span>
+                      <span ng-if="column.workflow.servicing_type.value != null && column.workflow.workflow_type_id == 3">
+                        ({{column.workflow.servicing_type.value}}
+                      </span>
+                      <span ng-if="column.workflow.resolution.value != null && column.workflow.workflow_type_id == 3">
+                        - {{column.workflow.resolution.value}}
+                      </span>
+                      <span ng-if="column.workflow.diffuseur.name != null && column.workflow.workflow_type_id == 3">
+                        - {{column.workflow.diffuseur.name}})
+                      </span>
+                    </span>
+                  </th>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="product in allCellsExport | orderBy:order_products_by" ng-style="{'background-color': $odd ? '#f4f6f9' : ''}">
+                    <td style="border: thin solid; vertical-align: middle; text-align: center;">
+                      <span ng-if="subproject.nature.name == 'serie'">{{product.episode_number}}</span>
+                      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                    </td>
+                    <td ng-repeat="cell in product.selectedCells" style="border: thin solid; vertical-align: middle;" ng-style="{'text-align': cell.isSummary || cell.action == null ? 'left' : 'center'}">
+                      <span ng-if="cell.isProductInfo">
+                        <span ng-if="cell.name == 'Titre VO' && product.title_vo">{{product.title_vo}}</span>
+                        <span ng-if="cell.name == 'Diff US' && product.air_date">{{product.air_date}}</span>
+                        <span ng-if="cell.name == 'Bobines' && product.number_reel">{{product.number_reel}}</span>
+                        <span ng-if="cell.name == 'Durée' && product.duration">{{product.duration}} min</span>
+                      </span>
+                      <span ng-if="cell.isSummary && returnContextInfo(product, allColumnsExport[$index].contextualInfoName, allColumnsExport[$index].workflow).value">
+                        {{returnContextInfo(product, allColumnsExport[$index].contextualInfoName, allColumnsExport[$index].workflow).value | addLineBreakForExcel}}
+                      </span>
+                      <span ng-if="cell.action.allow_request && cell.action.allow_request == '0'">
+                        <span ng-switch="cell.etape_type.name">
+                      		<span ng-switch-when="prepa_enregistrement">
+                            <span ng-if="cell.plain_value">{{cell.plain_value}}</span>
+                      		</span>
+                      		<span ng-switch-when-separator="production|production_mastering|production_servicing" ng-switch-when-separator="|">
+                      			<span ng-if="cell.action.name == 'prod_ordre_diff' || cell.action.name == 'prod_due_date' || cell.action.name == 'prod_mastering_due_date' || cell.action.name == 'prod_servicing_due_date' || cell.action.name == 'prod_title_vf' || cell.action.name == 'prod_note' || cell.action.name == 'prod_servicing_note' || cell.action.name == 'prod_mastering_note' || cell.action.name == 'prod_sortie_france' || cell.action.name == 'prod_servicing_diff_date'">
+                              <span ng-if="(cell.action.name == 'prod_due_date' || cell.action.name == 'prod_mastering_due_date' || cell.action.name == 'prod_servicing_due_date') && returnContextInfo(product, 'due_date', allColumnsExport[$index].workflow).value">
+                            		{{formatDate(returnContextInfo(product, 'due_date', allColumnsExport[$index].workflow).value)}}
+                            	</span>
+                              <span ng-if="cell.action.name == 'prod_servicing_diff_date' && returnContextInfo(product, 'diff_date', allColumnsExport[$index].workflow).value">
+                            		{{formatDate(returnContextInfo(product, 'diff_date', allColumnsExport[$index].workflow).value)}}
+                            	</span>
+                            	<span ng-if="cell.action.name == 'prod_ordre_diff' && returnContextInfo(product, 'ordre_diff', allColumnsExport[$index].workflow).value">
+                            		{{returnContextInfo(product, 'ordre_diff', allColumnsExport[$index].workflow).value}}
+                            	</span>
+                            	<span ng-if="cell.action.name == 'prod_title_vf' && returnContextInfo(product, 'title_vf', allColumnsExport[$index].workflow).value">
+                            		{{returnContextInfo(product, 'title_vf', allColumnsExport[$index].workflow).value}}
+                            	</span>
+                            	<span ng-if="(cell.action.name == 'prod_note' || cell.action.name == 'prod_mastering_note' || cell.action.name == 'prod_servicing_note') && returnContextInfo(product, 'note', allColumnsExport[$index].workflow).value">
+                            		{{returnContextInfo(product, 'note', allColumnsExport[$index].workflow).value}}
+                            	</span>
+                            	<!-- <span ng-if="cell.action.name == 'prod_servicing_pad' && returnContextInfo(product, 'servicing_pad', allColumnsExport[$index].workflow).value">
+                            		{{returnContextInfo(product, 'servicing_pad', allColumnsExport[$index].workflow).value}}
+                            	</span> -->
+                            	<span ng-if="cell.action.name == 'prod_sortie_france' && returnContextInfo(product, 'sortie_france', allColumnsExport[$index].workflow).value">
+                            		{{formatDate(returnContextInfo(product, 'sortie_france', allColumnsExport[$index].workflow).value)}}
+                            	</span>
+                      			</span>
+                      			<span ng-if="cell.action.name == 'prod_prelim_1' || cell.action.name == 'prod_prelim_2' || cell.action.name == 'prod_prelim_3' || cell.action.name == 'prod_prelim_4' || cell.action.name == 'prod_fnl' || cell.action.name == 'prod_audio_materials' || cell.action.name == 'prod_verif' || cell.action.name == 'prod_relecture_texte' || cell.action.name == 'prod_livraison_physique_safety' || cell.action.name == 'prod_validation_cf' || cell.action.name == 'prod_travaux_regie'">
+                              <span ng-if="cell.reception_date">{{formatDate(cell.reception_date)}}</span>
+                            </span>
+                      			<span ng-if="cell.action.name == 'prod_casting_list' || cell.action.name.indexOf('prod_validation') == 0 || cell.action.name == 'prod_script_vf' || cell.action.name == 'prod_script_vo' || cell.action.name == 'prod_servicing_pad' || cell.action.name == 'prod_screener' || cell.action.name == 'prod_dispo_doublage'">
+                              <span ng-if="(cell.checked == '1' || cell.checked == true) && cell.checked_date">{{cell.prod_validation_date ? formatDate(cell.prod_validation_date) : (cell.checked_date | asDate | date : "dd MMM")}}</span>
+                      			</span>
+                      		</span>
+                      		<span ng-switch-default>
+                            <span ng-if="cell.plain_value">{{formatDate(cell.plain_value)}}</span>
+                      		</span>
+                      	</span>
+                      </span>
+                      <span ng-if="cell.action.allow_request && cell.action.allow_request == '1'">
+                        <span ng-repeat="request in cell.requests" ng-if="request.is_canceled != 1">
+                          <span ng-repeat="(key, value) in request.dateByMonth">
+                            <span ng-repeat="date in value | orderBy: 'day'">
+                              {{date.day}}
+                              <span ng-if="$index < value.length - 1">/</span>
+                            </span>
+                            {{key}}<br style="mso-data-placement:same-cell;" ng-if="!$last">
+                          </span><br style="mso-data-placement:same-cell;" ng-if="!$last">
+                        </span>
+                      </span>
+                      <span ng-if="cell.action == null && cell.plain_value">{{cell.plain_value | addLineBreakForExcel}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+            <div class="col-md-3 col-md-offset-6">
+              <button ng-click="export()" ng-disabled="!countColumn" type="button" class="btn btn-primary btn-block btn-big-shadow"><i class="fa fa-file-excel-o"></i> {{ _T["l0vitufw"] }} {{countColumn}} {{ _T["n64f0loe"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .dragresize {
+    resize:both;
+    overflow: auto;
+    max-height: 900px !important;
+    min-height: 400px !important;   
+    min-width: 400px !important;   
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);  
+  }
+  </style>  
+  <script>
+    let position = { x: 0, y: 0 }
+    let edges = { left: true, right: true,   bottom: true,  top: true }
+    let attributes = {x:'data-x',y:'data-y'}
+    let IJS = Object.create(interactJS);
+    IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+  </script>

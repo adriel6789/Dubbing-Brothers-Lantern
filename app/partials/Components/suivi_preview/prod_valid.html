@@ -1,0 +1,32 @@
+<div class="row mb-0">
+  <div class="col-md-12">
+    <span
+      class="label-squared text-center"
+      ng-if="($ctrl.cell.checked_date && $ctrl.cell.checked == '1') || ($ctrl.cell.checked_date && $ctrl.cell.checked == true)"
+      tooltip-placement="bottom"
+      data-toggle="tooltip"
+      title="{{ $root._T['z0t6p7pd'] }} {{$ctrl.cell.prod_validation_date || $ctrl.cell.checked_date | asDate | date : 'dd/MM/yyyy'}}"
+	  >
+	  	{{ $ctrl.cell.prod_validation_date || $ctrl.cell.checked_date | asDate | date : 'dd/MM/yyyy'}}
+    </span>
+  </div>
+  <div
+    class="col-md-12"
+	ng-if="$ctrl.cell.note && $ctrl.cell.checked != '1' && 
+  ($ctrl.cell.action.name == 'prod_script_vf' ||
+  $ctrl.cell.action.name == 'prod_screener' ||
+  $ctrl.cell.action.name == 'prod_dispo_doublage' ||
+  $ctrl.cell.action.name == 'prod_validation' ||
+  $ctrl.cell.action.name == 'prod_validation_mastering_regie' || 
+	$ctrl.cell.action.name == 'prod_validation_mastering_report' || 
+	$ctrl.cell.action.name == 'prod_validation_mastering_cf' ||
+	$ctrl.cell.action.name == 'prod_validation_mastering_original_master' ||
+	$ctrl.cell.action.name == 'prod_validation_mastering_qc' ||
+	$ctrl.cell.action.name == 'prod_validation_mastering_qc_om' ||
+	$ctrl.cell.action.name == 'prod_validation_mastering_livraison' ||
+  $ctrl.cell.action.name == 'prod_validation_servicing_livraison' ||
+  $ctrl.cell.action.name == 'prod_servicing_pad')"
+  >
+    {{ $ctrl.cell.note }}
+  </div>
+</div>

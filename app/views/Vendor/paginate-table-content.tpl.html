@@ -1,0 +1,32 @@
+<!-- <div style="border: solid 2px red;width: 500px;height: 300px;">--
+    JDFDSfbdshfbdsbfhdsbfhdsbfhndsbbfds---</div> -->
+<div style="border: solid 2px red;width: 500px;height: 300px;">-----{{item}}----llll{{t}}</div>
+
+
+<div class="row">
+    <div class="col-md-6" ng-if="contentJoblines.length > 1">
+    <h2>Liste des joblines qui vont être màj </h2>
+    <p><strong>{{ contentProduct.title_phelix}}</strong></p>
+    <!-- {{tableParams}}
+    =====
+    {{columns}}
+       ===== -->
+    {{contentData}}
+    <table ng-table="tableParams" class="table table-condensed table-bordered table-striped ">
+        <tr>
+            <th ng-repeat="column in columns"
+                class="text-center sortable" ng-class="{
+                    'sort-asc': tableParams.isSortBy(column, 'asc'),
+                    'sort-desc': tableParams.isSortBy(column, 'desc')
+                }"
+                ng-click="tableParams.sorting(column, tableParams.isSortBy(column, 'asc') ? 'desc' : 'asc')">
+                {{column}}
+            </th>
+        </tr>
+        <tr ng-repeat="row in contentData">
+            <td ng-repeat="column in columns" sortable="column">
+                {{row[column]}}
+            </td>
+        </tr>
+    </table>
+</div>

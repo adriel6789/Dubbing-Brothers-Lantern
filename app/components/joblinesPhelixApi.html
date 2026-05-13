@@ -1,0 +1,73 @@
+    <!-- Related to the update Manually EDD -->
+<div class="row vertical-center-row" ng-if="!$ctrl.is_condition_phelix_valid">
+  <div class="text-center col-md-6 col-md-offset-3" >
+    <span class="alert alert-danger text-center"> {{ $root._T["cmlc29wu"] }}</span>
+  </div>
+</div>
+<div ng-if="$ctrl.is_condition_phelix_valid" ng-class="{ 'frame-scroll': ($ctrl.contentJoblines.length >= 1 || $ctrl.contentJoblinesUnmatch.length >= 1)}">
+    <div class="row vertical-center-row" ng-if="$ctrl.contentCell.action.name == 'prod_edd_phelix'">
+        <div class="text-center col-md-4 col-md-offset-5" >
+            <div uib-datepicker datepicker-options="options" template-url='views/Vendor/multi-datepicker.tpl.html' style="color:black" ng-model="$ctrl.selected_date" show-weeks="true" starting-day="1" ng-model-options="{timezone: 'utc'}"></div>
+            <div class="col-md-4">
+              <button class="btn btn-block btn-success btn-outline btn-xs pull-right" ng-disabled="$ctrl.contentJoblines.length < 1" ng-click="$ctrl.saveEDDManual($ctrl.contentCell, $ctrl.contentProduct, $ctrl.selected_date)">{{ $root._T["hvzykhtg"] }}</button>
+            </div>
+        </div>
+    </div>
+  <!-- <div class="col-md-8">
+    <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-click="$ctrl.updatePhelixJoblinesfieldsAuto($ctrl.requestId)">{{$root._T["olpi4vrg"] }}</button>
+</div> -->
+
+<!-- table for the list of joblines that will be updated  -->
+<div class="row" ng-if="$ctrl.contentJoblines.length >= 1">
+  <div class="col-md-12">
+    <h2 ng-show="!$ctrl.is_updated_Joblines" class="text-center">{{$root._T["olozhits"] }}</h2>
+    <h2 ng-show="$ctrl.is_updated_Joblines" class="text-center" style="color:green"><strong>{{$root._T["oacejjjd"] }}</strong></h2>
+    <p><strong>{{ $ctrl.contentProduct.title_phelix}}</strong></p>
+    <table ng-table="$ctrl.tableParams" class="table table-condensed table-bordered table-striped ">
+        <tr ng-style="$ctrl.is_updated_Joblines && {'background-color': 'chartreuse'}">
+            <th ng-repeat="column in $ctrl.columns"
+                class="text-center sortable" ng-class="{
+                    'sort-asc': $ctrl.tableParams.isSortBy(column, 'asc'),
+                    'sort-desc': $ctrl.tableParams.isSortBy(column, 'desc')
+                }"
+                ng-click="$ctrl.tableParams.sorting(column, $ctrl.tableParams.isSortBy(column, 'asc') ? 'desc' : 'asc')">
+                {{column}}
+            </th>
+        </tr>
+        <tr ng-repeat="row in $ctrl.data">
+            <td ng-repeat="column in $ctrl.columns" sortable="column">
+                {{row[column]}}
+            </td>
+        </tr>
+    </table>
+  </div>
+</div>
+
+<!-- table for the list of joblines not found to ignore in the update -->
+<div class="row" ng-if="$ctrl.contentJoblinesUnmatch.length >= 1">
+  <div class="col-md-12" >
+   <h2 class="text-center">{{$root._T["0ns6w76b"] }}</h2>
+   <p><strong>{{ $ctrl.contentProduct.title_phelix}}</strong></p>
+    <table ng-table="$ctrl.tableParamsUnmatch" class="table table-condensed table-bordered table-striped ">
+      <tr>
+          <th ng-repeat="column in $ctrl.columnsUnmatch"
+              class="text-center sortable" ng-class="{
+                  'sort-asc': $ctrl.tableParamsUnmatch.isSortBy(column, 'asc'),
+                  'sort-desc': $ctrl.tableParamsUnmatch.isSortBy(column, 'desc')
+                }"
+              ng-click="$ctrl.tableParamsUnmatch.sorting(column, $ctrl.tableParamsUnmatch.isSortBy(column, 'asc') ? 'desc' : 'asc')">
+              {{column}}
+          </th>
+      </tr>
+      <tr ng-repeat="row in $ctrl.dataUnmatch">
+          <td ng-repeat="column in $ctrl.columnsUnmatch" sortable="column">
+              {{row[column]}}
+          </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+
+

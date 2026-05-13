@@ -1,0 +1,95 @@
+<div class="page-popup page-custom-template dragresize" data-x=0 data-y=0>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="template-h1 poignee">{{ _T["udvvijhg"] }} -
+        <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+        <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+        <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+      </h1>
+      <div class="step text-center">
+        <form class="ng-pristine ng-valid">
+          <div>
+            <div class="col-md-6 col-md-offset-3">
+              <h2>{{ _T["exg9ee3n"] }}</h2>
+              <hr style="border-color: rgba(53, 112, 225, 0.5);">
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+              <ul class="list template-list" style="height: 650px;">
+                <li ng-repeat="workflow in workflows" class="col-md-6">
+                  <div>
+                    <span class="label label-info">{{(product.returns | filter:{workflow_id:workflow.id}:true).length}} {{ _T["f7du1if8"] }}</span>
+                  </div>
+                  <a class="btn btn-sm"  href="#/manageReturns/{{product.id}}/{{workflow.id}}" target="_blank" tooltip-placement="bottom" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')', 'color': workflow.color.font}" uib-tooltip-html="workflow.description">
+                    <span ng-if="workflow.workflow_type_id == 1">
+                      <span class="fa fa-microphone"></span> {{ _T["i5tk31xb"] }}
+                    </span>
+                    <span ng-if="workflow.workflow_type_id == 2">
+                      <span class="fa fa-archive"></span> {{ _T["z20ge21k"] }}
+                    </span>
+                    <span ng-if="workflow.workflow_type_id == 3">
+                      <span class="fa fa-briefcase"></span> {{ _T["1egq4x9k"] }}
+                    </span>
+                    <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                      - {{::workflow.doublage_type.value}}
+                    </span>
+                    <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                      - {{::workflow.language.value}}
+                    </span>
+                    <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                      - {{::workflow.norme_mix.value}}
+                    </span>
+                    <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                      - {{::workflow.servicing_type.value}}
+                    </span>
+                    <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                      - {{::workflow.resolution.value}}
+                    </span>
+                    <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                      - {{::workflow.diffuseur.name}}
+                    </span>
+                    <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                      - {{::workflow.speed.value}}
+                    </span>
+                    <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                      - {{::workflow.resolution.value}}
+                    </span>
+                    <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                      - {{::workflow.prod_version}}
+                    </span>
+                  </a>
+                  <hr style="border-color: rgb(237, 8, 83); width: 60%;">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .dragresize {
+    resize:both;
+    overflow: auto;
+    max-height: 900px !important;
+    min-height: 400px !important;   
+    min-width: 400px !important;   
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);  
+  }
+</style>  
+<script>
+    let position = { x: 0, y: 0 }
+    let edges = { left: false, right: true,   bottom: true,  top: false }
+    let attributes = {x:'data-x',y:'data-y'}
+    let IJS = Object.create(interactJS);
+    IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+</script>

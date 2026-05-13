@@ -1,0 +1,24 @@
+<!-- Gestion des cas avec les request associées -->
+<!-- <div class="infobull small-infobull inner-comment" popover-placement="right" uib-popover-template="$ctrl.cell.commentPopoverTemplate" popover-trigger="'outsideClick'" popover-title="Commentaire" tooltip-placement="right"  data-toggle="tooltip" title="{{$ctrl.cell.comment}}">
+  <i class="c-icon c-icon-comment c-icon-shadow "></i>
+  <span ng-if="$ctrl.cell.comment != '' && $ctrl.cell.comment != null" class="infobull-text inner-text">1</span>
+  <span ng-if="!$ctrl.cell.comment || $ctrl.cell.comment == ''" class="infobull-text inner-text">0</span>
+</div> -->
+<div ng-if="$ctrl.action.name != null" ng-switch="$ctrl.action.name">
+  <a class="unlink" ng-click="$ctrl.openRequestPopup($ctrl.request)">
+      <div ng-include="'partials/Components/suivi/enr_dialogue.html'"></div>
+  </a>
+<div style="position: relative" ng-show="$parent.$parent.$parent.$parent.$parent.$parent.$parent.edit_metrics_labels" class="metrics-start-end-date-containter">
+  <div class="icon calendar mini metrics clickable" ng-model="$ctrl.request.metrics_start_date"  ng-change="$ctrl.updateRequestMetricsDates()"  datetime-picker="dd-MM-yyyy" is-open="$ctrl.cell.metricsStartDatePopupOpen" ng-click="$ctrl.cell.metricsStartDatePopupOpen = true" title="{{ $root._T['wyfjnxha'] }}">
+    <span class="month ng-binding">{{$ctrl.request.metrics_start_date | date:"MMM"}}</span>
+    <span class="day ng-binding">{{$ctrl.request.metrics_start_date | date:"dd"}}</span>
+    <i class="fa fa-times clickable" ng-click="$ctrl.removeRequestMetricsStartDate($event);" title="{{ $root._T['5xqt25e6'] }}"></i>
+  </div>
+
+  <div class="icon calendar mini metrics clickable" ng-model="$ctrl.request.metrics_end_date" ng-show="$ctrl.request.metrics_start_date" ng-change="$ctrl.updateRequestMetricsDates()"  datetime-picker="dd-MM-yyyy" is-open="$ctrl.cell.metricsEndDatePopupOpen" ng-click="$ctrl.cell.metricsEndDatePopupOpen = true" title="{{ $root._T['i6m23sip'] }}">
+    <span class="month ng-binding">{{$ctrl.request.metrics_end_date | date:"MMM"}}</span>
+    <span class="day ng-binding">{{$ctrl.request.metrics_end_date | date:"dd"}}</span>
+    <i class="fa fa-times clickable" ng-click="$ctrl.removeRequestMetricsEndDate($event);" title="{{ $root._T['hnregxuk'] }}"></i>
+  </div>
+ </div>
+</div>

@@ -1,0 +1,227 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["o0x19e3d"] }}
+            </p>
+        </div>
+    </div>
+
+</header>
+
+<div class="container-fluid container-fixed-nav-aside header-input-text mt-10">
+    <form class="col-sm-12">
+      <div class="row">
+        <div class="form-group search-form col-md-6">
+          <input type="text" class="form-control input-search" aria-label="Rechercher parmi les projets" placeholder="{{ _T['x676xfn7'] }}" ng-model="textProjectFilter">
+        </div>
+        <div class="col-md-6">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-change">
+                <span ng-if="!filterWorkflow"> {{ _T["zfa1zcd0"] }} </span>
+                <span ng-if="filterWorkflow"> {{filterWorkflowDisplay}} </span>
+            </button>
+            <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="caret triangle"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a ng-click="filterProjectWorkflow('doublage')">{{ _T["i5tk31xb"] }}</a></li>
+              <li><a ng-click="filterProjectWorkflow('mastering')">{{ _T["z20ge21k"] }}</a></li>
+              <li><a ng-click="filterProjectWorkflow('servicing')">{{ _T["1egq4x9k"] }}</a></li>
+              <li><a ng-click="filterProjectWorkflow('doublage_mastering')">{{ _T["uwnsm9za"] }}</a></li>
+              <li><a ng-click="filterProjectWorkflow()">{{ _T["zfa1zcd0"] }}</a></li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-change">
+                <span> {{filterDueDateValues[filterDueDateChoosen]}} </span>
+            </button>
+            <button type="button" class="btn btn-default btn-change dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="caret triangle"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a ng-click="filterProjectDueDate('ascending')">{{filterDueDateValues[0]}}</a></li>
+              <li><a ng-click="filterProjectDueDate('descending')">{{filterDueDateValues[1]}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>
+
+<div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+      <div class="col-md-12 equal">
+        <div class="col-md-6" ng-repeat="subproject in (filteredItems = (getSubprojectsWithReturn() | filterSubProjectNameOrClient: textProjectFilter | filterSubProjectWorkflow: filterWorkflowChoosen | orderBy:'due_date':filterDueDateReverse) | startFrom:(currentPage-1)*pageSize | limitTo:pageSize)">
+          <div class="panel panel-default">
+            <table class="table table-no-border" style="background-color:transparent;">
+              <tbody>
+                <tr style="height:100px;">
+                  <td style="width:10%; vertical-align:middle;">
+                    <img class="img img-circle" width=64 height=64 style="margin-right: 5px; border:1px black solid;" ng-src="{{clients[subproject.project.client.id].url || '../app/img/no-customer.png'}}">
+                  </td>
+                  <td style="width:35%; vertical-align:middle;">
+                    <h4 class="media-heading mb-10">{{subproject.project.show_name}}</h4>
+                    <span>
+                      <span style="font-size:1.1em;" class="label label-default" ng-if="subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] }} {{subproject.season}}</span>
+                      <span style="font-size:1.1em;" class="label label-default" ng-if="subproject.nature.name != 'serie'">{{subproject.nature.name}}</span>
+                    </span>
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <div>
+                      {{subproject.returnClient}} {{ _T["y5p0wtnx"] }}
+                    </div>
+                    <div>
+                      {{subproject.returnInterne}} {{ _T["3z7ilt6p"] }}
+                    </div>
+                    <div>
+                      {{subproject.returnRefus}} {{ _T["ckttefin"] }}
+                    </div>
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span ng-if="subproject.due_date">
+                      <div class="icon calendar medium" uib-tooltip-html="subproject.due_date_tooltip">
+                        <span class="month">{{subproject.due_date | asDate | date:"MMM"}}</span>
+                        <span class="day">{{subproject.due_date | asDate | date:"dd"}}</span>
+                      </div>
+                    </span>
+                    <span ng-if="!subproject.due_date">
+                      <i class="fa fa-calendar-times-o"></i><span class="message"> {{ _T["03xzf0ab"] }}</span>
+                    </span>
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span class="btn-circle glyphicon glyphicon-menu-down btn-collapse" role="button" data-toggle="collapse" href="#collapseSubproject{{subproject.id}}" aria-expanded="false" aria-controls="collapseSubproject{{subproject.id}}"  data-toggle="tooltip" title="{{ _T['fam754qk'] }}" tooltip-placement="bottom"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="collapse" id="collapseSubproject{{subproject.id}}" style="border-top:1px solid lightgrey; padding: 10px;">
+
+              <div class="" style="margin:10px; background-color:#f5f8fb; border:1px solid lightgrey; border-radius: 5px;">
+                <div class="" ng-style="!$last && {'border-bottom':'1px solid lightgrey'}" style="padding:10px;" ng-repeat="product in subproject.ownProduct | filterProductWorkflow: filterWorkflowChoosen | orderObjectBy:'due_date':filterDueDateReverse">
+
+                  <div class="col-md-2">
+                    <span class="label label-default">
+                      {{product.description_text || product.episode_number != null && (product.type == 0 ? _T["590wjx96"] : _T["h12xqsuf"]) + product.episode_number || product.description.value}}
+                    </span>
+                  </div>
+                  <div class="col-md-6">
+                    <div>{{product.returnClient}} {{ _T["y5p0wtnx"] }} | {{product.returnInterne}} {{ _T["3z7ilt6p"] }} | {{product.returnRefus}} {{ _T["ckttefin"] }}</div>
+                  </div>
+                  <div class="col-md-2">
+                    <span ng-if="product.due_date">
+                      <div class="icon calendar medium" uib-tooltip-html="product.due_date_tooltip">
+                        <span class="month">{{product.due_date | asDate | date:"MMM"}}</span>
+                        <span class="day">{{product.due_date | asDate | date:"dd"}}</span>
+                      </div>
+                    </span>
+                    <span ng-if="!product.due_date">
+                      <small>
+                        <i class="fa fa-calendar-times-o"></i><span class="message"> {{ _T["03xzf0ab"] }}</span>
+                      </small>
+                    </span>
+                  </div>
+                  <div class="col-md-1 col-md-offset-1">
+                    <span class="btn-circle glyphicon glyphicon-menu-down btn-collapse" role="button" data-toggle="collapse" href="#collapseProduct{{product.id}}" aria-expanded="false" aria-controls="collapseProduct{{product.id}}"  data-toggle="tooltip" title="{{ _T['vsvub5nw'] }}" tooltip-placement="bottom"></span>
+                  </div>
+                  <div class="clearfix"></div>
+
+                  <div class="col-md-12 collapse" id="collapseProduct{{product.id}}" style="padding-top: 10px;">
+                    <div class="" ng-repeat="workflow in product.sharedWorkflow | orderObjectBy:'due_date':filterDueDateReverse" ng-if="!filterWorkflow || (filterWorkflowChoosen == workflow.workflow_type.name || (filterWorkflowChoosen == 'doublage_mastering' && (workflow.workflow_type.name == 'doublage' || workflow.workflow_type.name == 'mastering')))" style="border-top: 1px solid lightgrey; padding: 10px 0;">
+                      <div class="col-md-9">
+                        <a class="btn btn-sm mb-5"  href="#/manageReturns/{{product.id}}/{{workflow.id}}" target="_blank" tooltip-placement="bottom" ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')'}" style="color: {{workflow.color.font}}" uib-tooltip-html="workflow.description"><i class="c-icon c-icon-{{workflow.workflow_type.name}}"></i>
+                          {{workflow.workflow_type.value}}
+                          <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                            -
+                            {{workflow.doublage_type.value}}
+                          </span>
+                          <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                            -
+                            {{workflow.language.value}}
+                          </span>
+                          <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                            -
+                            {{workflow.norme_mix.value}}
+                          </span>
+                          <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                            -
+                            {{workflow.servicing_type.value}}
+                          </span>
+                          <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                            -
+                            {{workflow.resolution.value}}
+                          </span>
+                          <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                            -
+                            {{workflow.diffuseur.name}}
+                          </span>
+                          <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                            - {{workflow.speed.value}}
+                          </span>
+                          <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                            - {{workflow.resolution.value}}
+                          </span>
+                          <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                            - {{workflow.prod_version}}
+                          </span>
+                        </a>
+                        <div>
+                          {{workflow.returnClient}} {{ _T["y5p0wtnx"] }} | {{workflow.returnInterne}} {{ _T["3z7ilt6p"] }} | {{workflow.returnRefus}} {{ _T["ckttefin"] }}
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <span ng-if="workflow.due_date">
+                          <div class="icon calendar medium" uib-tooltip-html="workflow.due_date_tooltip">
+                            <span class="month">{{workflow.due_date | asDate | date:"MMM"}}</span>
+                            <span class="day">{{workflow.due_date | asDate | date:"dd"}}</span>
+                          </div>
+                        </span>
+                        <span ng-if="!workflow.due_date">
+                          <small>
+                            <i class="fa fa-calendar-times-o"></i><span class="message"> {{ _T["03xzf0ab"] }}</span>
+                          </small>
+                        </span>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <script type="text/javascript">
+              $('.collapse').on('show.bs.collapse', function (e) {
+                var ariaControls = e.target.id;
+                $('.btn-collapse[aria-controls=' + ariaControls + ']').addClass('rotate180');
+              });
+
+              $('.collapse').on('hide.bs.collapse', function (e) {
+                var ariaControls = e.target.id;
+                $('.btn-collapse[aria-controls=' + ariaControls + ']').removeClass('rotate180');
+              });
+            </script>
+
+          </div>
+        </div>
+        <div ng-if="filteredItems.length == 0 && showLoading == 0" class="col-md-12 text-center">
+          <span class="alert alert-info">{{ _T["enxs8jli"] }}</span>
+        </div>
+        <div ng-if="showLoading != 0" class="col-md-12 text-center">
+          <span class="alert alert-info">{{ _T["fjyh2vvp"] }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <ul uib-pagination previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="pageSize" total-items="filteredItems.length"
+          ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change=""></ul>
+      </div>
+    </div>
+
+      <div class="clearfix"></div>
+
+    </div>
+</div>

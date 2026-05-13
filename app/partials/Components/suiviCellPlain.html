@@ -1,0 +1,11 @@
+<!-- Cas avec les key / value simples -->
+<div>
+	<div ng-switch="$ctrl.role">
+		<div ng-switch-when="preview">
+			<div ng-include="'partials/Components/suivi_preview_cells/suiviCellPlain.html'"></div>
+		</div>
+		<div ng-switch-default>
+			<div ng-include="'partials/Components/suivi_cells/suiviCellPlain.html'"></div>
+		</div>
+	</div>
+</div>

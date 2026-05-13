@@ -1,0 +1,29 @@
+{
+  "version": "0.0.0",
+  "private": true,
+  "name": "bons-travaux",
+  "description": "Bons de travaux",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.7.23",
+    "bower": "^1.8.14",
+    "del": "^2.2.2",
+    "gulp": "^4.0.0",
+    "gulp-cache-bust": "^1.4.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-string-replace": "^1.1.2",
+    "gulp-version-number": "^0.1.7",
+    "http-server": "^0.6.1",
+    "moment-range": "^2.0.3",
+    "run-sequence": "^1.2.2"
+  },
+  "scripts": {
+    "gulp": "gulp"
+  },
+  "dependencies": {
+    "angular-desktop-notification": "^1.1.6",
+    "angularjs-dropdown-multiselect": "^2.0.0-beta.10",
+    "moment": "^2.29.4"
+  }
+}

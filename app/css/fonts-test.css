@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'graphik-light';
+    src: url('../fonts/graphik-sailec/Graphik-Light.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Graphik-Light.woff') format('woff'), url('../fonts/graphik-sailec/Graphik-Light.ttf') format('truetype'), url('../fonts/graphik-sailec/Graphik-Light.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'graphik-medium';
+    src: url('../fonts/graphik-sailec/Graphik-Medium.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Graphik-Medium.woff') format('woff'), url('../fonts/graphik-sailec/Graphik-Medium.ttf') format('truetype'), url('../fonts/graphik-sailec/Graphik-Medium.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'graphik-regular';
+    src: url('../fonts/graphik-sailec/Graphik-Regular.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Graphik-Regular.woff') format('woff'), url('../fonts/graphik-sailec/Graphik-Regular.ttf') format('truetype'), url('../fonts/graphik-sailec/Graphik-Regular.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'graphik-semibold';
+    src: url('../fonts/graphik-sailec/Graphik-Semibold.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Graphik-Semibold.woff') format('woff'), url('../fonts/graphik-sailec/Graphik-Semibold.ttf') format('truetype'), url('../fonts/graphik-sailec/Graphik-Semibold.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'graphik-thin';
+    src: url('../fonts/graphik-sailec/Graphik-Thin.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Graphik-Thin.woff') format('woff'), url('../fonts/graphik-sailec/Graphik-Thin.ttf') format('truetype'), url('../fonts/graphik-sailec/Graphik-Thin.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sailec-bold';
+    src: url('../fonts/graphik-sailec/Type Dynamic - Sailec Bold.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Type Dynamic - Sailec Bold.woff') format('woff'), url('../fonts/graphik-sailec/Type Dynamic - Sailec Bold.ttf') format('truetype'), url('../fonts/graphik-sailec/Type Dynamic - Sailec Bold.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sailec-medium';
+    src: url('../fonts/graphik-sailec/Type Dynamic - Sailec Medium.eot');
+    src: local('☺'), url('../fonts/graphik-sailec/Type Dynamic - Sailec Medium.woff') format('woff'), url('../fonts/graphik-sailec/Type Dynamic - Sailec Medium.ttf') format('truetype'), url('../fonts/graphik-sailec/Type Dynamic - Sailec Medium.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+

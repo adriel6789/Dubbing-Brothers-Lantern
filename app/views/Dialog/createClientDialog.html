@@ -1,0 +1,55 @@
+<div class="container-fluid">
+  <h3 class="text-center" style="padding-bottom: 10px;" ng-if="newClient == null">{{ _T["yd744uqu"] }}</h3>
+  <h3 class="text-center" style="padding-bottom: 10px;" ng-if="newClient != null">{{ _T["3xoocd81"] }} {{ _T["mdj3gnlm"] }}</h3>
+
+<div class="row">
+  <div class="col-lg-7" style="padding-right: 5px;">
+    <div class="row">
+      <div class="input-group w-100">
+        <span class="input-group-addon">
+          <i class="glyphicon glyphicon-user"></i>
+        </span>
+        <input type="text" class="form-control w-100" placeholder="{{ _T['a8zpqcxb'] }}" ng-model="newClient.name">
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="input-group w-100">
+        <div class="input-group col-md-12">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+  
+          <input type="text" class="form-control" ng-model="newClient.url"
+                 style="width: 100%; padding-bottom: 21px; padding-top: 22px;"
+                 id="image-file-data" placeholder="{{ _T['6k1ptp9j'] }}">
+  
+          <span class="input-group-btn">
+              <a class='btn btn-secondary btn-lg ml-0 no-left-border-radius' href="javascript:;" style="background: #EFEEEE; border-color: #ccc;">
+                ...
+                <input type="file" accept="image/*" class="input-right-button" id="file-source" name="file-source" ng-model="newClient.url" custom-on-change="uploadFile"/>
+              </a>
+          </span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row">
+      <ui-select ng-disabled="disabled" ng-model="newClient.type_id" style="width: 100%;" theme="bootstrap">
+        <ui-select-match placeholder="{{ _T['wmkt7iws'] }}">{{$select.selected.value}}</ui-select-match>
+        <ui-select-choices repeat="type.id as type in typeClient | propsFilter: {value: $select.search, id: $select.search}">
+          <div ng-bind-html="type.value | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+
+    <div class="text-right">      
+      <img ng-src="{{ newClient.url ? newClient.url : '../app/img/no-customer.png' }}" ng-model="newClient.url" style="border: 0px solid #EFEEEE; margin-top: -2px;" width="150" height="150">
+    </div>
+</div>  
+
+  <div class="row">
+    <button class="btn btn-primary pull-right" ng-click="saveClient()" ng-if="!inProgress"><i class="glyphicon glyphicon-ok"></i> {{ _T["d32u2mga"] }}</button>
+    <button class="btn btn-primary pull-right" disabled ng-if="inProgress">{{ _T["lluw8v9a"] }}</button>
+  </div>
+
+</div>

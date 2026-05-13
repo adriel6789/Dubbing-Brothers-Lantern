@@ -1,0 +1,242 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["t21g2bvi"] }}
+                  {{client.name| uppercase}}
+                  <a href="#/technicalSpecNew/{{client.id}}" role="button" class="btn btn-default btn-text-primary btn-big-shadow pull-right"><i class="c-icon c-icon-add"></i> {{ _T["fjc6td6t"] }} </a>
+            </p>
+        </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside header-input-text">
+        <div class="col-sm-12">
+            <form>
+                <div class="form-group search-form">
+                    <input type="text" class="form-control input-search" ng-model="textFilter" placeholder="{{ _T['rwl97pau'] }}">
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside" style="margin-top:30px">
+    <div class="col-md-10">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="doublage" class="active"><a href="#doublage" target="_self" aria-controls="doublage" role="tab" data-toggle="tab">{{ _T["i5tk31xb"] }}</a></li>
+            <li role="servicing" ><a href="#servicing" target="_self" aria-controls="servicing" role="tab" data-toggle="tab">{{ _T["1egq4x9k"] }}</a></li>
+            <li role="mastering"><a href="#mastering" target="_self" aria-controls="mastering" role="tab" data-toggle="tab">{{ _T["z20ge21k"] }}</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="doublage">
+                <div ng-if="specs.length == 0">
+                  <p class="text-center">{{ _T["lwifx2yb"] }}<br/>
+                    {{ _T["ws1r16ju"] }} «
+                    <a href="#/technicalSpecNew/{{client.id}}">
+                      <button class="btn btn-sm btn-primary">{{ _T["fjc6td6t"] }}</button>
+                    </a>
+                    » {{ _T["qnwdfcc8"] }}
+                  </p>
+              </div>
+                <table class="table  table-hover">
+                  <thead>
+                    <tr>
+                      <td>
+                        <strong>{{ _T["oaves6x0"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["2w7jtwr8"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["dfuet0tp"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["r48ex2km"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["hbtvjrk1"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["awbb7v9i"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["sl5qnahw"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["vob2snrb"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["fvmwlcji"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["noa1wtgc"] }}</strong>
+                      </td>
+                      <td style="width:20px"></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="spec in specs| magicFilter: textFilter" ng-if="spec.type_workflow == 1">
+                      <td>{{spec.subproject_nature_name}} <span ng-if="spec.subproject_nature_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.workflow_type_name}} <span ng-if="spec.workflow_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.etape_type_name}} <span ng-if="spec.etape_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.action_type_name}} <span ng-if="spec.action_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.exploitation_name}} <span ng-if="spec.exploitation_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.language_name}} <span ng-if="spec.language_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.doublage_type_name}} <span ng-if="spec.doublage_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.format_name}} <span ng-if="spec.format_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.norme_name}} <span ng-if="spec.norme_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.speed_name}} <span ng-if="spec.speed_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>
+                        <div class="btn-group-vertical btn-group-xs pull-right" style="margin:0px">
+                          <a href="#/technicalSpecEdit/{{spec.id}}" class="btn btn-xs btn-default">
+                              <i class="glyphicon glyphicon-edit"></i>
+                              {{ _T["rnr4bk5z"] }}</button>
+                          </a>
+                          <button class="btn btn-xs btn-default " ng-click="duplicateList(spec)">
+                            <i class="glyphicon glyphicon-copy"></i>
+                            {{ _T["29do63ej"] }}</button>
+                          <button class="btn btn-xs btn-default " ng-click="addList(spec)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {{ _T["queziuyo"] }}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="servicing">
+                <table class="table  table-hover">
+                  <thead>
+                    <tr>
+                      <td>
+                        <strong>{{ _T["jauwurs1"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["2w7jtwr8"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["dfuet0tp"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["r48ex2km"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["fa1lnlij"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["irlv7lue"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["wrctg8ou"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["awbb7v9i"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["8izp2is4"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["uezwjq5u"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["evjqdguw"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["7xhlusz8"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["xja52plw"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["aq9ar5xy"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["gknlq48m"] }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ _T["jik0oq9i"] }}</strong>
+                      </td>
+                      <td style="width:20px"></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="spec in specs| magicFilter: textFilter" ng-if="spec.workflow_type_name == 'Servicing'">
+                      <td>{{spec.subproject_nature_name}} <span ng-if="spec.subproject_nature_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.workflow_type_name}} <span ng-if="spec.workflow_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.etape_type_name}} <span ng-if="spec.etape_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.action_type_name}} <span ng-if="spec.action_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+
+                      <td>{{spec.servicing_type_name}} <span ng-if="spec.servicing_type_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.diffuseur_name}} <span ng-if="spec.diffuseur_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.resolution_name}} <span ng-if="spec.resolution_name == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.language || spec.language_labo}} <span ng-if="spec.language == null && spec.language_labo == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.layout_name}} <span ng-if="spec.layout_id == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.dynamic_process}} <span ng-if="spec.dynamic_process == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.type_audio_process}} <span ng-if="spec.type_audio_process == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.subtitle}} <span ng-if="spec.subtitle == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.nature_subtitle}} <span ng-if="spec.nature_subtitle == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.dolbye == 1 + _T["w7redrmn"] || _T["adoyhyi2"] }}</td>
+                      <td>{{spec.projector_aspect}} <span ng-if="spec.projector_aspect == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>{{spec.dcp_standard}} <span ng-if="spec.dcp_standard == null"><i class="fa fa-ellipsis-h"></i></span></td>
+                      <td>
+                        <div class="btn-group-xs btn-group-vertical pull-right" style="margin:0px">
+                          <a href="#/technicalSpecEdit/{{spec.id}}" class="btn btn-xs btn-default">
+                              <i class="glyphicon glyphicon-edit"></i>
+                              {{ _T["rnr4bk5z"] }}</button>
+                          </a>
+                          <button class="btn btn-xs btn-default " ng-click="duplicateList(spec)">
+                            <i class="glyphicon glyphicon-copy"></i>
+                            {{ _T["29do63ej"] }}</button>
+                          <button class="btn btn-xs btn-default " ng-click="addList(spec)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {{ _T["queziuyo"] }}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="mastering">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2" style="margin-top:30px" ng-show="allSteps.length != 0">
+      <input class="form-control" placeholder="{{ _T['rz1fdr0c'] }}" ng-model="list.title" type="text">
+      <ui-select ng-disabled="disabled" ng-model="list.workflow_type_id" style="width: 100%;" theme="bootstrap">
+        <ui-select-match placeholder="{{ _T['fbgskma3'] }}">{{$select.selected.value}}</ui-select-match>
+        <ui-select-choices repeat="item.id as item in workflow_types | propsFilter: {value: $select.search, id: $select.search}">
+          <div ng-bind-html="item.value | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <td>
+              <strong>#</strong>
+            </td>
+            <td>
+              <strong>{{ _T["dfuet0tp"] }}</strong>
+            </td>
+            <td>
+              <strong>{{ _T["r48ex2km"] }}</strong>
+            </td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="step in allSteps">
+            <td>{{$index + 1}}</td>
+            <td>{{step.etape_type_name}}</td>
+            <td>{{step.action_type_name}}</td>
+            <td>
+              <button class="btn btn-xs btn-danger pull-right" ng-click="removeFromList($index)">
+                <i class="fa fa-trash-o"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-success pull-right" ng-click="createList()" ng-show="list.workflow_type_id != null && list.title != ''">{{ _T["72yxd85l"] }}</button>
+    </div>
+
+
+</div>

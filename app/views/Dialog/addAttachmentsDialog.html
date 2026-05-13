@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <h3> {{ _T["gtvu3j6w"] }} <small>{{ _T["06djaui5"] }} {{currentProduct.episode_number|| currentProduct.description_text}}</small></h3>
+    <div ng-if="onLoad" class="text-center">{{ _T["9te4y32c"] }}</div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th><input type="checkbox" ng-click="selectAll(!selectAllAttachment)" ng-model="selectAllAttachment"/></th>
+                <th>{{ _T["qhjsf1e6"] }}</th>
+                <th>{{ _T["d5sogua1"] }}</th>
+                <th style="width:100px">{{ _T["r48ex2km"] }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="attachment in productAttachments | orderBy:'date_created':true">
+                <td><input type="checkbox" ng-model="attachment.isSelected"/></td>
+                <td>{{attachment.original_name}}</td>
+                <td>{{attachment.date_created | asDate | date:"dd/MM/yyyy 'à' HH:mm"}}</td>
+                <td><button ng-click="download(attachment);" class="btn btn-xs btn-success" target="_blank">{{ _T["0kyhuafp"] }}</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-success btn-sm" ng-click="addSelectedAttachments();">{{ _T["wskaqj1f"] }}</button>
+</div>

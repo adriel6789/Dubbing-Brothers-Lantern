@@ -1,0 +1,65 @@
+<div class="container-fluid">
+    <section>
+        <h3 class="mt-10 mb-20"><i class="fa fa-upload"></i> {{ _T["lk275t60"] }}</h3>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <i class="fa fa-file"></i> {{ dubxUploaderFileItem ? dubxUploaderFileItem.file.name : '' }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-show="reels && reels.length > 0">
+            <div class="col-md-12 form-group">
+                <label>{{ _T["rf6oa6d1"] }}</label>
+                <select class="form-control" ng-options="reel for reel in reels" ng-model="selectedReel"
+                    style="min-height: 50px !important">
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <label>{{ _T["ce1b0693"] }}</label>
+                <select class="form-control" ng-options="tag as tag.name for tag in allTags" ng-model="selectedTag"
+                    style="min-height: 50px !important">
+                </select>
+            </div>
+        </div>
+
+        <div class="row" ng-show="dubxLangs && dubxLangs.length > 0">
+            <div class="col-md-12 form-group">
+                <label>{{ _T["jlpma7dj"] }}</label>
+                <select class="form-control" ng-options="lang for lang in dubxLangs" ng-model="selectedLang"
+                    style="min-height: 50px !important">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <label>{{ _T["u3c7q7zx"] }}</label>
+                <select class="form-control" multiple disabled style="min-height: 100px !important; overflow: auto;"
+                    ng-options="tag as (tag.reel ? 'R' + tag.reel + ' - ' : '') + tag.name + (tag.lang ? '_' + tag.lang : '') +  ' (' + tag.fps + ')' for tag in usedTags"
+                    ng-model="unusedTag">
+                </select>
+            </div>
+        </div>
+
+        <div class="row" ng-if="uploadErrorMessage">
+            <div class="col-md-12 form-group">
+                <div style="background-color: pink; padding: 13px 12px;">
+                    {{ uploadErrorMessage }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-30 text-center">
+            <button class="btn btn-primary" ng-disabled="!dubxUploaderFileItem || !selectedTag || (reels && reels.length > 0 && !selectedReel)"
+                ng-click="uploadDubx()">{{
+                _T["lk275t60"] }}</button>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <section>
+        <h3>{{ $root._T["rpskooik"] }}</h3>
+        <div class="col-md-12 panel panel-default mt-10 p-10">
+            <div class="row" ng-show="!is_song">
+
+                <div class="col-md-12">
+                    <i class="fa fa-bullhorn" title="da" style="cursor: pointer;"> </i>
+                    <label class="col-md-4 text-right">{{ $root._T["kup2m5xn"] }}</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="farmer.artistic_director_id" style="width: 100%" theme="bootstrap" on-select="setDirector(farmer, $select.selected, 'artistic_director_id')">
+                            <ui-select-match placeholder="{{ $root._T['kup2m5xn'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                            <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                                <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="is_song">
+                <div class="col-md-12">
+                    <i class="fa fa-bullhorn" title="da" style="cursor: pointer;"> </i>
+                    <label class="col-md-4 text-right">{{ $root._T["6m9z8080"] }}</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="farmer.song_director_id" style="width: 100%" theme="bootstrap" on-select="setDirector(farmer, $select.selected, 'song_director_id')">
+                            <ui-select-match placeholder="{{ $root._T['kup2m5xn'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                            <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                                <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="branchId == 2">
+                <div class="col-md-12">
+                    <i class="fa fa-binoculars" title="stage manager"> </i>
+                    <label class="col-md-4 text-right">Stage manager</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="farmer.stage_manager_id" style="width: 100%" theme="bootstrap" on-select="setDirector(farmer, $select.selected, 'stage_manager_id')">
+                            <ui-select-match placeholder="Stage manager">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                            <ui-select-choices repeat="manager.id as manager in $root.stageManagers | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                                <div ng-bind-html="manager.firstname + ' ' + manager.lastname + ' ' + mainLocationList[manager.main_location].value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn btn-primary pull-right" style="margin-right:10px;" ng-disabled="canSave" ng-click="savePerson()">{{ $root._T["d32u2mga"] }}</button>
+            </div>
+
+        </div>
+        
+    </section>
+</div>

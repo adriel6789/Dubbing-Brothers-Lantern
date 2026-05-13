@@ -1,0 +1,45 @@
+<header>
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <p>
+        {{ _T["xivkgwb0"] }}
+        <span class="pull-right">
+          <a href="" role="button" ng-click="createOrEditClient();" class="btn btn-default btn-text-primary btn-big-shadow"><i class="c-icon c-icon-add"></i> {{ _T["9mwegthq"] }} </a>
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="container-fluid container-fixed-nav-aside header-input-text">
+    <div class="col-sm-12">
+      <form>
+        <div class="form-group search-form">
+          <input type="text" class="form-control input-search" ng-model="nameClientFilter.name" id="" placeholder="{{ _T['i6jp9fto'] }}">
+        </div>
+      </form>
+    </div>
+  </div>
+</header>
+<div class="container-fluid container-fixed-nav-aside">
+  <div class="row">
+    <div class="" style="float:left; margin:10px;" ng-repeat="client in clients | filter:nameClientFilter | orderBy:'name'">
+      <div class="panel panel-default text-center" >
+        <div class="panel-body panel-client"  style="background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 60%, rgba(255,255,255,0.9)), url({{imagesFromBase[client.id] || '../app/img/no-customer.png'}}); height:200px; width:200px; background-size: 200px 200px; background-repeat: no-repeat;">
+          <span class="label label-info" ng-if="client.type_id == 2">{{ _T["irlv7lue"] }}</span>
+          <span class="label label-primary" ng-if="client.type_id == 1">{{ _T["m9dhu6hl"] }}</span>
+          <p class="panel-name-client" title="{{client.id}}">
+            <strong>{{client.name}} </strong>
+          </p>
+        </div>
+        <div ui-sref="app.technicalSpecList({idClient : client.id})" class="panel-footer panel-footer-neutral panel-client">
+          {{ _T["r82kep1b"] }}
+        </div>
+        <div ui-sref="app.stepList({idClient : client.id})" class="panel-footer panel-footer-neutral panel-client">
+          {{ _T["e9qdu5yn"] }}
+        </div>
+        <div class="panel-footer panel-footer-neutral panel-client" ng-click="createOrEditClient(client);">
+          {{ _T["c33oyayd"] }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

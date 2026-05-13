@@ -1,0 +1,8 @@
+
+.st-sort-ascent:before {
+    content: "▲";
+}
+
+.st-sort-descent:before {
+    content: "▼";
+}

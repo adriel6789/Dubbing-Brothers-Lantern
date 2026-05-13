@@ -1,0 +1,12 @@
+<!-- Gestion des cas avec les request associées -->
+<!-- <div class="infobull small-infobull inner-comment" popover-placement="right" uib-popover-template="$ctrl.cell.commentPopoverTemplate" popover-trigger="'outsideClick'" popover-title="Commentaire" tooltip-placement="right"  data-toggle="tooltip" title="{{$ctrl.cell.comment}}">
+  <i class="c-icon c-icon-comment c-icon-shadow "></i>
+  <span ng-if="$ctrl.cell.comment != '' && $ctrl.cell.comment != null" class="infobull-text inner-text">1</span>
+  <span ng-if="!$ctrl.cell.comment || $ctrl.cell.comment == ''" class="infobull-text inner-text">0</span>
+</div> -->
+<div ng-if="$ctrl.action.name != null" ng-switch="$ctrl.action.name">
+  <span ng-show="!$ctrl.request.metrics_start_date && $ctrl.request.farmer_min_date && $ctrl.request.is_planned == 1">{{$ctrl.request.farmer_min_date | date:"dd/MM/yyyy" : ""}}</span>
+  <span ng-show="!$ctrl.request.metrics_start_date && $ctrl.request.farmer_min_date && $ctrl.request.farmer_max_date && $ctrl.request.farmer_max_date.getTime() != $ctrl.request.farmer_min_date.getTime() && $ctrl.request.is_planned == 1"> - {{$ctrl.request.farmer_max_date | date:"dd/MM/yyyy" : ""}}</span>
+  <span ng-show="$ctrl.request.metrics_start_date && $ctrl.request.is_planned == 1">{{$ctrl.request.metrics_start_date | date:"dd/MM/yyyy" : ""}}</span>
+  <span ng-show="$ctrl.request.metrics_end_date && $ctrl.request.is_planned == 1">- {{$ctrl.request.metrics_end_date | date:"dd/MM/yyyy" : ""}}</span>
+</div>

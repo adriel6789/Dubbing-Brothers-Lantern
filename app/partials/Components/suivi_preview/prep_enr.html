@@ -1,0 +1,16 @@
+<!-- Gestion des cas avec les request associées -->
+<div class="row mb-0">
+	<div class="col-md-12 f-13 break-word" ng-if="$ctrl.cell.plain_value">
+		{{$ctrl.cell.plain_value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.action.name != 'prepa_enr_adaptation' && $ctrl.cell.sent_date && !$ctrl.cell.reception_date">
+		{{$ctrl.cell.sent_date}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.action.name != 'prepa_enr_adaptation' && $ctrl.cell.reception_date">
+		{{$ctrl.cell.reception_date}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.note">
+		{{$ctrl.cell.note}}
+	</div>
+</div>
+

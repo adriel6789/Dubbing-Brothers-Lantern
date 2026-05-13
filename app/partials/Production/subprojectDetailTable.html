@@ -1,0 +1,512 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+              <a class="btn btn-default btn-lg btn-big-shadow btn-text-primary" ng-if="$root.canDisplay(23)" href="#/projects" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['rk5npo18'] }}">
+                <i class="c-icon c-icon-arrowLeft"></i></a>
+                {{ _T["5tkpc5to"] }}
+                  {{::projet.name}} -
+                  <span ng-if="subproject.nature.name == 'serie'">{{_T["6vwtywcc"] + ' ' + subproject.season}}</span>
+                  <span ng-if="subproject.nature.name != 'serie'">{{subproject.nature.value}}</span> ({{subproject.nature.value}})
+                  <a href="" ng-click="editSubproject(subproject)"><i class="glyphicon glyphicon-edit" style="font-size:20px;"></i></a>
+            </p>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+  <h2 class="sub-header">
+    <div class="btn-group btn-big-shadow btn-group-vertical pull-right">
+      <button class="btn btn-default btn-text-primary text-left" ng-click="createProduct()">
+        <span class="c-icon c-icon-add"></span>
+        {{ _T["yztihdqz"] }}
+      </button>
+      <button class="btn btn-default btn-text-primary text-left" ng-click="createSubProject()">
+        <span class="c-icon c-icon-add"></span>
+        {{ _T["vxcilqtw"] }}
+      </button>
+      <button class="btn btn-default btn-text-primary text-left" ng-click="createWorkflow()">
+        <span class="c-icon c-icon-add"></span>
+        {{ _T["nexhhzu4"] }}
+      </button>
+    </div>
+  </h2>
+
+  <div class="row text-center">
+    <div class="btn-group" ng-repeat="workflow in subproject_workflows">
+      <button class="btn btn-sm" tooltip-placement="bottom"
+      ng-class="{'workflowUnselect': selectedWorkflowFilter.id != workflow.id && !allWorkflowsSelected}"
+      ng-click="workflowSelected(workflow);"
+      ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')', 'font-weight':'bold', 'color': workflow.color.font}" uib-tooltip-html="workflow.description">
+        <span ng-if="workflow.workflow_type_id == 1">
+          <span class="fa fa-microphone"></span> {{ _T["i5tk31xb"] }}
+        </span>
+        <span ng-if="workflow.workflow_type_id == 2">
+          <span class="fa fa-archive"></span> {{ _T["z20ge21k"] }}
+        </span>
+        <span ng-if="workflow.workflow_type_id == 3">
+          <span class="fa fa-briefcase"></span> {{ _T["1egq4x9k"] }}
+        </span>
+        <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+          - {{::workflow.doublage_type.value}}
+        </span>
+        <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+          - {{::workflow.language.value}}
+        </span>
+        <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+          - {{::workflow.norme_mix.value}}
+        </span>
+        <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+          - {{::workflow.servicing_type.value}}
+        </span>
+        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+          - {{::workflow.resolution.value}}
+        </span>
+        <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+          - {{::workflow.diffuseur.name}}
+        </span>
+        <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+          - {{::workflow.speed.value}}
+        </span>
+        <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+          - {{::workflow.resolution.value}}
+        </span>
+        <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+          - {{::workflow.prod_version}}
+        </span>
+      </button>
+      <button class="btn btn-sm" tooltip-placement="bottom" ng-class="{'workflowUnselect': selectedWorkflowFilter.id != workflow.id && !allWorkflowsSelected}" ng-click="editWorkflow(workflow)" ng-style="{'background-color':'rgb('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+')', 'font-weight':'bold', 'color': workflow.color.font}" data-toggle="tooltip" title="{{ _T['g799mppu'] }}">
+        |
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+    </div>
+  </div>
+
+  <hr>
+
+  <button ng-show="subproject.ownProduct.length != 0 && isProductSelected(subproject.ownProduct)" class="btn btn-default btn-sm" ng-click="newRequestFromProduct(subproject.ownProduct)"><i class="glyphicon glyphicon-open-file"></i> {{ _T["8zes3k7d"] }}</button>
+  <button class="btn btn-default btn-sm" ng-show="selectedWorkflowFilter != null && selectedWorkflowFilter.workflow_type.name == 'servicing'" ng-click="displayMassiveInsert = !displayMassiveInsert">{{ _T["42qmdclf"] }}</button>
+
+  <div ng-show="selectedWorkflowFilter != null && selectedWorkflowFilter.workflow_type.name == 'servicing' && displayMassiveInsert">
+      <div class="col-md-3">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <i class="glyphicon glyphicon-copy"></i> {{ _T["e60nmm64"] }} :
+              </div>
+              <div class="panel-body">
+
+                  <textarea ng-model="excelData" placeholder="{{ _T['1bt63b6n'] }}"></textarea>
+
+
+                  <select ng-model="excelSelectProd">
+                      <option value="title_vo">{{ _T["vf668li1"] }}</option>
+                      <option value="title_vf">{{ _T["s8ywk5cr"] }}</option>
+                      <option value="num_client">{{ _T["fn4lsvg7"] }}</option>
+                  </select>
+                  <button class="btn btn-default" ng-click="excelPasteProd()">
+                      <i class="glyphicon glyphicon-copy"></i>
+                      {{ _T["nd3zi99q"] }}</button>
+
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Tableau pour le servicing -->
+    <div ng-if="selectedWorkflowFilter != null && selectedWorkflowFilter.workflow_type.name == 'servicing'">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><input ng-click="selectAllProducts(subproject)" ng-model="subproject.master" type="checkbox"></th>
+                    <th>{{ _T["06djaui5"] }}</th>
+                    <th>{{ _T["vf668li1"] }}</th>
+                    <th>{{ _T["s8ywk5cr"] }}</th>
+                    <th>{{ _T["0mhweyv2"] }}</th>
+                    <th>{{ _T["lnex2r7c"] }}</th>
+                    <th>{{ _T["ty3o988q"] }}</th>
+                    <th>{{ _T["nrisq69z"] }}</th>
+                    <th>{{ _T["udvvijhg"] }}</th>
+                    <th>{{ _T["qg7rqxc7"] }}</th>
+                    <th>{{ _T["nzjn81uv"] }}</th>
+                    <th>{{ _T["km6j87uy"] }}</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="product in subproject.ownProduct| workflowFilter:selectedWorkflowFilter | orderBy:'episode_number'">
+                <tr>
+                    <td><input ng-model="product.selected" type="checkbox"/></td>
+                    <td>
+                        <a href="#/products/{{product.id}}?workflow_id={{selectedWorkflowFilter.id}}" target="_blank">
+                            <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+                            <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                            <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                        </a>
+                    </td>
+                    <td>
+                        <a blur="ignore" editable-text="product.title_vo" href="#" onaftersave="doneEditing('title_vo', product)">
+                          {{ product.title_vo || _T["fotw2kth"] }}
+                        </a>
+                    </td>
+                    <td>
+                        <a blur="ignore" editable-text="returnContextInfo(product, 'title_vf', selectedWorkflowFilter).value" href="#" onaftersave="doneEditingContextual(returnContextInfo(product, 'title_vf', selectedWorkflowFilter), product, selectedWorkflowFilter, 'title_vf')">
+                          {{ returnContextInfo(product, 'title_vf', selectedWorkflowFilter).value || _T["0mzut3vy"] }}
+                        </a>
+                    </td>
+                    <td>
+                        <a blur="ignore" editable-text="returnContextInfo(product, 'num_client', selectedWorkflowFilter).value" href="#" onaftersave="doneEditingContextual(returnContextInfo(product, 'num_client', selectedWorkflowFilter), product, selectedWorkflowFilter, 'num_client')">
+                          {{ returnContextInfo(product, 'num_client', selectedWorkflowFilter).value || _T["0mzut3vy"] }}
+                        </a>
+                    </td>
+                    <td>
+                        <a blur="ignore" editable-textarea="returnContextInfo(product, 'comment_prod', selectedWorkflowFilter).value" href="#" e-rows="2" e-cols="30" onaftersave="doneEditingContextual(returnContextInfo(product, 'comment_prod', selectedWorkflowFilter), product, selectedWorkflowFilter, 'comment_prod')">
+                          <pre>{{ returnContextInfo(product, 'comment_prod', selectedWorkflowFilter).value }}</pre>
+                        </a>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/requests/detail/{{lastRequest(product, selectedWorkflowFilter).id}}" ng-if="lastRequest(product, selectedWorkflowFilter) != null" target="_blank">
+                              <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{lastRequest(product, selectedWorkflowFilter).tooltipFlag}}" type="button">
+                                <span class="glyphicon glyphicon-flag" ng-if="lastRequest(product, selectedWorkflowFilter).ownReturn.length != 0" style="color: red"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="lastRequest(product, selectedWorkflowFilter).is_planned == 0 && lastRequest(product, selectedWorkflowFilter).is_in_progress == 0 && lastRequest(product, selectedWorkflowFilter).is_not_done == 0" style="color: black"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="lastRequest(product, selectedWorkflowFilter).is_done == 1" style="color: green"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="lastRequest(product, selectedWorkflowFilter).is_not_done == 1" style="color: darkorange"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="(lastRequest(product, selectedWorkflowFilter).is_planned == 1 || lastRequest(product, selectedWorkflowFilter).is_in_progress == 1) &&
+                                                      !(lastRequest(product, selectedWorkflowFilter).is_done == 1 || lastRequest(product, selectedWorkflowFilter).is_not_done == 1)" style="color: deepskyblue"></span>
+                                {{lastRequest(product, selectedWorkflowFilter).action_type.etape_type.value}}
+                                -
+                                {{lastRequest(product, selectedWorkflowFilter).action_type.value}}
+                                <br/>
+                                <span ng-if="lastRequest(product, selectedWorkflowFilter).is_planned == 0 && lastRequest(product, selectedWorkflowFilter).is_in_progress == 0 && lastRequest(product, selectedWorkflowFilter).is_not_done == 0">
+                                    {{lastRequest(product, selectedWorkflowFilter).date_creation | asDate | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="(lastRequest(product, selectedWorkflowFilter).is_planned == 1 || lastRequest(product, selectedWorkflowFilter).is_in_progress == 1) && !(lastRequest(product, selectedWorkflowFilter).is_done == 1 || lastRequest(product, selectedWorkflowFilter).is_not_done == 1)">
+                                    {{lastRequest(product, selectedWorkflowFilter).planification_date | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="lastRequest(product, selectedWorkflowFilter).is_done == 1">
+                                    {{lastRequest(product, selectedWorkflowFilter).closing_date | date:'dd/MM/yyyy'}}
+                                </span>
+                              </button>
+                            </a>
+                            <section ng-if="lastRequest(product, selectedWorkflowFilter).ownComment != null">
+                              <div class="text-center">
+                                <a class="btn btn-xs btn-link" ng-click="showComments = !showComments" ng-show="lastRequest(product, selectedWorkflowFilter).ownComment != 0 && !showComments">
+                                  <i class="glyphicon glyphicon-eye-open"></i>
+                                  {{ _T["23wrcfrg"] }} ({{count(lastRequest(product, selectedWorkflowFilter).ownComment)}})
+                                </a>
+                                <a class="btn btn-xs btn-link" ng-click="showComments = !showComments" ng-show="lastRequest(product, selectedWorkflowFilter).ownComment != 0 && showComments">
+                                  <i class="glyphicon glyphicon-eye-close"></i>
+                                  {{ _T["opdvdk4c"] }}
+                                </a>
+                              </div>
+                              <div ng-if="showComments" class="well well-sm">
+                                <div  ng-repeat="comment in lastRequest(product, selectedWorkflowFilter).ownComment | orderBy:'date_creation':true">
+                                  <hr style="margin-top:0px; margin-bottom:3px" ng-show="$index > 0">
+                                  <strong class="pull-left primary-font">{{comment.user.person.firstname}} {{comment.user.person.lastname}}</strong>
+                                  <small>
+                                    <small><span class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span> {{comment.date_creation | asDate | date:"dd/MM/yyyy HH:mm"}}</span></small>
+                                  </small>
+                                  <br/>
+                                  <div>{{comment.text}}</div>
+                                </div>
+                              </div>
+                            </section>
+                        </div>
+                        <div ng-if="lastRequest(product, selectedWorkflowFilter) == null">
+                             <button class="btn btn-sm btn-default disabled" data-placement="bottom" type="button">{{ _T["uwyqwm23"] }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <a blur="ignore" editable-text="returnContextInfo(product, 'date_diff', selectedWorkflowFilter).value" href="#" onaftersave="doneEditingContextual(returnContextInfo(product, 'date_diff', selectedWorkflowFilter), product, selectedWorkflowFilter, 'date_diff')">
+                          {{ returnContextInfo(product, 'date_diff', selectedWorkflowFilter).value || _T["0mzut3vy"] }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#/manageReturns/{{product.id}}" target="_blank"><span class="label label-danger" style="font-size:14px;" ng-if="countReturn(product, selectedWorkflowFilter) > 0">{{countReturn(product, selectedWorkflowFilter)}}</span></a>
+                        <a href="#/manageReturns/{{product.id}}" target="_blank"><span class="label label-success" ng-if="countReturn(product, selectedWorkflowFilter) == 0">0</span></a>
+                    </td>
+                    <td>
+                        <p ng-repeat="attachment in attachmentsOnWorkflow(product, selectedWorkflowFilter) | limitTo: limit[product.id+'_'+selectedWorkflowFilter.id]">
+                            <a href="{{url_api}}{{attachment.path}}" target="_blank">{{attachment.original_name}}</a>
+                        </p>
+                        <button ng-show="!showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] && attachmentsOnWorkflow(product, selectedWorkflowFilter).length > 2" type="button" ng-click="limit[product.id+'_'+selectedWorkflowFilter.id] = 100; showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] = true" class="btn btn-link btn-xs">
+                          {{ _T["dtxaskq5"] }}
+                        </button>
+                        <button ng-show="showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] == true" type="button" ng-click="limit[product.id+'_'+selectedWorkflowFilter.id] = 2; showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] = false" class="btn btn-link btn-xs">
+                          {{ _T["1i71noks"] }}
+                        </button>
+                        <p ng-if="attachmentsOnWorkflow(product, selectedWorkflowFilter).length == 0">
+                            {{ _T["kqjrapcr"] }}
+                        </p>
+                    </td>
+                    <td>
+                        <a href="#" blur="ignore" editable-textarea="returnContextInfo(product, 'notes_prod', selectedWorkflowFilter).value" e-rows="2" e-cols="30" onaftersave="doneEditingContextual(returnContextInfo(product, 'notes_prod', selectedWorkflowFilter), product, selectedWorkflowFilter, 'notes_prod')">
+                            <pre>{{ returnContextInfo(product, 'notes_prod', selectedWorkflowFilter).value }}</pre>
+                        </a>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-vertical btn-group-sm">
+                        <a href="#/products/{{product.id}}/mediaItems" class="btn btn-default btn-sm" target="_blank">{{ _T["tp9x2vk5"] }}</a>
+                        <button type="button" ng-click="timeline = !timeline" class="btn btn-primary btn-sm">
+                          {{ _T["wfv0dreu"] }}
+                        </button>
+                      </div>
+
+                    </td>
+                </tr>
+                <tr ng-show="timeline">
+                  <td colspan="12">
+                    <vis-timeline data="getTimelineByProductAndWorkflow(product, selectedWorkflowFilter)" options="options"></vis-timeline>
+                  </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tableau pour le doublage -->
+    <div ng-if="selectedWorkflowFilter != null && selectedWorkflowFilter.workflow_type.name == 'doublage'">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><input ng-click="selectAllProducts(subproject)" ng-model="subproject.master" type="checkbox"></th>
+                    <th>{{ _T["06djaui5"] }}</th>
+                    <th>{{ _T["8cas229y"] }}</th>
+                    <th>{{ _T["kgty7www"] }}</th>
+                    <th>{{ _T["wit1j843"] }}</th>
+                    <th>{{ _T["ri4arulz"] }}</th>
+                    <th>{{ _T["zel3ffi1"] }}</th>
+                    <th>{{ _T["cqp49ff7"] }}</th>
+                    <th>{{ _T["udvvijhg"] }}</th>
+                    <th>{{ _T["qg7rqxc7"] }}</th>
+                    <th>{{ _T["nzjn81uv"] }}</th>
+                    <th>{{ _T["km6j87uy"] }}</th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="product in subproject.ownProduct| workflowFilter:selectedWorkflowFilter | orderBy:'episode_number' ">
+                <tr >
+                    <td>
+                            <!-- <input type="checkbox" ng-model="method.important" ng-checked="method.important" name="onoffswitch"  id="myonoffswitch"> -->
+
+                        <input id='{{::product.id}}' ng-model="product.selected" type="checkbox"/>
+                        <label for='{{::product.id}}'></label>
+                    </td>
+                    <td>
+                        <a href="#/products/{{product.id}}?workflow_id={{selectedWorkflowFilter.id}}" target="_blank">
+                            <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{::product.episode_number}}</span>
+                            <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{::product.description.value}}</span>
+                            <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{::product.description_text}}</span>
+                        </a>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/requests/detail/{{product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.id}}" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio != null" target="_blank">
+                              <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.tooltipFlag}}" type="button">
+                                <span class="glyphicon glyphicon-flag" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.ownReturn.length != 0" style="color: red"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_not_done == 0" style="color: black"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_done == 1" style="color: green"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_not_done == 1" style="color: darkorange"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_in_progress == 1) &&
+                                                      !(product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_not_done == 1)" style="color: deepskyblue"></span>
+                                {{product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.action_type.value}}
+                                <br/>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_not_done == 0">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.date_creation | asDate | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_in_progress == 1) && !(product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_not_done == 1)">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.planification_date | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.is_done == 1">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio.closing_date | date:'dd/MM/yyyy'}}
+                                </span>
+                              </button>
+                            </a>
+                        </div>
+                        <div ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastPrepaAudio == null">
+                             <button class="btn btn-sm btn-default disabled" data-placement="bottom" type="button">{{ _T["uwyqwm23"] }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/requests/detail/{{product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.id}}" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement != null" target="_blank">
+                              <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.tooltipFlag}}" type="button">
+                                <span class="glyphicon glyphicon-flag" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.ownReturn.length != 0" style="color: red"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_not_done == 0" style="color: black"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_done == 1" style="color: green"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_not_done == 1" style="color: darkorange"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_in_progress == 1) &&
+                                                      !(product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_not_done == 1)" style="color: deepskyblue"></span>
+                                {{product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.action_type.value}}
+                                <br/>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_not_done == 0">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.date_creation | asDate | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_in_progress == 1) && !(product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_not_done == 1)">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.planification_date | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.is_done == 1">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement.closing_date |  date:'dd/MM/yyyy'}}
+                                </span>
+                              </button>
+                            </a>
+                        </div>
+                        <div ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastEnregistrement == null">
+                             <button class="btn btn-sm btn-default disabled" data-placement="bottom" type="button">{{ _T["uwyqwm23"] }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/requests/detail/{{product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.id}}" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_done != null" target="_blank">
+                              <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.tooltipFlag}}" type="button">
+                                <span class="glyphicon glyphicon-flag" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.ownReturn.length != 0" style="color: red"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_not_done == 0" style="color: black"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_done == 1" style="color: green"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_not_done == 1" style="color: darkorange"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_in_progress == 1) &&
+                                                      !(product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_not_done == 1)" style="color: deepskyblue"></span>
+                                {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.action_type.value}}
+                                <br/>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_not_done == 0">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.date_creation | asDate | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_in_progress == 1) && !(product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.is_not_done == 1)">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.planification_date | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage == null">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage.closing_date | date:'dd/MM/yyyy'}}
+                                </span>
+                              </button>
+                            </a>
+                        </div>
+                        <div ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMontage == null">
+                             <button class="btn btn-sm btn-default disabled" data-placement="bottom" type="button">{{ _T["uwyqwm23"] }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/requests/detail/{{product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.id}}" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage != null" target="_blank">
+                              <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.tooltipFlag}}" type="button">
+                                <span class="glyphicon glyphicon-flag" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.ownReturn.length != 0" style="color: red"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_not_done == 0" style="color: black"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_done == 1" style="color: green"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_not_done == 1" style="color: darkorange"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_in_progress == 1) &&
+                                                      !(product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_not_done == 1)" style="color: deepskyblue"></span>
+                                {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.action_type.value}}
+                                <br/>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_not_done == 0">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.date_creation | asDate | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_in_progress == 1) && !(product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_not_done == 1)">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.planification_date | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.is_done == 1">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage.closing_date | date:'dd/MM/yyyy'}}
+                                </span>
+                              </button>
+                            </a>
+                        </div>
+                        <div ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastMixage == null">
+                             <button class="btn btn-sm btn-default disabled" data-placement="bottom" type="button">{{ _T["uwyqwm23"] }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/requests/detail/{{product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.id}}" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication != null" target="_blank">
+                              <button class="btn btn-sm btn-default" data-placement="bottom" data-toggle="tooltip" title="{{product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.tooltipFlag}}" type="button">
+                                <span class="glyphicon glyphicon-flag" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.ownReturn.length != 0" style="color: red"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_not_done == 0" style="color: black"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_done == 1" style="color: green"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_not_done == 1" style="color: darkorange"></span>
+                                <span class="glyphicon glyphicon-record" ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_in_progress == 1) &&
+                                                      !(product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_not_done == 1)" style="color: deepskyblue"></span>
+                                {{product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.action_type.value}}
+                                <br/>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_planned == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_in_progress == 0 && product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_not_done == 0">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.date_creation | asDate | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="(product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_planned == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_in_progress == 1) && !(product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_done == 1 || product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_not_done == 1)">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.planification_date | date:'dd/MM/yyyy'}}
+                                </span>
+                                <span ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.is_done == 1">
+                                    {{product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication.closing_date | date:'dd/MM/yyyy'}}
+                                </span>
+                              </button>
+                            </a>
+                        </div>
+                        <div ng-if="product.requestsWorkflow[selectedWorkflowFilter.id].lastFabrication == null">
+                             <button class="btn btn-sm btn-default disabled" data-placement="bottom" type="button">{{ _T["uwyqwm23"] }}</button>
+                        </div>
+                    </td>
+                    <td>
+                        <a blur="ignore" editable-text="returnContextInfo(product, 'due_date', selectedWorkflowFilter).value" href="#" onaftersave="doneEditingContextual(returnContextInfo(product, 'due_date', selectedWorkflowFilter), product, selectedWorkflowFilter, 'due_date')">
+                          {{ returnContextInfo(product, 'due_date', selectedWorkflowFilter).value || _T["0mzut3vy"] }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#/manageReturns/{{product.id}}" target="_blank"><span class="label label-danger" style="font-size:14px;" ng-if="countReturn(product, selectedWorkflowFilter) > 0">{{countReturn(product, selectedWorkflowFilter)}}</span></a>
+                        <a href="#/manageReturns/{{product.id}}" target="_blank"><span class="label label-success" ng-if="countReturn(product, selectedWorkflowFilter) == 0">0</span></a>
+                    </td>
+                    <td>
+                        <p ng-repeat="attachment in attachmentsOnWorkflow(product, selectedWorkflowFilter) | limitTo: limit[product.id+'_'+selectedWorkflowFilter.id]">
+                            <a href="{{url_api}}{{attachment.path}}" target="_blank">{{attachment.original_name}}</a>
+                        </p><button ng-show="!showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] && attachmentsOnWorkflow(product, selectedWorkflowFilter).length > 2" type="button" ng-click="limit[product.id+'_'+selectedWorkflowFilter.id] = 100; showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] = true" class="btn btn-link btn-xs">
+                          {{ _T["dtxaskq5"] }}
+                        </button>
+                        <button ng-show="showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] == true" type="button" ng-click="limit[product.id+'_'+selectedWorkflowFilter.id] = 2; showAllAttachments[product.id+'_'+selectedWorkflowFilter.id] = false" class="btn btn-link btn-xs">
+                          {{ _T["1i71noks"] }}
+                        </button>
+                        <p ng-if="attachmentsOnWorkflow(product, selectedWorkflowFilter).length == 0">
+                            {{ _T["kqjrapcr"] }}
+                        </p>
+                    </td>
+                    <td>
+                        <a href="#" blur="ignore" editable-textarea="returnContextInfo(product, 'notes_prod', selectedWorkflowFilter).value" e-rows="2" e-cols="30" onaftersave="doneEditingContextual(returnContextInfo(product, 'notes_prod', selectedWorkflowFilter), product, selectedWorkflowFilter, 'notes_prod')">
+                            <pre>{{ returnContextInfo(product, 'notes_prod', selectedWorkflowFilter).value }}</pre>
+                        </a>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-vertical btn-group-sm">
+                        <a href="#/products/{{product.id}}/mediaItems" class="btn btn-primary btn-sm" target="_blank">{{ _T["tp9x2vk5"] }}</a>
+                        <!-- <button type="button" ng-click="timeline = !timeline" class="btn btn-primary btn-sm">
+                          Voir la timeline
+                        </button> -->
+                      </div>
+
+                    </td>
+                </tr>
+                <!-- <tr ng-show="timeline">
+                  <td colspan="12">
+                    <vis-timeline data="getTimelineByProductAndWorkflow(product, selectedWorkflowFilter)" options="options"></vis-timeline>
+                  </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tableau pour le mastering -->
+    <!-- TODO -->
+
+    <div ng-if="selectedWorkflowFilter == null" class="text-center">
+        <div class="alert alert-warning" role="alert">{{ _T["q7o6edst"] }}</div>
+    </div>
+    <button ng-show="subproject.ownProduct.length != 0 && isProductSelected(subproject.ownProduct)" class="btn btn-default btn-sm" ng-click="newRequestFromProduct(subproject.ownProduct)"><i class="glyphicon glyphicon-open-file"></i> {{ _T["8zes3k7d"] }}</button>
+
+    <div class="text-center">
+        <a href="#/subprojectsAdvanced/{{subproject.id}}"><button class="btn btn-default"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["8qd2rfoq"] }}</button></a>
+        <a href="#/suiviProd/{{subproject.id}}"><button class="btn btn-default" title="{{ _T['4xkb1w0k'] }}">
+          <i class="fa fa-exchange"></i>
+          {{ _T["z3q7vofm"] }}
+        </button></a>
+    </div>
+
+    <hr>
+    <div class="text-center" >
+      <div class="alert alert-info col-md-offset-3 col-md-6" role="alert">{{ _T["v0d53mq7"] }}
+        <br>
+      <a class="btn btn-default" href="#/products/{{product.id}}?workflow_id={{selectedWorkflowFilter.id}}" target="_blank" ng-repeat="product in subproject.ownProduct | orderBy: ['episode_number','description_text'] ">
+          Détail
+          <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+          <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+          <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+      </a>
+      </div>
+    </div>
+</div>

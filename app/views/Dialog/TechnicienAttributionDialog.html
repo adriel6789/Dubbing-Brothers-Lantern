@@ -1,0 +1,100 @@
+<div class="container-fluid">
+  <h3>{{ _T["bapj5lr2"] }} :</h3>
+  <div class="col-md-4">
+    <div class="input-group">
+      <span class="input-group-addon" style="width: 100px"><i class="fa fa-wrench fa-fw"></i> {{ _T["peh5x5iu"] }}</span>
+      <ui-select on-select="selectTechWriter($item,$model)" ng-model="tech_writer" theme="bootstrap" ng-disabled="disabled" style="width: 500px">
+      <ui-select-match>{{$select.selected.name}}</ui-select-match>
+      <ui-select-choices repeat="tech in allTechs | propsFilter: {name: $select.search, id: $select.search} | orderBy: tech.name">
+      <div ng-bind-html="tech.name | highlight: $select.search"></div>
+      </ui-select-choices>
+      </ui-select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" style="width: 100px"><i class="fa fa-book fa-fw"></i> {{ _T["npaxq3f4"] }}</span>
+      <ui-select on-select="selectTechReader($item,$model)" ng-model="tech_reader" theme="bootstrap" ng-disabled="disabled" style="width: 500px">
+      <ui-select-match>{{$select.selected.name}}</ui-select-match>
+      <ui-select-choices repeat="tech in allTechs | propsFilter: {name: $select.search, id: $select.search} | orderBy: tech.name">
+      <div ng-bind-html="tech.name | highlight: $select.search"></div>
+      </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+  <div class="col-md-8 text-right">
+    <span ng-if="requestToSend != null">
+      <h3>{{::requestToSend.action_type.etape_type.value}} - {{::requestToSend.action_type.value}} <small>{{::requestToSend.product.human_description}}</small></h3>
+    </span>
+    <span ng-if="farmersToSend != null">
+      <h3>{{farmersToSend[0].requests[0].action_type.etape_type.value}} - {{farmersToSend[0].requests[0].action_type.value}}
+      <small>
+      {{farmersToSend[0].requests[0].product.project.name}}
+      <span>{{farmersToSend[0].requests[0].product.subproject.project.name}}
+      -</span>
+      <span ng-if="farmersToSend[0].requests[0].product.subproject.nature.name == 'serie'">
+        {{ _T["6vwtywcc"] }} {{farmersToSend[0].requests[0].product.subproject.season}}
+      </span>
+      <span ng-if="farmersToSend[0].requests[0].product.subproject.nature.name != 'serie'">
+        {{farmersToSend[0].requests[0].product.subproject.nature.value}}
+      </span>
+      </small>
+      </h3>
+    </span>
+  </div>
+  <br>
+  <button ng-if="selectedFarmer.length > 0 && tech_writer != null && requestToSend != null" class="btn btn-success pull-right" ng-click="sendRequestFarmer()"><span class="glyphicon glyphicon-send"></span> {{ _T["cefm3w2w"] }}</button>
+  <button ng-if="selectedFarmer.length > 0 && tech_writer != null && farmersToSend != null" class="btn btn-success pull-right" ng-click="sendRequestsFarmer()"><span class="glyphicon glyphicon-send"></span> {{ _T["xv27xmfr"] }}</button>
+  <button ng-if="requestToSend.action_type.planning == 'parallele' && tech_writer != null" class="btn btn-success pull-right" ng-click="sendRequestsInternal()"><span class="glyphicon glyphicon-send"></span> {{ _T["igy5e2ng"] }}</button>
+  <button ng-if="requestsToSend[0].action_type.planning == 'parallele' && tech_writer != null" class="btn btn-success pull-right" ng-click="sendRequestsInternal()"><span class="glyphicon glyphicon-send"></span> {{ _T["igy5e2ng"] }}</button>
+  <div class="clearfix"></div>
+  <section ng-if="requestToSend != null">
+    <h3 ng-show="requestToSend.ownFarmerbookings.length != 0">{{ _T["k5obz9q2"] }} :</h3>
+    <div class="row">
+      <div class="col-md-3" ng-repeat="farmer in requestToSend.ownFarmerbookings" ng-click="selectFarmer(farmer)" ng-class="{'farmer-selected' : farmer.selected == 1}" ng-if="farmer.is_selected != 1">
+        <div class="panel panel-default " >
+          <div class="panel-heading"><span class="glyphicon glyphicon-file"></span> {{ _T["rkfedl4m"] }} <strong>{{farmer.day | asDate | date:"dd/MM/yyyy"}}</strong></div>
+          <div class="panel-body">
+            <span class="glyphicon glyphicon-time"></span> {{ _T["2lq5g7zj"] }} : {{farmer.start_time}} - {{farmer.end_time}}
+            <br/>
+            <span class="glyphicon glyphicon-cog"></span> {{ _T["0y1qimug"] }} : {{farmer.ingenieur}}
+            <br/>
+            <span class="glyphicon glyphicon-record"></span> {{ _T["82k00at3"] }} : {{farmer.recorder}}
+            <br/>
+            <!-- <span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} : directeur artistique -->
+            <br/>
+            <span class="glyphicon glyphicon-tower"></span> {{ _T["h9ox64fe"] }} : {{farmer.audit}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section ng-if="farmersToSend != null">
+    <h3>{{ _T["k5obz9q2"] }} :</h3>
+    <div class="row">
+      <div class="col-md-3" ng-repeat="farmerEntity in farmersToSend" ng-click="selectFarmer(farmerEntity.farmer, farmerEntity.requests)" ng-class="{'farmer-selected' : farmerEntity.farmer.selected}" ng-if="farmerEntity.farmer.is_selected != 1">
+        <div class="panel panel-default " >
+          <div class="panel-heading"><span class="glyphicon glyphicon-file"></span> {{ _T["rkfedl4m"] }} <strong>{{farmerEntity.farmer.day | asDate | date:"dd/MM/yyyy"}}</strong></div>
+          <div class="panel-body">
+            <span class="glyphicon glyphicon-time"></span> {{ _T["2lq5g7zj"] }} : {{farmerEntity.farmer.start_time}} - {{farmerEntity.farmer.end_time}}
+            <br/>
+            <span class="glyphicon glyphicon-cog"></span> {{ _T["0y1qimug"] }} : {{farmerEntity.farmer.ingenieur}}
+            <br/>
+            <span class="glyphicon glyphicon-record"></span> {{ _T["82k00at3"] }} : {{farmerEntity.farmer.recorder}}
+            <br/>
+            <!-- <span class="glyphicon glyphicon-bullhorn"></span> {{ _T["kup2m5xn"] }} : directeur artistique -->
+            <br/>
+            <span class="glyphicon glyphicon-tower"></span> {{ _T["h9ox64fe"] }} : {{farmerEntity.farmer.audit}}
+            <br/>
+            <span class="glyphicon glyphicon-film"></span> {{ _T["ba0heyvu"] }} : <span ng-repeat="req in farmerEntity.requests | orderBy:'product.human_description'">
+            {{req.product.episode_number || req.product.description_text}}<span ng-if="$index < farmerEntity.requests.length-1">,</span>
+          </span></i>{{farmerEntity.audit}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<button ng-if="selectedFarmer.length > 0 && tech_writer != null && requestToSend != null" class="btn btn-success pull-right" ng-click="sendRequestFarmer()"><span class="glyphicon glyphicon-send"></span> {{ _T["cefm3w2w"] }}</button>
+<button ng-if="selectedFarmer.length > 0 && tech_writer != null && farmersToSend != null" class="btn btn-success pull-right" ng-click="sendRequestsFarmer()"><span class="glyphicon glyphicon-send"></span> {{ _T["xv27xmfr"] }}</button>
+<br/>
+<button ng-if="requestToSend.action_type.planning == 'parallele' && tech_writer != null" class="btn btn-success pull-right" ng-click="sendRequestsInternal()"><span class="glyphicon glyphicon-send"></span> {{ _T["igy5e2ng"] }}</button>
+<button ng-if="requestsToSend[0].action_type.planning == 'parallele' && tech_writer != null" class="btn btn-success pull-right" ng-click="sendRequestsInternal()"><span class="glyphicon glyphicon-send"></span> {{ _T["igy5e2ng"] }}</button>
+</div>

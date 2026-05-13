@@ -1,0 +1,1049 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                <a class="btn btn-default btn-lg btn-big-shadow btn-text-primary" ng-if="!isTechnician" href="#/technicalSpecList/{{client.id}}" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['lwfnfxr0'] }}">
+                    <i class="c-icon c-icon-arrowLeft"></i></a>
+                {{ _T["z0p8lmho"] }}
+                  {{::client.name| uppercase}}
+                  <a ng-if="isEdit == true && !isTechnician" ng-click="deleteSpec()" role="button" class="btn btn-danger btn-big-shadow pull-right"><i class="c-icon c-icon-trash"></i> {{ _T["2b72z4yo"] }}</a>
+            </p>
+        </div>
+    </div>
+
+</header>
+
+<div class="container-fluid container-fixed-nav-aside" style="margin-top:30px">
+    <div class="panel panel-primary">
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                          <button type="button" ng-disabled=isTechnician ng-class="{'btn-primary' : entity.type_workflow == 1}" class="btn btn-default btn-block" ng-click="selectWorkflow(1)">
+                              <i class="fa fa-microphone"></i> {{ _T["i5tk31xb"] }}
+                          </button>
+                        </div>
+                        <div class="btn-group">
+                          <button type="button" ng-disabled=isTechnician ng-class="{'btn-primary' : entity.type_workflow == 2}" class="btn btn-default btn-block" ng-click="selectWorkflow(2)">
+                              <i class="fa fa-archive"></i> {{ _T["z20ge21k"] }}
+                          </button>
+                        </div>
+                        <div class="btn-group">
+                          <button type="button" ng-disabled=isTechnician ng-class="{'btn-primary' : entity.type_workflow == 3}" class="btn btn-default btn-block" ng-click="selectWorkflow(3)">
+                              <i class="fa fa-briefcase"></i> {{ _T["1egq4x9k"] }}
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+            <section ng-if="entity.type_workflow != null">
+            <hr/>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                      <i class="glyphicon glyphicon-tag"></i> {{ _T["dfuet0tp"] }}
+                  </span>
+                  <ui-select ng-disabled=isTechnician on-select="showSelectedEtape($item,$model)" ng-model="entity.etape_type_id" theme="bootstrap" style="width: 100%;">
+                      <ui-select-match placeholder="{{ _T['dfuet0tp'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="etape.id as etape in etapes_types | propsFilter: {value: $select.search, id: $select.search}">
+                          <div ng-bind-html="etape.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                  </ui-select>
+
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="input-group" ng-if="entity.etape_type_id">
+                  <span class="input-group-addon">
+                      <i class="glyphicon glyphicon-tags"></i> {{ _T["r48ex2km"] }}
+                  </span>
+                  <ui-select ng-disabled=isTechnician ng-model="entity.action_type_id" theme="bootstrap" style="width: 100%;">
+                      <ui-select-match placeholder="{{ _T['r48ex2km'] }}">{{$select.selected.value}}</ui-select-match>
+                      <ui-select-choices repeat="action.id as action in action_types track by $index | propsFilter: {value: $select.search, id: $select.search}">
+                          <div ng-bind-html="action.value | highlight: $select.search"></div>
+                      </ui-select-choices>
+                  </ui-select>
+
+                </div>
+              </div>
+
+            </div>
+
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-file"></span> {{ _T["2w7jtwr8"] }}
+                        </div>
+                        <div class="panel-body">
+                          <section ng-if="entity.type_workflow == 1"><!-- Section doublage -->
+                            <div class="col-md-6">
+                              <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-random"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.exploitation_id" theme="bootstrap"
+                                on-select="itemNull(entity.exploitation_id, 'exploitation_id')"
+                                  style="width: 100%;" >
+                                    <ui-select-match allow-clear placeholder="{{ _T['hbtvjrk1'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="workflow.id as workflow in exploitation_types | propsFilter: {value: $select.search, id: $select.search}">
+                                        <div ng-bind-html="workflow.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-volume-up"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.doublage_type_id"
+                                on-select="itemNull(entity.doublage_type_id, 'doublage_type_id')"
+                                 theme="bootstrap"  style="width: 100%;" >
+                                    <ui-select-match allow-clear placeholder="{{ _T['sl5qnahw'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="doublage_type.id as doublage_type in doublage_types | propsFilter: {value: $select.search, id: $select.search}">
+                                        <div ng-bind-html="doublage_type.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="input-group" >
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-flag"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.language_id"
+                                on-select="itemNull(entity.language_id, 'language_id')"
+                                 theme="bootstrap"  style="width: 100%;" >
+                                    <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="language.id as language in languages | propsFilter: {value: $select.search, id: $select.search}">
+                                        <div ng-bind-html="language.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                              </div>
+                              </div>
+                              <div class="col-md-6">
+                              <div class="input-group" >
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-sound-dolby"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.format_mix_id"
+                                on-select="itemNull(entity.format_mix_id, 'format_mix_id')"
+                                 theme="bootstrap"  style="width: 100%;" >
+                                    <ui-select-match allow-clear placeholder="{{ _T['l5mah47l'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="formatmix.id as formatmix in formatmixs | propsFilter: {value: $select.search, id: $select.search}">
+                                        <div ng-bind-html="formatmix.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="input-group" >
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-unchecked"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.norme_mix_id" theme="bootstrap" on-select="itemNull(entity.norme_mix_id, 'norme_mix_id')"  style="width: 100%;" >
+                                    <ui-select-match allow-clear placeholder="{{ _T['5zr61zuf'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="normemix.id as normemix in normesmix | propsFilter: {value: $select.search, id: $select.search}">
+                                        <div ng-bind-html="normemix.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="input-group" >
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-dashboard"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.speed_id"
+                                on-select="itemNull(entity.speed_id, 'speed_id')" theme="bootstrap" style="width: 100%;" >
+                                    <ui-select-match allow-clear placeholder="{{ _T['noa1wtgc'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="speed.id as speed in speeds | propsFilter: {value: $select.search, id: $select.search}">
+                                        <div ng-bind-html="speed.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                              </div>
+                            </div>
+
+
+                          <div class="col-md-12">
+                            <div class="input-group" >
+                              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                              <input ng-disabled=isTechnician  ng-model="entity.prod_version" placeholder="{{ _T['cq02isiz'] }}" type="text" class="form-control"/>
+                            </div>
+                          </div>
+                          </section>
+                          <section ng-if="entity.type_workflow == 2"> <!-- Section Mastering -->
+
+                          </section>
+
+                          <section  ng-if="entity.type_workflow == 3"> <!-- Section Servicing -->
+                            <div class="col-md-6">
+                              <div class="input-group" >
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-random"></i></span>
+                                <ui-select ng-disabled=isTechnician ng-model="entity.servicing_type_id" on-select="itemNull(entity.servicing_type_id, 'servicing_type_id')" style="width: 100%;" theme="bootstrap">
+                                  <ui-select-match allow-clear placeholder="{{ _T['fa1lnlij'] }}">{{$select.selected.value}}</ui-select-match>
+                                  <ui-select-choices repeat="item.id as item in servicing_types | propsFilter: {value: $select.search, id: $select.search}">
+                                    <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                  </ui-select-choices>
+                                </ui-select>
+                              </div>
+                            </div>
+
+                            <section ng-if="entity.servicing_type_id == 1"> <!-- Bloc PAD -->
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.diffuseur_id" on-select="itemNull(entity.diffuseur_id, 'diffuseur_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['irlv7lue'] }}">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in diffuseurs | propsFilter: {name: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-fullscreen"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.resolution_id" on-select="itemNull(entity.resolution_id, 'resolution_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['wrctg8ou'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-flag"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.language_labo" on-select="itemNull(entity.language_labo, 'language_labo')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in languages_labo | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-sound-5-1"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.layout_id" on-select="itemNull(entity.layout_id, 'layout_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in layouts | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-headphones"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.dynamic_process" on-select="itemNull(entity.dynamic_process, 'dynamic_process')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['s8xaaxu2'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in dynamic_processes | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-signal"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.type_audio_process" on-select="itemNull(entity.type_audio_process, 'type_audio_process')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['iprheja8'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in audio_processes | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-font"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.subtitle" on-select="itemNull(entity.subtitle, 'subtitle')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['7xhlusz8'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in subtitles | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-font"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.nature_subtitle" on-select="itemNull(entity.nature_subtitle, 'nature_subtitle')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['lmvddeqr'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in nature_subtitle | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-sound-dolby"></i></span>
+                                  <span class="input-group-addon" >DolbyE</span>
+                                  <span class="input-group-btn" style="width: 100%;">
+                                    <button class="btn btn-info btn-block" ng-click="entity.dolbye = false" type="button" ng-if="entity.dolbye">{{ _T["w7redrmn"] }}</button>
+                                    <button class="btn btn-default btn-block" ng-click="entity.dolbye = true" type="button" ng-show="entity.dolbye == false || entity.dolbye == null">{{ _T["adoyhyi2"] }}</button>
+                                  </span>
+                                </div>
+                              </div>
+
+                            </section> <!-- Fin bloc PAD -->
+
+                            <section ng-if="entity.servicing_type_id == 2"> <!-- Bloc VOD -->
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.diffuseur_id" on-select="itemNull(entity.diffuseur_id, 'diffuseur_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['irlv7lue'] }}">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in diffuseurs | propsFilter: {name: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-fullscreen"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.resolution_id" on-select="itemNull(entity.resolution_id, 'resolution_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['wrctg8ou'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-flag"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.language.id" on-select="itemNull(entity.language_id, 'language_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in languages | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-sound-5-1"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.layout_id" on-select="itemNull(entity.layout_id, 'layout_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in layouts | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+
+                            </section> <!-- fin Bloc VOD -->
+                            <section  ng-if="entity.servicing_type_id == 4"> <!-- bloc DCP -->
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-facetime-video"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.projector_aspect" on-select="itemNull(entity.projector_aspect, 'projector_aspect')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['gknlq48m'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in projector_aspects | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-fullscreen"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.resolution_id" on-select="itemNull(entity.resolution_id, 'resolution_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['wrctg8ou'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in resolutions | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-flag"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.language_id" on-select="itemNull(entity.language_id, 'language_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in languages | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-sound-5-1"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.layout_id" on-select="itemNull(entity.layout_id, 'layout_id')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.id as item in layouts | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="input-group" >
+                                  <span class="input-group-addon"><i class="glyphicon glyphicon-film"></i></span>
+                                  <ui-select ng-disabled=isTechnician ng-model="entity.dcp_standard" on-select="itemNull(entity.dcp_standard, 'dcp_standard')" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match allow-clear placeholder="{{ _T['jik0oq9i'] }}">{{$select.selected.value}}</ui-select-match>
+                                    <ui-select-choices repeat="item.value as item in dcp_standards | propsFilter: {value: $select.search, id: $select.search}">
+                                      <div ng-bind-html="item.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                              </div>
+                            </section><!-- fin bloc DCP -->
+                          </section><!-- Fin servicing -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-file"></span> {{ _T["lowrb760"] }}
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label><span class="glyphicon glyphicon-random"></span> {{ _T["65cjmmn6"] }} :</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ui-select  ng-model="entity.subproject_nature_id"
+                                    on-select="itemNull(entity.subproject_nature_id, 'subproject_nature_id')" theme="bootstrap" ng-disabled=isTechnician style="width: 100%;" >
+                                        <ui-select-match allow-clear placeholder="{{ _T['65cjmmn6'] }}">{{$select.selected.value}}</ui-select-match>
+                                        <ui-select-choices repeat="subproject_nature.id as subproject_nature in subproject_natures | propsFilter: {value: $select.search, id: $select.search}">
+                                            <div ng-bind-html="subproject_nature.value | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-default" ng-click="addInput()"><i class="glyphicon glyphicon-plus"></i> {{ _T["m5uanw3p"] }}</button><br/><br/>
+            <div class="row">
+                <div class="col-md-4" ng-repeat="input in inputs | orderBy:'position'">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-file"></span> Input #{{$index + 1}} - {{input.position}}
+                            <div class="close pull-right" ng-click="deleteInput($index);" title="{{ _T['qyn1cfrv'] }}" style="margin-top: -10px; margin-right: -10px">×</div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["of4q6u6a"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['of4q6u6a'] }}" ng-model="input.element">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["h5bglkgi"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['h5bglkgi'] }}" ng-model="input.support">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["cq02isiz"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['cq02isiz'] }}" ng-model="input.validation">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["hbtvjrk1"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ui-select ng-disabled=isTechnician ng-model="input.exploitation_id"
+                                    on-select="itemNullInput(item.exploitation_id, 'exploitation_id', input.id)"
+                                     theme="bootstrap"  style="width: 100%;" >
+                                        <ui-select-match allow-clear placeholder="{{ _T['hbtvjrk1'] }}">{{$select.selected.value}}</ui-select-match>
+                                        <ui-select-choices repeat="workflow.id as workflow in exploitation_types | propsFilter: {value: $select.search, id: $select.search}">
+                                            <div ng-bind-html="workflow.value | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["awbb7v9i"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ui-select ng-disabled=isTechnician ng-model="input.language_id"
+                                    on-select="itemNullInput(input.language_id, 'language_id', input.id)"
+                                      theme="bootstrap"  style="width: 100%;" >
+                                        <ui-select-match allow-clear placeholder="{{ _T['awbb7v9i'] }}">{{$select.selected.value}}</ui-select-match>
+                                        <ui-select-choices repeat="language.id as language in languages | propsFilter: {value: $select.search, id: $select.search}">
+                                            <div ng-bind-html="language.value | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["vob2snrb"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ui-select ng-disabled=isTechnician ng-model="input.format_mix_id"
+                                    on-select="itemNullInput(input.format_mix_id, 'format_mix_id', input.id)"
+                                      theme="bootstrap"  style="width: 100%;" >
+                                        <ui-select-match allow-clear placeholder="{{ _T['vob2snrb'] }}">{{$select.selected.value}}</ui-select-match>
+                                        <ui-select-choices repeat="formatmix.id as formatmix in formatmixs | propsFilter: {value: $select.search, id: $select.search}">
+                                            <div ng-bind-html="formatmix.value | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["fvmwlcji"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ui-select ng-disabled=isTechnician ng-model="input.norme_mix_id"
+                                    on-select="itemNullInput(input.norme_mix_id, 'norme_mix_id', input.id)"
+                                      theme="bootstrap"  style="width: 100%;" >
+                                        <ui-select-match allow-clear placeholder="{{ _T['fvmwlcji'] }}">{{$select.selected.value}}</ui-select-match>
+                                        <ui-select-choices repeat="normemix.id as normemix in normesmix | propsFilter: {value: $select.search, id: $select.search}">
+                                            <div ng-bind-html="normemix.value | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["noa1wtgc"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <ui-select ng-disabled=isTechnician ng-model="input.speed_id"
+                                    on-select="itemNullInput(input.speed_id, 'speed_id', input.id)"
+                                      theme="bootstrap"  style="width: 100%;" >
+                                        <ui-select-match allow-clear placeholder="{{ _T['noa1wtgc'] }}">{{$select.selected.value}}</ui-select-match>
+                                        <ui-select-choices repeat="speed.id as speed in speeds | propsFilter: {value: $select.search, id: $select.search}">
+                                            <div ng-bind-html="speed.value | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>{{ _T["cq02isiz"] }}:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input ng-disabled=isTechnician  ng-model="input.prod_version" placeholder="{{ _T['cq02isiz'] }}" type="text" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="col-md-2">
+                        <label>{{ _T["ba7lqfs6"] }}: </label>
+                    </div>
+                    <div class="col-md-10">
+                        <input ng-disabled=isTechnician  type="text" ng-model="entity.description" class="form-control col-md-8" placeholder="{{ _T['3qzox6qp'] }}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="col-md-2">
+                        <label>{{ _T["q6g3ttxk"] }}: </label>
+                    </div>
+                    <div class="col-md-10">
+                        <input ng-disabled=isTechnician  type="text" ng-model="entity.note" class="form-control col-md-8" placeholder="{{ _T['ms5soofq'] }}"/>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <button class="btn btn-sm btn-default" ng-click="addOutput()"><i class="glyphicon glyphicon-plus"></i> {{ _T["1ecv6233"] }}</button><br/><br/>
+            <div class="row">
+                <div class="col-md-6" ng-repeat="output in outputs | orderBy:'position'" ng-show="!output.hidden">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-file"></span> {{ _T["g5xyei5s"] }} #{{$index + 1}}
+                            <div class="btn-group btn-group-xs pull-right" style="margin-top:-7px">
+                              <button class="btn btn-xs" ng-click="addOutput(output)">
+                                <i class="fa fa-files-o" aria-hidden="true"></i> {{ _T["29do63ej"] }}
+                              </button>
+                              <button class="btn btn-xs btn-danger" ng-click="deleteOutput(output);">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ _T["tc6j8t46"] }}
+                              </button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel panel-info" >
+                                <div class="panel-heading">
+                                    <strong>{{ _T["g5xyei5s"] }}</strong>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label>{{ _T["of4q6u6a"] }}:</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['of4q6u6a'] }}" ng-model="output.element">
+                                        </div>
+                                    </div><div class="row">
+                                    <div class="col-sm-2">
+                                        <label>{{ _T["h5bglkgi"] }}:</label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['h5bglkgi'] }}" ng-model="output.support">
+                                    </div>
+                                </div><div class="row">
+                                    <div class="col-sm-2">
+                                        <label>{{ _T["zttfm33n"] }}:</label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['zttfm33n'] }}" ng-model="output.quantity">
+                                    </div>
+                                </div>
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label>{{ _T["noa1wtgc"] }}:</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['noa1wtgc'] }}" ng-model="output.speed">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <strong>{{ _T["czqullyu"] }}</strong>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label>{{ _T["cgh02pi5"] }}:</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['cgh02pi5'] }}" ng-model="output.format">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label>{{ _T["fmsj3re9"] }}:</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['fmsj3re9'] }}" ng-model="output.audio">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label>TC:</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="TC" ng-model="output.tc">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label>{{ _T["q6g3ttxk"] }}:</label>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['q6g3ttxk'] }}" ng-model="output.note">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>{{ _T["ripzo4s6"] }}</label>
+                                </div>
+                                <div class="col-md-10">
+                                    <input ng-disabled=isTechnician  type="text" placeholder="{{ _T['dfq1zn4o'] }}" ng-model="output.nomenclature" class="form-control" />
+                                </div>
+                            </div>
+                            <br>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <strong>{{ _T["8izp2is4"] }}</strong><!--
+                                            <div class="btn-group pull-right" role="group" aria-label="" >
+                                                <button class="btn btn-info btn-sm" ng-click="addLayout($index)"><i class="glyphicon glyphicon-plus"></i> Ajouter un layout</button>
+                                                <button class="btn btn-info btn-sm" ng-click="deleteLayout($index)"><i class="glyphicon glyphicon-minus"></i> Retirer un layout</button>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #1</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 1" ng-model="output.piste_1">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #2</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 2" ng-model="output.piste_2">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #3</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 3" ng-model="output.piste_3">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #4</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 4" ng-model="output.piste_4">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #5</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 5" ng-model="output.piste_5">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #6</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 6" ng-model="output.piste_6">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #7</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 7" ng-model="output.piste_7">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #8</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 8" ng-model="output.piste_8">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #9</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 9" ng-model="output.piste_9">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #10</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 10" ng-model="output.piste_10">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #11</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 11" ng-model="output.piste_11">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #12</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 12" ng-model="output.piste_12">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #13</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 13" ng-model="output.piste_13">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #14</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 14" ng-model="output.piste_14">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #15</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 15" ng-model="output.piste_15">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #16</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 16" ng-model="output.piste_16">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #17</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 17" ng-model="output.piste_17">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #18</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 18" ng-model="output.piste_18">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #19</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 19" ng-model="output.piste_19">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #20</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 20" ng-model="output.piste_20">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #21</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 21" ng-model="output.piste_21">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #22</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 22" ng-model="output.piste_22">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #23</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 23" ng-model="output.piste_23">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #24</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 24" ng-model="output.piste_24">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #25</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 25" ng-model="output.piste_25">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #26</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 26" ng-model="output.piste_26">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #27</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 27" ng-model="output.piste_27">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #28</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 28" ng-model="output.piste_28">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #29</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 29" ng-model="output.piste_29">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #30</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 30" ng-model="output.piste_30">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #31</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 31" ng-model="output.piste_31">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #32</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 32" ng-model="output.piste_32">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #33</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 33" ng-model="output.piste_33">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #34</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 34" ng-model="output.piste_34">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #35</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 35" ng-model="output.piste_35">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #36</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 36" ng-model="output.piste_36">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #37</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 37" ng-model="output.piste_37">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #38</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 38" ng-model="output.piste_38">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #39</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 39" ng-model="output.piste_39">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #40</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 40" ng-model="output.piste_40">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #41</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 41" ng-model="output.piste_41">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #42</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 42" ng-model="output.piste_42">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #43</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 43" ng-model="output.piste_43">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label> {{ _T["5sdilxx7"] }} #44</label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input ng-disabled=isTechnician  type="text" class="form-control" placeholder="{{ _T['1vz2jleo'] }} 44" ng-model="output.piste_44">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <button class="btn btn-success btn-lg pull-right" ng-if="isEdit == false && !isTechnician" ng-click="createSpec()"><i class="glyphicon glyphicon-send"></i> {{ _T["67cfgwmy"] }} {{client.name | uppercase}}</button>
+            <button class="btn btn-success btn-lg pull-right" ng-if="isEdit == true && !isTechnician" ng-click="editSpec()"><i class="glyphicon glyphicon-send"></i> {{ _T["rnr4bk5z"] }} {{client.name | uppercase}}</button>
+          </section>
+        </div>
+    </div>
+</div>

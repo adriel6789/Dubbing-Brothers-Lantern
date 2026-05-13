@@ -1,0 +1,12 @@
+.input-right-button {
+    position: absolute;
+    top: -1px;
+    left: -2px;
+    opacity: 0;
+    width: 50px;
+    height: 45px;
+}
+.no-left-border-radius {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}

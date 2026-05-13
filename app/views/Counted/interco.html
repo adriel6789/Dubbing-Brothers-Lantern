@@ -1,0 +1,470 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["oi1uwfhf"] }}
+            </p>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="#person" target="_self" aria-controls="home" role="tab" data-toggle="tab" ng-click="init()">{{ _T["m05520j5"] }}</a></li>
+        <li role="presentation" class="active"><a href="#project" target="_self" aria-controls="profile" role="tab" data-toggle="tab" ng-click="init()">{{ _T["k6rc0geg"] }}</a>
+        <li role="presentation"><a href="#action" target="_self" aria-controls="profile" role="tab" data-toggle="tab" ng-click="init()">{{ _T["0rvv41bf"] }}</a>
+        <li role="presentation"><a href="#suiviFacturation" target="_self" aria-controls="profile" role="tab" data-toggle="tab" ng-click="init()">{{ _T["psdfj21z"] }}</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane " id="person">
+            <div class="well well-sm col-md-12" style="background-color:white">
+                <div class="col-md-3 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-user fa-2x"></i>
+                        <strong>{{ _T["qbjpkrru"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                      <ui-select ng-disabled="disabled" ng-model="user" on-select="userSelected($item)" style="width: 100%;" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['qbjpkrru'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                          <ui-select-choices repeat="tech in users | limitTo: 100 | propsFilter: {id: $select.search, lastname: $select.search, firstname: $select.search}">
+                              <span ng-bind-html="tech.firstname | highlight: $select.search"></span>
+                              <span ng-bind-html="tech.lastname | highlight: $select.search"></span>
+                          </ui-select-choices>
+                      </ui-select>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-calendar fa-2x"></i>
+                        <strong>{{ _T["v870gpf0"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(true)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['pmi0fz3q'] }}">
+                                   << </button> </span>
+                                    <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span>
+                                    <input ng-model="dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">
+                                    <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span>
+                                    <input ng-model="dateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(false)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['z98e8ejr'] }}"> >>
+                                </button>
+                            </span>
+                        </div>
+                        <script ng-if="products.length!=0">
+                            $('input.calendar').datepicker({
+                                format: "dd-mm-yyyy",
+                                todayBtn: true,
+                                language: $.cookie("language"),
+                                orientation: "top",
+                                multidateSeparator: " - ",
+                                calendarWeeks: true,
+                                todayHighlight: true
+                            });
+
+                              $(function() {
+                                $('[data-toggle="tooltip"]').tooltip({html: true})
+                              });
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                  <section ng-if="user == ''">
+                    <div class="col-md-12">
+                        <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                    <div class="col-md-12">
+                        <strong>{{ _T["hw30mphu"] }}</strong>
+                    </div>
+                  </section>
+                    <section ng-if="calculInProgress > 0">
+                        <div class="col-md-12">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>{{ _T["y9uiclqq"] }}</strong>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane active" id="project">
+            <div class="well well-sm col-md-12" style="background-color:white">
+                <div class="col-md-3 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-film fa-2x"></i>
+                        <strong>{{ _T["r82ct91x"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                      <ui-select ng-disabled="disabled" ng-model="user" on-select="projectSelected($item)" style="width: 100%;" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['r82ct91x'] }}">{{$select.selected.name_format}}</ui-select-match>
+                          <ui-select-choices repeat="project in projects | propsFilter: {id: $select.search, name_format: $select.search, client: $select.search} | orderBy : 'name_format' | limitTo: 100 ">
+                            <span ng-bind-html="project.name_format | highlight: $select.search"></span>
+                          </ui-select-choices>
+                      </ui-select>
+                    </div>
+                    <button class="btn btn-default" ng-click="searchAllProject()">{{ _T["rngrcfjv"] }}</button>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-calendar fa-2x"></i>
+                        <strong>{{ _T["v870gpf0"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(true)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['pmi0fz3q'] }}">
+                                    << </button> </span>
+                                    <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span> <input ng-model="dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span> <input
+                                    ng-model="dateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(false)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['z98e8ejr'] }}"> >>
+                                </button>
+                            </span>
+                        </div>
+                        <script ng-if="products.length!=0">
+                            $('input.calendar').datepicker({
+                                format: "dd-mm-yyyy",
+                                todayBtn: true,
+                                language: $.cookie("language"),
+                                orientation: "top",
+                                multidateSeparator: " - ",
+                                calendarWeeks: true,
+                                todayHighlight: true
+                            });
+
+                              $(function() {
+                                $('[data-toggle="tooltip"]').tooltip({html: true})
+                              });
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                  <section ng-if="project == ''">
+                    <div class="col-md-12">
+                        <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                    <div class="col-md-12">
+                        <strong>{{ _T["usljt4ka"] }}</strong>
+                    </div>
+                  </section>
+                    <section ng-if="calculInProgress > 0">
+                        <div class="col-md-12">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>{{ _T["y9uiclqq"] }}</strong>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane " id="action">
+            <div class="well well-sm col-md-12" style="background-color:white">
+                <div class="col-md-3 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-step-forward fa-2x"></i>
+                        <strong>{{ _T["0rvv41bf"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                        <ui-select ng-disabled="disabled" ng-model="user" on-select="actionSelected($item)" style="width: 100%;" theme="bootstrap">
+                            <ui-select-match placeholder="{{ _T['0rvv41bf'] }}">{{$select.selected.value}}</ui-select-match>
+                            <ui-select-choices repeat="action in etapeAction | limitTo: 100 | propsFilter: {value: $select.search, id: $select.search}">
+                                <span ng-bind-html="action.value | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-calendar fa-2x"></i>
+                        <strong>{{ _T["v870gpf0"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(true)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['pmi0fz3q'] }}">
+                                    << </button> </span>
+                                    <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span>
+                                    <input ng-model="dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">
+                                    <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span>
+                                    <input ng-model="dateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(false)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['z98e8ejr'] }}"> >>
+                                </button>
+                            </span>
+                        </div>
+                        <script ng-if="products.length!=0">
+                            $('input.calendar').datepicker({
+                                format: "dd-mm-yyyy",
+                                todayBtn: true,
+                                language: $.cookie("language"),
+                                orientation: "top",
+                                multidateSeparator: " - ",
+                                calendarWeeks: true,
+                                todayHighlight: true
+                            });
+
+                                $(function() {
+                                $('[data-toggle="tooltip"]').tooltip({html: true})
+                                });
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <section ng-if="action == ''">
+                    <div class="col-md-12">
+                        <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                    <div class="col-md-12">
+                        <strong>{{ _T["gbo9on4x"] }}</strong>
+                    </div>
+                    </section>
+                    <section ng-if="calculInProgress > 0">
+                        <div class="col-md-12">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>{{ _T["y9uiclqq"] }}</strong>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane " id="suiviFacturation">
+            <div class="well well-sm col-md-12" style="background-color:white">
+                <div class="col-md-3 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-film fa-2x"></i>
+                        <strong>{{ _T["r82ct91x"] }}</strong>
+                    </div>
+                    <button class="btn btn-default" ng-click="searchAllProjectFacturation()">{{ _T["rngrcfjv"] }}</button>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="col-md-12">
+                        <i class="fa fa-calendar fa-2x"></i>
+                        <strong>{{ _T["v870gpf0"] }}</strong>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(true)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['pmi0fz3q'] }}">
+                                    << </button> </span>
+                                    <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span> <input ng-model="dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span> <input
+                                    ng-model="dateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(false)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['z98e8ejr'] }}"> >>
+                                </button>
+                            </span>
+                        </div>
+                        <script ng-if="products.length!=0">
+                            $('input.calendar').datepicker({
+                                format: "dd-mm-yyyy",
+                                todayBtn: true,
+                                language: $.cookie("language"),
+                                orientation: "top",
+                                multidateSeparator: " - ",
+                                calendarWeeks: true,
+                                todayHighlight: true
+                            });
+
+                              $(function() {
+                                $('[data-toggle="tooltip"]').tooltip({html: true})
+                              });
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                  <section ng-if="project == ''">
+                    <div class="col-md-12">
+                        <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                    <div class="col-md-12">
+                        <strong>{{ _T["usljt4ka"] }}</strong>
+                    </div>
+                  </section>
+                    <section ng-if="calculInProgress > 0">
+                        <div class="col-md-12">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                        </div>
+                        <div class="col-md-12">
+                            <strong>{{ _T["y9uiclqq"] }}</strong>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="clearfix"></div>
+    <section ng-if="showSection">
+
+      <div ng-if="farmers.length <= 0 && calculInProgress <= 0 && user != ''" class="alert alert-info col-md-offset-3 col-md-6 text-center">
+        {{user.firstname}} {{user.lastname}} {{ _T["bru6srm2"] }}
+      </div>
+      <div ng-if="farmers.length <= 0 && calculInProgress <= 0 && project != ''" class="alert alert-info col-md-offset-3 col-md-6 text-center">
+          {{ _T["6qmazs3o"] }} {{project.name}} {{ _T["6hpl6yqv"] }}
+      </div>
+
+    <div class="col-md-12" id="exportable" ng-if="farmers.length > 0 && calculInProgress <= 0">
+        <table class="table table-hover">
+            <thead>
+                <th class="text-center">
+                    {{ _T["fm3hd4h1"] }}
+                </th> 
+                <th class="text-center">
+                    {{ _T["ovna6ycs"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["ewybz84r"] }}
+                </th>                     
+                <th class="text-center">
+                    {{ _T["0rvv41bf"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["hbtvjrk1"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["994zv55k"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["uhm2vkrg"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["2lq5g7zj"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["h9ox64fe"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["agwqbccp"] }}
+                </th>
+                <th class="text-center">
+                    {{ _T["cozug9c6"] }}
+                </th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="farmer in farmers | orderBy: 'sortByTime'">
+                    <td class="text-center">
+                        <i">{{farmer.client_name}}</i>    
+                    </td>
+                    <td class="text-center">
+                        <a ui-sref="app.suiviProd({id:farmer.subproject_id})" target="_blank">
+                            <i>{{farmer.lantern_project_name}}</i>
+                        </a>    
+                    </td>
+                    <td class="text-center">        
+                            {{farmer.human_description}}
+                    </td>                                      
+                    <td class="text-center">
+                        {{farmer.vett_value}}/{{farmer.vat_value}}
+                    </td>
+                    <td class="text-center">
+                        {{farmer.vext_value}}
+                    </td>
+                    <td class="text-center">
+                        {{farmer.firstname}}
+                        {{farmer.lastname}} 
+                    </td>
+                    <td class="text-center">
+                      <strong>{{farmer.day | asDate | date:"dd/MM/yy"}}</strong>
+                    </td>
+                    <td class="text-center">
+                        <div ng-if="farmer.vett_id != 9">
+                            {{ _T["jeepc9om"] }} <strong>{{farmer.working_time_start | asDate | date:"HH\'h\'mm"}}</strong>
+                            {{ _T["v9l0r966"] }} <strong>{{farmer.working_time_end | asDate | date:"HH\'h\'mm"}}</strong>
+                        </div>  
+                        <div ng-if="farmer.vett_id == 9">
+                            {{ _T["jeepc9om"] }} <strong>{{farmer.start_time}}</strong>
+                            {{ _T["v9l0r966"] }} <strong>{{farmer.end_time}}</strong>
+                        </div> 
+                    </td>
+                    <td class="text-center">
+                        {{farmer.audit}}
+                    </td>
+                    <td class="text-center">
+                        <div ng-if="farmer.vett_id != 9">
+                            {{countTimeOne(farmer, "hours")}}
+                            ({{countTimeOne(farmer, "minutes")}}
+                            min)
+                        </div>
+                        <div ng-if="farmer.vett_id == 9">
+                            {{farmer.estimate_time}}
+                            ({{farmer.estimate_time_minute}} min)
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div ng-if="farmer.vett_id == 9">
+                            {{farmer.qte}} min
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button type="button" style="margin-top:20px" ng-click="exportSeances()" class="btn btn-primary btn-big-shadow pull-right">
+        <i class="fa fa-file-excel-o"></i> {{ _T["5dcia69a"] }}
+    </button>
+  </section>
+
+    <div class="clearfix"></div>
+    <section ng-if="showFacturationSection">
+        <div class="col-md-12" id="exportable" ng-if="farmers.length > 0 && calculInProgress <= 0">
+            <table class="table table-hover">
+                <thead>
+                    <th class="text-center">
+                        {{ _T["h9ox64fe"] }}
+                    </th> 
+                    <th class="text-center">
+                        {{ _T["0densyw8"] }}
+                    </th>                     
+                    <th class="text-center">
+                        {{ _T["w3wtyron"] }}
+                    </th>
+                    <th class="text-center">
+                        {{ _T["lkngkhpw"] }}
+                    </th>
+                    <th class="text-center">
+                        {{ _T["sc8bj8gk"] }}
+                    </th>
+                    <th class="text-center">
+                        {{ _T["2fhlp0sg"] }}
+                    </th>
+                    <th class="text-center">
+                        {{ _T["eq9spk3x"] }}
+                    </th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="interco_value in interco_values | orderBy: 'sortByTime'">
+                        <td class="text-center">
+                            {{interco_value.audit}}
+                        </td>
+                        <td class="text-center">        
+                            {{interco_value.etape_exploitation}}
+                        </td>                                      
+                        <td class="text-center">
+                            {{interco_value.code}}
+                        </td>
+                        <td class="text-center">
+                            {{interco_value.forfait}}
+                        </td>
+                        <td class="text-center">
+                            {{interco_value.qte}}
+                        </td>
+                        <td class="text-center">
+                            {{interco_value.ca}}
+                        </td>
+                        <td class="text-center">
+                            {{interco_value.commentaire}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button type="button" style="margin-top:20px" ng-click="exportSeances()" class="btn btn-primary btn-big-shadow pull-right">
+            <i class="fa fa-file-excel-o"></i> {{ _T["5dcia69a"] }}
+        </button>
+  </section>
+</div>

@@ -1,0 +1,151 @@
+<div class="container-fluid">
+    <section ng-if="subprojectToSetCodeSecurite != null">
+        <h3>{{ _T["iw8n2zyn"] }} : </h3>
+
+        <div class="container-fluid">
+            <div class="panel panel-default" ng-show="subprojectVideoElements.length > 0" style="overflow: auto; height: 550px;">
+                <table class="table table-custom table-striped" style="width: 100%; margin:0; padding:0; position: sticky; top: 0; z-index: 1;" st-safe-src="subprojectVideoElements" st-table="displayedCollection" st-filtered-collection="videoObjects.filteredCollection">
+                    <thead style="position: sticky; top: 0; z-index: 1; background-color: #e4e4e4;">
+                    <tr>
+                        <th style="max-width: 6vw; min-width: 6vw; width: 6vw; text-align: center; color:black">
+                            <span class="f-13">{{ _T["0fnnoz79"] }}</span>
+                        </th>
+                        <th style="color:black;max-width: 6vw; min-width: 6vw; width: 6vw; text-align: center; cursor: pointer;" st-sort="product_desc">{{ _T["ba0heyvu"] }}</th>
+                        <th style="color:black;max-width: 7vw; min-width: 7vw; width: 7vw; text-align: center; cursor: pointer;" st-sort="title_vo">{{ _T["vf668li1"] }}</th>
+                        <th style="color:black;max-width: 9vw; min-width: 9vw; width: 9vw; text-align: center; cursor: pointer;" st-sort="support">{{ _T["h5bglkgi"] }}</th>
+                        <th style="color:black;max-width: 15vw; min-width: 15vw; width: 15vw; text-align: center; cursor: pointer;" st-sort="path">{{ _T["zh4fsex6"] }}</th>
+                        <th style="color:black;max-width: 6vw; min-width: 6vw; width: 6vw; text-align: center; cursor: pointer;" st-sort="origin">{{ _T["hq73hg2l"] }}</th>
+                        <th style="color:black;max-width: 6vw; min-width: 6vw; width: 6vw; text-align: center; cursor: pointer;" st-sort="workflow">{{ _T["2w7jtwr8"] }}</th>
+                        <th colspan="2" style="color:black;max-width: 5vw; min-width: 5vw; width: 5vw; text-align: center">{{ _T["26suhfgm"] }}</th>
+                        <th colspan="2" style="color:black;max-width: 5vw; min-width: 5vw; width: 5vw; text-align: center; cursor: pointer;" st-sort="media_seal_security_version">{{ _T["9wii0lxr"] }}</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input id='allVideoProd' ng-model="videoObjects.videoMaster" ng-click="selectAllFilteredVideoProducts(videoObjects.filteredCollection, videoObjects.videoMaster)" type="checkbox" />
+                            <label style="margin-bottom: 5px" for='allVideoProd'></label>
+                        </th>
+                        <th>
+                            <select class="dropdown-toggle filtercodesecurite" st-search="product_desc" ng-model="videoObjects.activeFilter.thProductDesc" ng-change="resetSelectedVideos()">
+                                <option value="">{{ _T["d087pif1"] }}</option>
+                                <option ng-repeat="row in subprojectVideoElements | uniqueMediaFilter:'product_desc'" value="{{row.product_desc}}">{{row.product_desc}}</option>
+                            </select>                            
+                        </th>
+                        <th><input style="border: 1px solid black;" st-search="title_vo" placeholder="{{ _T['udrcrsun'] }}" class="input-sm filtercodesecurite" type="search" ng-model="videoObjects.activeFilter.thTitleVo" ng-change="resetSelectedVideos()"/></th>
+                        <th>
+                            <select class="dropdown-toggle filtercodesecurite" st-search="support" ng-model="videoObjects.activeFilter.thSupport" ng-change="resetSelectedVideos()">
+                                <option value="">{{ _T["d087pif1"] }}</option>
+                                <option ng-repeat="row in subprojectVideoElements | uniqueMediaFilter:'support'" value="{{row.support}}">{{row.support}}</option>
+                            </select>                            
+                        </th>
+                        <th><input style="border: 1px solid black;" st-search="path" placeholder="{{ _T['udrcrsun'] }}" class="input-sm filtercodesecurite" type="search" ng-model="videoObjects.activeFilter.thPath" ng-change="resetSelectedVideos()"/></th>
+                        <th>
+                            <select class="dropdown-toggle filtercodesecurite" st-search="origin" ng-model="videoObjects.activeFilter.thOrigin" ng-change="resetSelectedVideos()">
+                                <option value="">{{ _T["d087pif1"] }}</option>
+                                <option ng-repeat="row in subprojectVideoElements | uniqueMediaFilter:'origin'" value="{{row.origin}}">{{row.origin}}</option>
+                            </select>                            
+                        </th>
+                        <th>
+                            <select class="dropdown-toggle filtercodesecurite" st-search="workflow" ng-model="videoObjects.activeFilter.thWorkflow" ng-change="resetSelectedVideos()">
+                                <option value="">{{ _T["d087pif1"] }}</option>
+                                <option ng-repeat="row in subprojectVideoElements | uniqueMediaFilter:'workflow'" value="{{row.workflow}}">{{row.workflow}}</option>
+                            </select>                            
+                        </th>
+                        <th colspan="2"></th>
+                        <th colspan="2" style="text-align:center;">
+                            <select class="dropdown-toggle filtercodesecurite" st-search="media_seal_security_version" ng-model="videoObjects.activeFilter.thVideoFileVersion" ng-change="resetSelectedVideos()">
+                                <option value="">{{ _T["d087pif1"] }}</option>
+                                <option ng-repeat="row in subprojectVideoElements | uniqueMediaFilter:'media_seal_security_version'" value="{{row.media_seal_security_version}}">{{row.media_seal_security_version}}</option>
+                            </select>                            
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in videoObjects.filteredCollection">
+                        <td>
+                            <input id='{{::item.id}}' ng-model="item.selected" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" />
+                            <label for='{{::item.id}}'></label>
+                        </td>
+                        <td>
+                            <span style="width:80px;word-wrap:break-word">{{item.product_desc}}</span>
+                        </td>
+                        <td>
+                            {{ item.title_vo || _T["vf668li1"] }}
+                        </td>
+                        <td>
+                            {{ item.support || _T["fj98qsz4"] }}
+                        </td>
+                        <td style="width: 40%; word-break: break-all;">
+                            {{ item.path || _T["fj98qsz4"] }}
+                        </td>
+                        <td>
+                            <i>{{item.origin}}</i>
+                        </td>
+                        <td>
+                            {{item.workflow}}
+                        </td>
+                        <td style="text-align: center;" ng-style="item.media_seal_code_changed && {'background-color': '#b3c5e7'}">
+                            <a blur="ignore" e-style="max-width: 80px;" style="color: #3570E1;" editable-password="item.new_media_seal_security_code" href="#" e-autocomplete="off" onaftersave="editMediaCodeSecurite(item)">
+                                <span ng-if="(item.media_seal_security_code && !item.media_seal_code_changed) || (item.media_seal_code_changed && item.new_media_seal_security_code.trim() != '')">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                </span>
+                                <span ng-if="(!item.media_seal_security_code && !item.media_seal_code_changed) || (item.media_seal_code_changed && item.new_media_seal_security_code.trim() == '')">
+                                    {{ _T["fj98qsz4"] }}
+                                </span>
+                            </a>
+                        </td>
+                        <td style="max-width: 10px; min-width: 10px; width: 10px; padding-left: 0;" ng-style="item.media_seal_code_changed && {'background-color': '#b3c5e7'}">
+                            <button ng-if="item.media_seal_code_changed" class="btn btn-link" style="max-width: 10px; padding: 0" ng-click="undoVideoElementCodeModifications(item)">
+                                <i style="font-size: 14px;" class="fa fa-undo"></i>
+                            </button>
+                        </td>
+                        <td style="text-align: center;" ng-style="item.new_media_seal_security_version != item.media_seal_security_version && {'background-color': '#b3c5e7'}">
+                            <a e-ng-options="media_seal_security_version.value as media_seal_security_version.value for media_seal_security_version in media_seal_security_versions" blur="ignore" style="color: #3570E1; height: 15px;" e-style="padding: 0 2px" editable-select="item.new_media_seal_security_version" href="#">
+                                {{item.new_media_seal_security_version || _T["fj98qsz4"] }}
+                            </a>
+                        </td>
+                        <td style="max-width: 10px; min-width: 10px; width: 10px; padding-left: 0;" ng-style="item.new_media_seal_security_version != item.media_seal_security_version && {'background-color': '#b3c5e7'}">
+                            <button ng-if="item.new_media_seal_security_version != item.media_seal_security_version" class="btn btn-link" style="max-width: 10px; padding: 0" ng-click="undoVideoElementVersionModifications(item)">
+                                <i style="font-size: 14px;" class="fa fa-undo"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tfoot style="position: sticky; bottom: 0; z-index: 1; background: #e4e4e4">
+                        <tr>
+                            <td colspan="7">
+                                <span class="pull-right" style="color: black; margin: 8px 3px;">{{ _T["9w6rqnlv"] }}</span>
+                                <span class="pull-right" style="color:#3570E1; font-weight: bold; margin: 9px 1px;">{{videoObjects.nbSelectedElements}}</span>
+                            </td>
+                            <td style="text-align: center; color:black;">
+                                <div class="row">
+                                    <input style="color:black; max-width: 70px; width: 70px; margin-top: 4px; max-height: 25px; height: 25px;" type="password" autocomplete="off" ng-disabled="videoObjects.nbSelectedElements == 0" ng-model="videoObjects.multiCodeSecurite"/>
+                                    <button type="submit" style="max-height: 26px;  margin-top:-1px" class="btn btn-primary ml-4" ng-disabled="videoObjects.nbSelectedElements == 0" ng-click="editMultiMediaCodeSecurite(videoObjects.multiCodeSecurite)"><span style="top: -1px;" class="glyphicon glyphicon-ok"></span></button>
+                                </div>
+                            </td>
+                            <td style="padding-left: 0;">
+                                <button ng-if="videoObjects.nbCodeModificationsElements > 0" class="btn btn-link" style="max-width: 10px; padding: 0; margin-top: 7px;" ng-click="undoAllVideoElementCodeModifications()" title="{{ _T['yzh0wbg1'] }}">
+                                    <i style="font-size: 19px;" class="fa fa-undo"></i>
+                                </button>
+                            </td>
+                            <td style="text-align: center; color:black;">
+                                <select style="color:black; max-width: 70px; width: 70px; margin-top: 5px; max-height: 25px; height: 25px" ng-disabled="videoObjects.nbSelectedElements == 0" ng-options="media_seal_security_version.value as media_seal_security_version.value for media_seal_security_version in media_seal_security_versions" ng-model="videoObjects.multiMediaVersion"></select>
+                                <button type="submit" style="max-height: 26px; margin-top:-1px" class="btn btn-primary ml-4" ng-disabled="videoObjects.nbSelectedElements == 0" ng-click="editMultiMediaVersion(videoObjects.multiMediaVersion)"><span style="top: -1px;" class="glyphicon glyphicon-ok"></span></button>
+                            </td>
+                            <td style="padding-left: 0;">
+                                <button ng-if="videoObjects.nbVersionModificationsElements > 0" class="btn btn-link" style="max-width: 10px; padding: 0; margin-top: 7px;" ng-click="undoAllVideoElementVersionModifications()" title="{{ _T['vf3gfwv0'] }}">
+                                    <i style="font-size: 19px;" class="fa fa-undo"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <button class="btn btn-danger" style="margin-bottom: 4px;" ng-click="closeMultiMediaSecurite()">{{ _T["ficbz281"] }}</button>
+                <button class="btn btn-primary pull-right" style="margin-bottom: 4px;" ng-disabled="videoObjects.nbModifiedElements == 0" ng-click="saveMultiMediaSecuriteModification()">{{ _T["d32u2mga"] }}</button>
+                <span class="pull-right" style="margin: 5px 3px;">{{ _T["sfgf0i5i"] }}</span>
+                <span class="pull-right" style="color:#3570E1; font-weight: bold; margin: 6px 2px;">{{videoObjects.nbModifiedElements}}</span>
+            </div>
+
+    </section>
+</div>

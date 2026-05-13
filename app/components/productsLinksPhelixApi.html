@@ -1,0 +1,30 @@
+<!-- <header class="header-with-tabs"  ng-if="$ctrl.data.human_description != null">
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <p>
+        {{$ctrl.data.human_description}} - ({{$ctrl.data.title_phelix}} )
+      </p>
+    </div>
+  </div>
+</header> -->
+<label class="col-md-12"  ng-if="$ctrl.data.ownProduct.length > 0 && $ctrl.data.nature_id == '2'">{{ $root._T["0cjgeec8"] }}</label>
+<label class="col-md-12"  ng-if="$ctrl.data.ownProduct.length > 0 && $ctrl.data.nature_id == '1'">{{ $root._T["bfubirr3"] }}</label>
+<div class="col-md-12 panel panel-default mt-10 p-10"   style="margin-left:10px; width: 97%;" ng-if="$ctrl.data.ownProduct.length > 0">
+    <div class="row"  ng-if="$ctrl.data.ownProduct.length > 0"  ng-repeat="(key, product) in $ctrl.data.ownProduct | orderBy: 'episode_number' track by $index">
+         <!-- Serie -->
+        <div class="col-md-12" style="display: inline-flex;" ng-if="$ctrl.data.nature_id == '2'"> 
+            <div class="f-22">{{product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]}} {{ product.episode_number }}: </div>
+            <!-- Module Link Titles Episode Phelix API -->
+            <module-phelix-api ng-if="$ctrl.data.title_phelix &&  ($index == 0 || $root.phelixListProduct.length !=0 || $root.phelix_exclude_ids.length !=0)" title-params ="{'phelix_choice': 2, phelix_season_title:$ctrl.data.title_phelix}" element-type="'product'" element-data="product" on-update="$ctrl.setProductInfoPhelix(product,selectedItem)" hide-save-button="true" style="width: 100%;" ></module-phelix-api> 
+        </div>
+          <!-- Film -->
+        <div class="col-md-12" style="display: inline-flex;" ng-if="$ctrl.data.nature_id == '1'">
+            <div class="f-22">{{ product.description.value }}: </div>
+            <!-- Module Link Titles Film Phelix API -->
+            <module-phelix-api ng-if="$ctrl.data &&  ($index == 0 || $root.phelixListProduct.length !=0 || $root.phelix_exclude_ids.length !=0)" title-params ="{'phelix_choice': 4}" element-type="'feature'" element-data="product" is-single="true" on-update="$ctrl.setProductInfoPhelix(product,selectedItem)" hide-save-button="true" style="width: 100%;" ></module-phelix-api> 
+          </div>
+    </div>
+    <div> 
+         <button class="btn btn-success pull-right" ng-click="$ctrl.allSave()" ng-disabled="!$ctrl.isEnableSave">{{ $root._T["6n3679ox"] }}</button>
+    </div>
+</div>

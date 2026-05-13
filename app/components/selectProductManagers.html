@@ -1,0 +1,17 @@
+<div class="col-md-12">
+    <h5>{{ $root._T["bxkmvx9v"] }}
+        <span class="alert alert-danger text-center" ng-show="$ctrl.elementId != undefined && $ctrl.elementType =='project'">
+            {{ $root._T["u2a8addk"] }}
+        </span>
+    </h5>
+    <div class="form-group">
+        <ui-select ng-disabled="disabled" multiple close-on-select="true" ng-model="$ctrl.selectedPerson" ng-change="$ctrl.update()"
+            style="width: 100%" theme="bootstrap">
+            <ui-select-match placeholder="{{ $root._T['pmasor78'] }}">{{$item.name}}</ui-select-match>
+            <ui-select-choices
+                repeat="user.id as user in $ctrl.users | propsFilter: {name: $select.search, id: $select.search}">
+                <div ng-bind-html="user.name | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</div>

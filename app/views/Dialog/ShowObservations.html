@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <h3>{{ _T["3j35hqts"] }} :</h3>
+    <div class="panel panel-primary" style="margin: 2px" ng-repeat="observation in myObservations">
+      <div class="panel-body">
+        <label class="col-md-12">{{observation.categorie}}
+          {{ _T["mc051ilq"] }}
+          {{observation.date_creation | asDate | date:"dd/MM/yyyy"}}</label>
+
+        <label class="col-md-12">{{ _T["eq9spk3x"] }}</label>
+        <div class="col-md-12">
+          {{observation.comment}}
+        </div>
+      </div>
+    </div>
+</div>

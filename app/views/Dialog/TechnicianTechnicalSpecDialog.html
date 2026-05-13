@@ -1,0 +1,429 @@
+<div class="container-fluid">
+  <div class="row text-center" ng-show="isProd">
+    <p><a ui-sref="app.technicalSpecEdit({idSpec : techspec_id})" target="_blank">{{ _T["ieq2tjs7"] }}</a></p>
+  </div>
+  <div class="col-md-6 text-center">
+    <h4>
+    <span class="label label-default">{{ _T["ba7lqfs6"] }}</span>
+    </h4>
+  <pre>{{entity.description || _T["fj98qsz4"] }}</pre>
+</div>
+<div class="col-md-6 text-center">
+  <h4>
+  <span class="label label-default">{{ _T["q6g3ttxk"] }}</span>
+  </h4>
+<pre>{{entity.note || _T["fj98qsz4"] }}</pre>
+</div>
+<div class="col-md-12">
+<tabset type="pills justified">
+<tab heading="{{output.element}}" ng-repeat="output in outputs">
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <span class="label label-info">{{output.quantity || _T["442bbbms"] }}</span>
+            <b>x</b>
+            <span class="label label-info">{{output.support || _T["i8n8g5xj"] }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <span class="label label-info">{{output.format || _T["prohvr6j"] }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <span class="label label-info">{{output.audio || _T["1famsgc8"] }}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <span class="label label-info">{{output.speed != null && output.speed + " fps" || _T["918d0x8g"] }}</span>
+            <b>
+            / TC
+            </b>
+            <span class="label label-info">{{output.tc || _T["5c9h8zlw"] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+          <pre>{{output.note || _T["f24p9b6c"] }}</pre>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+        <pre>{{output.nomenclature || _T["uykssppj"] }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="row" ng-if="output.piste_1 != null">
+      <div class="col-md-2">
+        <label>{{ _T["5sdilxx7"] }} #1</label>
+      </div>
+      <div class="col-md-10">
+      <pre>{{output.piste_1}}</pre>
+    </div>
+  </div>
+  <div class="row" ng-if="output.piste_2 != null">
+    <div class="col-md-2">
+      <label>{{ _T["5sdilxx7"] }} #2</label>
+    </div>
+    <div class="col-md-10">
+    <pre>{{output.piste_2}}</pre>
+  </div>
+</div>
+<div class="row" ng-if="output.piste_3 != null">
+  <div class="col-md-2">
+    <label>{{ _T["5sdilxx7"] }} #3</label>
+  </div>
+  <div class="col-md-10">
+  <pre>{{output.piste_3}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_4 != null">
+<div class="col-md-2">
+  <label>{{ _T["5sdilxx7"] }} #4</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_4}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_5 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #5</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_5}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_6 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #6</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_6}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_7 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #7</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_7}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_8 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #8</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_8}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_9 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #9</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_9}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_10 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #10</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_10}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_11 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #11</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_11}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_12 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #12</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_12}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_13 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #13</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_13}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_14 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #14</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_14}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_15 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #15</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_15}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_16 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #16</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_16}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_17 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #17</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_17}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_18 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #18</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_18}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_19 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #19</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_19}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_20 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #20</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_20}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_21 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #21</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_21}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_22 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #22</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_22}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_23 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #23</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_23}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_24 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #24</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_24}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_25 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #25</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_25}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_26 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #26</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_26}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_27 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #27</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_27}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_28 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #28</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_28}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_29 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #29</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_29}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_30 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #30</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_30}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_31 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #31</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_31}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_32 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #32</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_32}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_33 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #33</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_33}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_34 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #34</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_34}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_35 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #35</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_35}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_36 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #36</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_36}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_37 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #37</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_37}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_38 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #38</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_38}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_39 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #39</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_39}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_40 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #40</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_40}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_41 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #41</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_41}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_42 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #42</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_42}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_43 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #43</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_43}}</pre>
+</div>
+</div>
+<div class="row" ng-if="output.piste_44 != null">
+<div class="col-md-2">
+<label>{{ _T["5sdilxx7"] }} #44</label>
+</div>
+<div class="col-md-10">
+<pre>{{output.piste_44}}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</tab>
+</tabset>
+</div>
+</div>
+</div>

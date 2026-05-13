@@ -1,0 +1,41 @@
+<div class="col-md-6">
+    <div class="col-md-3">
+        <h5> {{ $root._T["c6qf5vfl"] }}</h5>
+        <div ng-if="$ctrl.listJobTypeFilter" class="form-group" ng-dropdown-multiselect="" options="$ctrl.listJobTypeFilter" selected-model="$ctrl.selectedJobTypeFilter" extra-settings="$ctrl.setting" translation-texts="$ctrl.searchSelectTranslationTexts"></div>
+    </div>
+    <div class="col-md-3">
+        <h5>{{ $root._T["zqham6qe"] }}</h5>
+        <div ng-if="$ctrl.listJobConfigurationFilter" class="form-group" ng-dropdown-multiselect="" options="$ctrl.listJobConfigurationFilter" selected-model="$ctrl.selectedJobConfigurationFilter" extra-settings="$ctrl.setting"  translation-texts="$ctrl.searchSelectTranslationTexts"></div>
+    </div>
+    <div class="col-md-2">
+        <div>
+            <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-disabled="$ctrl.selectedJobTypeFilter.length < 1 && $ctrl.selectedJobConfigurationFilter.length < 1" ng-click="$ctrl.refreshjobsAlula($ctrl.textSearch[$ctrl.requestData.id],$ctrl.requestData.id)">{{$root._T["eyap4b6e"] }}</button>
+        </div>
+    </div>
+</div>
+<div class="col-md-6" style="border-left: solid #3570E1 2px;">
+    <!-- list jobs linked to the request -->
+    <div class="col-md-4">
+        <h5> {{ $root._T["18gu76id"] }} {{$ctrl.requestData.id}}</h5>
+        <div ng-if="$ctrl.listJobLinkedRequest" class="form-group" ng-dropdown-multiselect="" options="$ctrl.listJobLinkedRequest" selected-model="$ctrl.selectedJobLinkedRequest" extra-settings="$ctrl.settingJobs" translation-texts="$ctrl.searchSelectTranslationTexts"></div>
+    </div>
+    <div class="col-md-8">
+        <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-disabled="!$ctrl.jobAlulaLinked[$ctrl.requestData.id].length || $ctrl.jobAlulaLinked[$ctrl.requestData.id].length < 1" ng-click="$ctrl.saveLinkedJobIdsAlula($ctrl.jobAlulaLinked[$ctrl.requestData.id],$ctrl.requestData.id)">{{$root._T["hvzykhtg"] }}</button>
+        <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-disabled="$ctrl.selectedJobLinkedRequest.length < 1" ng-click="$ctrl.resetDatesLinkedJobIdsAlula($ctrl.requestData.id)">{{$root._T["olpi4vrg"] }}</button>
+        <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-disabled="$ctrl.selectedJobLinkedRequest.length < 1" ng-click="$ctrl.unlinkJobIdsAlula($ctrl.requestData.id)">{{$root._T["n1580mzu"] }}</button>
+    </div>
+</div>
+<div class="col-md-12" ng-show="!$ctrl.requestData.alula_job_id ">
+    <h5>{{ $root._T["668li1gh"] }}</h5>
+    <div class="form-group">
+        <ui-select multiple ng-disabled="disabled" ng-model="$ctrl.jobAlulaLinked[$ctrl.requestData.id]" ng-model-options="{ debounce: 1000 }" style="width: 100%" theme="bootstrap"
+            required>
+            <ui-select-match placeholder="Jobs Alula">{{$item.id}}</ui-select-match>
+            <ui-select-choices
+                repeat="job.id as job in $ctrl.jobsAlula[$ctrl.requestData.id] | propsFilter: {name: $select.search, id: $select.search}"
+                refresh="$ctrl.refreshjobsAlula($select.search,$ctrl.requestData.id)" refresh-delay="2">
+                <div ng-bind-html="job.name | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</div>

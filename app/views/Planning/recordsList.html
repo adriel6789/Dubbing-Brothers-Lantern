@@ -1,0 +1,87 @@
+<!-- DEPRECATED depuis 2017 aaff60802f1bdc2a86fc282c31a1fa434a2292f8 -->
+<div class="page page-requests-demands">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <ul uib-pagination previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" ng-if="totalItems" items-per-page="pageSize" total-items="filteredItems.length"
+        ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged(currentPage)"></ul>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-12 parent equal">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 child" ng-repeat="(key, request) in (filteredItems = (requests | orderObjectBy:'date_order_project' | showGroupCardForDate:startTimestamp:endTimestamp | showGroupCard:textFilter | filter:query) | startFrom:current*pageSize | limitTo:pageSize)"
+      id="request{{key}}">
+      <div class="panel panel-default p-10 request-card" ng-class="{'panel-unselected' : elementSelected != key && $ctrl.cols == 12, 'more' : request.showMore, 'less' : !request.showMore}">
+        <div class="media">
+          <div class="media-left">
+            <img alt="64x64" class="media-object img-circle" ng-src="{{::request.requests[0].product.subproject.project.client.url || '../app/img/no-customer.png'}}"
+                data-holder-rendered="true">
+
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">{{request.project_name}}</h4>
+            <p>
+                <span style="font-size:1.1em;" class="label label-default" ng-if="request.requests[0].product.subproject.nature.name == 'serie'">{{ _T["6vwtywcc"] }} {{request.requests[0].product.subproject.season}}</span>
+                <span style="font-size:1.1em;" class="label label-default" ng-if="request.requests[0].product.subproject.nature.name != 'serie'">{{request.subproject_name}}</span>
+              </p>
+
+          </div>
+        </div>
+        <hr>
+        <div class="panel panel-body request-card-group" ng-class="{'more' : request.show_more, 'less' : !request.show_more}">
+          <div class="card" ng-repeat="aGroupRequest in filteredGroupRequest = (request.sortedRequests | filterGroupRequestByDate:startTimestamp:endTimestamp | magicFilterGroupRequest:textFilter:hideRequests | orderObjectBy:'date_for_order')">
+            <div class="row group" ng-click="showRequestDemands(aGroupRequest.requests[0].id)">
+                <div class="col-md-12 text-center" style="overflow-x:auto">
+                    <span ng-repeat="aRequest in aGroupRequest.requests" class="label label-default" style="margin-right:1px;">
+                        {{aRequest.product.episode_number != null && _T["590wjx96"] + " " + aRequest.product.episode_number || aRequest.product.description_text || aRequest.product.description.value}}
+                    </span>
+                </div>
+              <div class="col-md-2">
+                <span uib-tooltip-html="aGroupRequest.productsName" tooltip-class="tooltip-90p" tooltip-placement="bottom">
+                  <span class="badge" style="background: dodgerblue;" ng-if="aGroupRequest.requests[0].is_planned == 1 && !(aGroupRequest.requests[0].is_done == 1 || aGroupRequest.requests[0].is_in_progress == 1 || aGroupRequest.requests[0].is_not_done == 1)">{{aGroupRequest.requests.length}} {{ _T["ggwfd2ym"] }}</span>
+                  <span class="badge" style="background: dodgerblue;" ng-if="aGroupRequest.requests[0].is_in_progress == 1">{{aGroupRequest.requests.length}} {{ _T["ggwfd2ym"] }}</span>
+                  <span class="badge" style="background: darkorange;" ng-if="aGroupRequest.requests[0].is_not_done == 1 ">{{aGroupRequest.requests.length}} {{ _T["ggwfd2ym"] }}</span>
+                  <span class="badge" style="background: black;" ng-if="aGroupRequest.requests[0].is_planned == 0 ">{{aGroupRequest.requests.length}} {{ _T["ggwfd2ym"] }}</span>
+                </span>
+                <div class="visual">
+                  <i ng-if="aGroupRequest.requests[0].on_hold == 1" class="fa fa-pause" aria-hidden="true"></i>
+                  <i ng-if="aGroupRequest.requests[0].important == 1" class="fa fa-exclamation-triangle"></i>
+                </div>
+              </div>
+              <div class="col-md-10">{{aGroupRequest.requests[0].action_type.etape_type.value }} - {{ aGroupRequest.requests[0].action_type.value}}
+                <div style="margin-top: 5px; margin-bottom: 5px">
+                  <workflow data="aGroupRequest.requests[0].workflow"></workflow>
+                </div>
+                <date-wish ng-if="aGroupRequest.requests[0]" data="aGroupRequest.requests[0]" hide="true" small="true"></date-wish>
+              </div>
+            </div>
+          </div>
+          <!-- <div ng-show="request.sortedRequestsCount > 2">
+            <div ng-click="changeState(request)" class="show-more">
+              <span ng-show="!request.show_more">Voir + de demandes </span>
+              <span ng-show="request.show_more">Voir - de demandes</span>
+            </div>
+          </div> -->
+        </div>
+        <div class="panel-footer">
+            <span ng-click="changeState(request)" class="show-more">
+                <span ng-show="!request.show_more">{{ _T["ny42m9kz"] }} ({{filteredGroupRequest.length}}) </span>
+                <span ng-show="request.show_more">{{ _T["1abmdxo2"] }} ({{filteredGroupRequest.length}})</span>
+              </span>
+        </div>
+
+      </div>
+    </div>
+    <div ng-if="requests.length <= 0 || filtered.length <= 0" class="no-data">
+      {{ _T["fuiu10dn"] }}
+    </div>
+
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <ul uib-pagination previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" ng-if="totalItems" items-per-page="pageSize" total-items="filteredItems.length"
+        ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true" ng-change="pageChanged(currentPage)"></ul>
+    </div>
+  </div>
+</div>

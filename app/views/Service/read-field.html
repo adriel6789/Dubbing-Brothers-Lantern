@@ -1,0 +1,22 @@
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ field.title }}<em ng-hide="!field.required">*</em></label>
+    <span>
+            <div class="col-sm-6">
+                <div ng-if="method[field.name] == null">
+                    <label class="control-label">{{ _T["fj98qsz4"] }}</label>
+                </div>
+                <div ng-if="method[field.name] != null">
+                    <label class="control-label">{{ method[field.name] }}</label>
+                </div>
+            </div>
+
+        </span>
+    <div class="col-sm-3">
+        <div ng-if="method[field.name] == null">
+            <button class="btn btn-sm btn-info">{{ _T["g0nm0vwj"] }}</button>
+        </div>
+        <div ng-if="method[field.name] != null">
+            <button class="btn btn-sm btn-info">{{ _T["mx7q7rbm"] }}</button>
+        </div>
+    </div>
+</div>

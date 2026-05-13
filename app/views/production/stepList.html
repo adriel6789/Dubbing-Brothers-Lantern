@@ -1,0 +1,48 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["t0mdcz55"] }} {{::client.name | uppercase}}
+                  <a href="#/stepDetailNew/{{client.id}}" role="button" class="btn btn-default btn-text-primary btn-big-shadow pull-right"><i class="c-icon c-icon-add"></i> {{ _T["obrn92qp"] }} </a>
+            </p>
+        </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside header-input-text">
+        <div class="col-sm-12">
+            <form>
+                <div class="form-group search-form">
+                    <input type="text" class="form-control input-search" ng-model="textFilter" placeholder="{{ _T['4uqnpszb'] }}">
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside" style="margin-top:50px">
+    <div class="row">
+        <div ng-if="specs.length == 0">
+            <p class="text-center">{{ _T["yf83dwos"] }}<br/>
+                {{ _T["ws1r16ju"] }} « <a href="#/stepDetailNew/{{client.id}}"><button class="btn btn-sm btn-primary">{{_T["obrn92qp"] }}</button></a> » {{ _T["qnwdfcc8"] }}.
+            </p>
+        </div>
+        <table class="table table-condensed table-bordered table-hover table-custom">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ _T["x8562wdg"] }}</th>
+                <th>{{ _T["2w7jtwr8"] }}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="step in steps | magicFilter: textFilter">
+                <td>{{$index + 1}}</td>
+                <td>{{step.title}}</td>
+                <td>{{step.workflow_type_name}}</td>
+                <td><a href="#/stepDetailEdit/{{step.id}}"><button class="btn btn-sm btn-default pull-right"><i class="glyphicon glyphicon-edit"></i> {{ _T["rnr4bk5z"] }}</button></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,432 @@
+<div class="container-fluid container-fixed-nav-aside">
+  <div class="row">
+    <h2 class="col-md-12 text-center">
+      <button  type="button" class="btn btn-default btn-change" ng-show="!loaded && !loading"  ng-click="loadData(1)">
+        Charger les données sur un an
+      </button>
+      <button  type="button" class="btn btn-default btn-change" ng-show="!loaded && !loading"  ng-click="loadData(2)">
+        Charger les données sur deux ans
+      </button>
+      <span ng-if="loaded && numberOfLoading == numberOfLoadingDone">
+      {{ _T["uiclqq45"] }} {{dateStartDisplayed}} {{ _T["f6vwmdfc"] }} {{dateEndDisplayed}}
+       - <button type="button" class="btn btn-default" ng-click="computeSaturdayOrNot()">{{ saturdayNightFeverOrNot[saturdayChoice] }}</button>
+      </span>
+      <span ng-if="loading && numberOfLoading != numberOfLoadingDone">
+      loading: {{numberOfLoadingDone}} / {{numberOfLoading}}
+      
+      </span>
+      <span ng-show="computing" class="fa fa-refresh" title="calculs"></span>
+      <br />
+      <span class="badge" ng-if="warningsOverQuota.rec" style="background-color:red">Salles rec overbooked</span>
+      <span class="badge" ng-if="warningsOverQuota.mix" style="background-color:red">Salles mix overbooked</span>
+    </h2>
+    <div class="col-md-offset-3 col-md-6">
+      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+        <div class="btn-group" role="group" ng-show="true">
+          <button type="button" class="btn btn-default" ng-click="filterDate(730)" ng-class="{'btn-primary': filter == 730}">- 24 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group" ng-show="true">
+          <button type="button" class="btn btn-default" ng-click="filterDate(547)" ng-class="{'btn-primary': filter == 547}">- 18 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group" ng-show="true">
+          <button type="button" class="btn btn-default" ng-click="filterDate(365)" ng-class="{'btn-primary': filter == 365}">- 12 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default" ng-click="filterDate(182)" ng-class="{'btn-primary': filter == 182}">- 6 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default" ng-click="filterDate(91)" ng-class="{'btn-primary': filter == 91}">- 3 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default" ng-click="filterDate(30)" ng-class="{'btn-primary': filter == 30}">- 1 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group" ng-show="true">
+          <button type="button" class="btn btn-default" ng-click="filterDate(-30)" ng-class="{'btn-primary': filter == -30}">+ 1 {{ _T["z6vth5jn"] }}</button>
+        </div>
+        <div class="btn-group" role="group" ng-show="true">
+          <button type="button" class="btn btn-default" ng-click="filterDate(-90)" ng-class="{'btn-primary': filter == -90}">+3 {{ _T["z6vth5jn"] }}</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-offset-3 col-md-6 text-center">
+      <div class="col-md-9">
+          <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span>
+                <input ng-model="dashDateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" ng-change="getDay(dashDateStart, 'start')" placeholder="{{ _T['6a062zq9'] }}">
+                <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span>
+                <input ng-model="dashDateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" ng-change="getDay(dashDateEnd, 'end')" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">              
+          </div>
+          <script>
+            $('input.calendar').datepicker({
+              format: "yyyy-mm-dd",
+              todayBtn: true,
+              language: $.cookie("language"),
+              orientation: "top",
+              multidateSeparator: " - ",
+              calendarWeeks: true,
+              todayHighlight: true,
+              autoclose: true,
+              clearBtn: true
+            });
+            $(function() {
+              $('[data-toggle="tooltip"]').tooltip({html: true})
+            });
+          </script>
+      </div>
+      <div class="col-md-3">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          {{ _T["z6vth5jn"] }}
+          <ui-select ng-model="chosenMonth" ng-change="displayMonth($select)" style="width:180px; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="month in monthsList">
+            <div ng-bind-html="month.name"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </div>
+    </div>
+    <div class="col-md-offset-2 col-md-8">
+      <div class="col-md-2">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Clients<br />
+          <ui-select ng-model="chosenClient" ng-change="displayClient($select)" style="width:80%; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="client in clientsList | propsFilter: {name: $select.search}">
+            <div ng-bind-html="client.name"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </div>      
+      <div class="col-md-3">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          projets
+          <ui-select ng-model="chosenProjet" ng-change="displayProjects($select)" style="width:80%;" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="projet in projects | propsFilter: {name: $select.search} ">
+            <div ng-bind-html="projet.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+          <br />
+          <span style="cursor:pointer" ng-if="chosenProjet" ng-click="displayProject(chosenProjet)">Stats pour {{chosenProjet.name}}</span> <span ng-if="chosenProjet && computing">Analyse en cours</span>
+
+          <ui-select ng-show="subProjectsList" ng-model="chosenSubProjet" ng-change="displaySubProject($select)" style="width:80%;" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="subprojet in subProjectsList | propsFilter: {name: $select.search} ">
+            <div ng-bind-html="subprojet.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+          <span ng-if="chosenSubProjet && computing">Analyse en cours</span>
+        </span>
+      </div>
+      <div class="col-md-2">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Types d'exploitation<br />
+          <ui-select ng-model="chosenExploitation" ng-change="displayExploitation($select)" style="width:100px; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.value}}</ui-select-match>
+            <ui-select-choices repeat="exploitation in exploitationTypesList">
+            <div ng-bind-html="exploitation.value"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </div>
+
+      <div class="col-md-1">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Langues<br />
+          <ui-select ng-model="chosenLanguage" ng-change="displayLanguage($select)" style="width:100px; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="language in languagesFound | propsFilter: {name: $select.search}">
+            <div ng-bind-html="language.value"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </div>
+      <div class="col-md-2">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Formats de mixage<br />
+          <ui-select ng-model="chosenFormatMix" ng-change="displayFormatMix($select)" style="width:100px; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.value}}</ui-select-match>
+            <ui-select-choices repeat="formatMix in formatsmix">
+            <div ng-bind-html="formatMix.value"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </div>
+      <div class="col-md-2">
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Etapes de doublage<br />
+          <ui-select ng-model="chosenDubStep" ng-change="displayDubStep($select)" style="width:100%; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder="" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="dubStep in dubbingStepsList">
+            <div ng-bind-html="dubStep.value"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <button type="button" class="btn btn-default" ng-repeat="menu in mainMenu | orderObjectBy:'name'"  ng-click="seeElement(menu)">{{menu.value}}</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <button type="button" class="btn btn-default"  ng-click="exportAuditData()">Export Data</button>
+    </div>
+  </div>
+  <div class="row bold" ng-style="{'background-color': waitingWhileRecomputingDataStyle.backgroundColor, 'color': waitingWhileRecomputingDataStyle.color }">
+    <div class="col-md-offset-3 col-md-6"> 
+      {{waitingWhileRecomputingDataStyle.text}}
+    </div>
+  </div>
+  <div class="col-md-12 col-lg-12" ng-if="showActivity()">
+    <div class="panel">
+      <div class="panel-body">
+        <nvd3 data='dataCumulativeChart' options='optionsCumulativeChart'></nvd3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showActivity()">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="text-center">
+          <h1>{{requestsCreatedDuringPeriod}}</h1>
+          <h2>{{ _T["csc017kq"] }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showActivity()">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="text-center">
+          <h1>{{workingProjectsTotal}}</h1>
+          <h2>{{ _T["kyv5c5i5"] }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showActivity()">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="text-center">
+          <h1>{{totalHours}}</h1>
+          <h2>{{ _T["ed705r5n"] }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showActivity()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>{{ _T["lu3c7q7z"] }}</h1>
+        <nvd3 data='dataPieTypeOfDemands' options='optionsPie'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showActivity()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>{{ _T["k031c8d0"] }}</h1>
+        <nvd3 data='dataPieTypeOfProjects' options='optionsPie'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="false">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>{{ _T["by8mndiw"] }}</h1>
+        <nvd3 data='dataPieTypeOfPlanning' options='optionsPie'></nvd3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-6" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body">
+        <nvd3 data='dataConfidenceRecChart' options='optionsConfidenceIndexRecChart'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body">
+        <nvd3 data='dataConfidenceRetakeChart' options='optionsConfidenceIndexRetakeChart'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body">
+        <nvd3 data='dataConfidenceMixChart' options='optionsConfidenceIndexMixChart'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body">
+        <nvd3 data='dataConfidenceMixRepassageChart' options='optionsConfidenceIndexMixRepassageChart'></nvd3>
+      </div>
+    </div>
+  </div>
+
+
+  <!---rendues non rendues-->
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Enregistrements non rendus</h1>
+        <nvd3 data='dataPieRendered.enregistrement' options='optionsRendered'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Mix non rendus</h1>
+        <nvd3 data='dataPieRendered.mixage' options='optionsRendered'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showConfidence()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Prepa audio non rendus</h1>
+        <nvd3 data='dataPieRendered.prepa_audio' options='optionsRendered'></nvd3>
+      </div>
+    </div>
+  </div>
+  <!--taux occupation global-->
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showOccupation()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Occupation tout studio Jour</h1>
+        <nvd3 data='occupancyRatioJour' options='nuitJour'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showOccupation()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Occupation tout studio Nuit</h1>
+        <nvd3 data='occupancyRatioNuit' options='nuitJour'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showOccupation()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Occupation Studios hybrides Jour</h1>
+        <nvd3 data='occupancyHybridRatioJour' options='nuitJour'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="false">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Occupation Studios hybrides nuit</h1>
+        <nvd3 data='occupancyHybridRatioNuit' options='nuitJour'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showResources()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Mixage: internes VS freelance</h1>
+        <nvd3 data='MixInternesVSFreelances' options='nuitJour'></nvd3>
+      </div>
+      <span class="alert alert-danger mr-15" ng-if="errors['ressources']">{{errors['ressources']}}</span>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showResources()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Enregistrements: Internes VS freelances</h1>
+        <nvd3 data='RecordingInternesVSFreelances' options='nuitJour'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showResources()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Mix inserts par langues</h1>
+        <nvd3 data='correctionsByLang' options='mixByLang'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showResources()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>Mix repassage par langues</h1>
+        <nvd3 data='repassageByLang' options='mixByLang'></nvd3>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4" ng-if="showResources()">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h1>inserts et repassage Vs mix total</h1>
+        <nvd3 data='repassageAndInsertVersusRestOfTheWorld' options='nuitJour'></nvd3>
+      </div>
+    </div>
+  </div>  
+
+
+
+
+  
+  <div class="col-md-12 col-lg-12" ng-if="showRooms()">
+    <div class="panel">
+      <div class="panel-body">
+        <span style="cursor:pointer" class="f-13" ng-click="displayRooms = !displayRooms">Afficher les salles</span> - 
+
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Types d'exploitation affiché {{chosenExploitType.name }}
+          <ui-select ng-model="chosenExploitType" ng-change="choseExploitType($select.selected)" style="width:100px; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder=""></ui-select-match>
+            <ui-select-choices repeat="type in typesExploitation">
+            <div ng-bind-html="type.name"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+        <span style="width:100%; padding-bottom: 21px; padding-top: 22px;" >
+          Sites {{chosenLocation }}
+          <ui-select ng-model="chosenLocation" ng-change="choseLocation($select.selected)" style="width:100px; display: inline-table" theme="bootstrap">
+            <ui-select-match placeholder=""></ui-select-match>
+            <ui-select-choices repeat="location in roomsByLocation">
+            <div ng-bind-html="location"></div>
+            </ui-select-choices>
+          </ui-select>
+        </span>
+        Affichage général - affichage théorique
+        <br />
+      </div>
+    </div>
+  </div>  
+  <!--displayRooms-->
+  <div class="col-md-12 col-lg-12" ng-if="showRooms()">
+    <div class="col-sm-12 col-md-3 col-lg-3"  ng-repeat="audit in audits | orderObjectBy:'name'">
+      <div class="panel" ng-show="((!chosenExploitType && !chosenLocation) || (displayARoom(chosenExploitType, audit.dubStepRoomValue) || displayByLocation(chosenLocation, audit.location))) && roomExcluded(audit)">
+        <div class="panel-body">
+          <div counter="true" gauge-width-scale="1" justgage label-font-color="black" label="Heures" max="8" min="0" no-gradient="false" start-animation-time="2000" start-animation-type="linear" decimals="2" title-font-color="black" title="{{audit.name}} " value="{{audit.hoursDays}}" text-renderer="textRenderer" label="label 1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- for dev :) errors -->
+  <div class="col-md-12 col-lg-12" ng-if="displayOnlyForAdmin">
+    <div class="panel" >
+      <div class="panel-body">
+        <div ng-repeat="(key, entry) in errorsInSession">
+          <div>{{entry.info}} :  {{entry.details}} <br /></div>  
+         
+          </div>
+      </div>
+      
+    </div>
+  </div>
+
+
+</div>

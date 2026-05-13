@@ -1,0 +1,118 @@
+<div class="page page-projects">
+  <header>
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>{{ _T["kgt6sdwa"] }}</p>
+      </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside header-input-text">
+      <div class="row">
+        <div class="col-md-2 col-sm-4" style="margin-top: 3px;">
+          <button ng-click="launchWizard()" class="btn btn-primary btn-block"><i class="fa fa-plus-circle"></i> {{ _T["vrk8txlq"] }}</button>
+        </div>
+        <form class="col-md-10 col-sm-8">
+          <div class="form-group search-form">
+            <input type="text" class="form-control input-search" aria-label="Rechercher un projet" placeholder="{{ _T['7sc3e0xf'] }}" ng-change="saveSearch()" ng-model="textProjectFilter">
+          </div>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="projects" ng-class="{'no-projects' : allProjects.length < 1 || filteredItemsPjt.length < 1}">
+          <div ng-if="isLoadingAllProjects()">
+            <p>{{ _T["0243qh7n"] }}</p>
+          </div>
+          <div ng-if="filteredItemsPjt.length == 0 && !isLoadingAllProjects()">
+            <p>{{ _T["k7az6ku7"] }}</p>
+          </div>
+          <div ng-show="allProjects.length > 0">
+            <div class="col-md-12 p-0">
+              <div class="panel panel-default mr-0 mb-5" ng-repeat="project in (filteredItemsPjt = (allProjects | filterProjectByNameOrCodeNameOrClient: textProjectFilter | orderBy:'date_creation':true) | startFrom:(currentPjt-1)*10 | limitTo:10)">
+                <div class="panel-body">
+                  <div class="row mb-0">
+                    <div class="col-md-1 text-center">
+                      <img class="img-responsive img-circle" style="margin: auto; cursor: default;" ng-src="{{clients[project.client.id].url || '../app/img/no-customer.png'}}" alt="{{project.client.name}}" />
+                      <div ng-show="project.client.name" class="icon-style" style="top: 5px;">
+                        <label class="company">{{project.client.name}}</label>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-md-offset-1">
+                      <div class="">
+                        <label ng-if="project.name != null && project.name != ''" ng-class="{'text-bold' : project.display_name == 'name'}">{{project.name}}</label>
+                        <label ng-if="project.code_name != null && project.code_name != ''" ng-class="{'text-bold' : project.display_name == 'code_name'}">({{project.code_name}})</label>
+                        <label ng-if="project.code_name_2 != null && project.code_name_2 != ''" ng-class="{'text-bold' : project.display_name == 'code_name_2'}">({{project.code_name_2}})</label>
+                        <label ng-if="project.code_name_3 != null && project.code_name_3 != ''" ng-class="{'text-bold' : project.display_name == 'code_name_3'}">({{project.code_name_3}})</label>
+                      </div>
+                      <div class="">
+                        <span ng-repeat="subproject in project.ownSubproject | orderBy:subproject.season:true" ng-if="subproject.tableausuivi_id != NULL || (subproject.tableausuivi_id == NULL && subproject.tmdb_id == NULL)">
+                          <button class="btn btn-default btn-light-shadow" ng-class="{'btn-primary' : getSelectedSubprojectId() == subproject.id}" ng-if="subproject.nature.name == 'serie'" ng-click="selectSubProject(subproject)">
+                            {{_T["6vwtywcc"] + " " + subproject.season}}
+                          </button>
+                          <button class="btn btn-default btn-light-shadow" ng-class="{'btn-primary' : getSelectedSubprojectId() == subproject.id}" ng-if="subproject.nature.name != 'serie'" ng-click="selectSubProject(subproject)">
+                            {{subproject.nature.value}}
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <button class="btn btn-primary btn-block" ng-click="launchWizard(project)"><i class="fa fa-pencil"></i> {{ _T["2g5g3f45"] }}</button>
+                      <button class="btn btn-success btn-block" ng-click="createSubProject(project)"><i class="fa fa-plus-circle"></i> {{ _T["hwhpe6sy"] }}</button>
+                    </div>
+                  </div>
+                  <div class="row mb-0" ng-repeat="subproject in project.ownSubproject | orderBy:subproject.season:true" ng-if="getSelectedSubprojectId() == subproject.id && (subproject.tableausuivi_id != NULL || (subproject.tableausuivi_id == NULL && subproject.tmdb_id == NULL))">
+                    <div class="col-md-12">
+                      <hr class="mt-0">
+                      <div class="row">
+                        <form class="col-md-4">
+                          <div class="form-group search-form">
+                            <input type="text" class="form-control input-search" aria-label="Rechercher un produit" placeholder="{{ _T['vob9e3rp'] }}" ng-model="textProductFilter">
+                          </div>
+                        </form>
+                        <div class="col-md-8 mt-5">
+                          <button ng-click="createProduct(subproject, project)" class="btn btn-success"><i class="fa fa-plus-circle"></i> {{ _T["yztihdqz"] }}</button>
+                          <button ng-click="editSubproject(subproject)" class="btn btn-primary ml-10"><i class="fa fa-pencil"></i> {{ _T["ufto2j7b"] }}</button>
+                          <button ng-click="setCodeSecuriteSubproject(subproject)" class="btn btn-info ml-10"><i class="fa fa-pencil"></i> {{ _T["9688806z"] }}</button>
+                          <button ng-click="createMultiElementDialog(subproject, project)" class="btn btn-primary ml-10"><i class="fa fa-plus-circle"></i> {{ _T["sfuw54q6"] }}</button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <table class="table table-striped">
+                            <tr ng-repeat="product in subproject.ownProduct| magicFilterProduct:textProductFilter | orderBy:'episode_number'">
+                              <td>
+                                <input type="checkbox" id="select-{{product.id}}" ng-model="selectedProducts[product.id]">
+                                <label for="select-{{product.id}}"></label>
+                              </td>
+                              <td class="text-left">
+                                <span class="f-16">
+                                  <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+                                  <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+                                  <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+                                </span>
+                                <a class="btn btn-default btn-sm pull-right ml-10" ui-sref="app.products({id:product.id})">{{ _T["7hsxi6xf"] }}</a>
+                                <button class="btn btn-default btn-sm pull-right ml-10" ng-click="editProduct(product)">{{ _T["dpd3kbc8"] }}</button>
+                                <a class="btn btn-default btn-sm pull-right ml-10" href="#/products/{{product.id}}/mediaItems">{{ _T["tp9x2vk5"] }}</a>
+                                <button class="btn btn-default btn-sm pull-right ml-10" ng-click="createElementDialog(product, subproject, project)">{{_T["sfuw54q6"] }}</button>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <ul uib-pagination previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="10" total-items="filteredItemsPjt.length" ng-model="currentPjt" max-size="10" class="pagination-sm" boundary-link-numbers="true" ng-change=""></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

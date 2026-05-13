@@ -1,0 +1,153 @@
+<div class="page page-projects">
+  <header>
+    <div class="container-fluid container-fixed-nav-aside">
+      <div class="col-sm-12">
+        <p>
+          {{ _T["kgt6sdwa"] }}
+          <span class="pull-right" ng-if="role != 'commercial'">
+            <a role="button" ng-click="launchWizard()" class="btn btn-default btn-text-primary btn-big-shadow"><i class="c-icon c-icon-add"></i> {{ _T["ipz2ujo1"] }} </a>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside header-input-text">
+      <form class="col-sm-12">
+        <div class="form-group search-form">
+          <input type="text" class="form-control input-search" aria-label="Rechercher parmi les projets" placeholder="{{ _T['rsucdqhx'] }}" ng-change="saveSearch()" ng-model="textProjectFilter">
+        </div>
+      </form>
+    </div>
+  </header>
+
+  <!-- projets suivis -->
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <h2>{{ _T["ofi8cwh0"] }} <small><i class="fa fa-info-circle" aria-hidden="true"></i> {{ _T["ghilfvma"] }}</small></h2>
+      <div class="projects" ng-class="{'no-projects' : favoriteProjects.length < 1 || filteredItemsFav.length < 1}">
+        <div ng-if="favoriteProjects.length == 0 && !isLoadingFavoriteProjects()" >
+          <p>{{ _T["a41trl9a"] }}</p>
+        </div>
+        <div ng-if="filteredItemsFav.length == 0 && !isLoadingFavoriteProjects()" >
+          <p>{{ _T["k7az6ku7"] }}</p>
+        </div>
+        <div ng-if="isLoadingFavoriteProjects()" >
+          <p>{{ _T["237bw0dy"] }}</p>
+        </div>
+        <div ng-show="favoriteProjects.length > 0">
+          <div class="col-md-12 p-0">
+            <div class="panel panel-default mr-0 mb-5" ng-repeat="favorite in (filteredItemsFav = (favoriteProjects | filterProjectByNameOrClient: textProjectFilter : $root.canDisplay(33) | orderBy:'name_format') | startFrom:(currentFav-1)*pageSize | limitTo:pageSize)">
+              <div class="panel-body">
+                <div class="col-md-1" ng-click="unableFavorite(favorite)">
+                  <i class="fa fa-star-o f-22 icon-style full"  data-toggle="tooltip" title="{{ _T['nspe67nr'] }}" aria-hidden="true"></i>
+                  <img class="img-responsive img-circle pull-right" ng-src="{{ clients[favorite.client.id].url || '../app/img/no-customer.png'}}" alt="{{favorite.client.name}}" />
+                </div>
+                <div class="col-md-1">
+                  <div ng-show="favorite.client.name" class="icon-style">
+                    <label class="company">{{favorite.client.name}}</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <label ng-if="$root.canDisplay(1)"><strong>Id:({{favorite.id }})  </strong></label>
+                  <label ng-if="!$root.canDisplay(32)">{{favorite.name_format}}</label><br />
+                  <label ng-if="$root.canDisplay(32)">
+                    Titre Lantern: {{favorite.name_format}}<br />
+                    Vrai titre: {{favorite.name ? favorite.name :  _T["fj98qsz4"]}}<br />
+                    <strong>Titre original</strong> {{favorite.original_name ? favorite.original_name :  _T["fj98qsz4"] }}<br />
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <span ng-repeat="subproject in favorite.ownSubproject | orderBy:subproject.season:true" ng-if="subproject.tableausuivi_id != NULL || (subproject.tableausuivi_id == NULL && subproject.tmdb_id == NULL)">
+                    <a class="btn btn-default" ng-if="subproject.nature.name == 'serie'" ui-sref="app.suiviProd({id : subproject.id})">
+                      {{_T["6vwtywcc"] + " " + subproject.season}}
+                    </a>
+                    <a class="btn btn-default" ng-if="subproject.nature.name != 'serie'" ui-sref="app.suiviProd({id : subproject.id})">
+                      {{subproject.nature.value}}
+                    </a>
+                  </span>
+                </div>
+                <div class="col-md-2 text-center">
+                  <div class="actions-container">
+                    <button  ng-if="role != 'commercial'" type="button" ng-click="launchWizard(favorite)"  data-toggle="tooltip" title="{{ _T['y3ka5nio'] }}" class="btn btn-lg btn-default">
+                      <i class="fa fa-pencil"></i>
+                    </button>
+                    <a ui-sref="app.timeTracking({idProject : favorite.id})"  data-toggle="tooltip" title="{{ _T['9jd32u2m'] }}" type="button" class="btn btn-lg btn-primary">
+                      <i class="c-icon c-icon-timer"></i>
+                    </a>
+                    <button ng-if="role != 'commercial'" type="button" ng-click="createSubProject(favorite)"  data-toggle="tooltip" title="{{ _T['hwhpe6sy'] }}" class="btn btn-lg btn-success">
+                    <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+          <ul uib-pagination previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="10" total-items="filteredItemsFav.length"
+            ng-model="currentFav" max-size="10" class="pagination-sm" boundary-link-numbers="true" ng-change=""></ul>
+        </div>
+    </div>
+    <!-- /projets suivis -->
+    <!-- tous les projets -->
+    <div class="col-md-12">
+      <h2>{{ _T["rngrcfjv"] }} <small><i class="fa fa-info-circle" aria-hidden="true"></i> {{ _T["covcqmdq"] }}</small></h2>
+      <div class="projects" ng-class="{'no-projects' : allProjects.length < 1 || filteredItemsPjt.length < 1}">
+        <div ng-if="isLoadingAllProjects()" >
+          <p>{{ _T["0243qh7n"] }}</p>
+        </div>
+        <div ng-if="filteredItemsPjt.length == 0 && !isLoadingAllProjects()" >
+          <p>{{ _T["k7az6ku7"] }}</p>
+        </div>
+        <div ng-show="allProjects.length > 0">
+          <div class="col-md-12 p-0">
+            <div class="panel panel-default mr-0 mb-5" ng-repeat="project in (filteredItemsPjt = (allProjects | filterProjectByNameOrClient: textProjectFilter : $root.canDisplay(33) | projectFilter:favoriteProjects | orderBy:'date_creation':true) | startFrom:(currentPjt-1)*10 | limitTo:10)">
+              <div class="panel-body">
+                <div class="col-md-1" ng-click="enableFavorite(project)">
+                  <i class="fa fa-star-o f-22 icon-style"  data-toggle="tooltip" title="{{ _T['xo6sovj2'] }}" aria-hidden="true"></i>
+                  <img class="img-responsive img-circle pull-right" ng-src="{{ clients[project.client.id].url || '../app/img/no-customer.png'}}" alt="{{project.client.name}}" />
+                </div>
+                <div class="col-md-1">
+                  <div ng-show="project.client.name" class="icon-style">
+                    <label class="company">{{project.client.name}}</label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <label ng-if="$root.canDisplay(1)"><strong>Id:({{project.id }}) </strong></label>
+                  <label ng-if="!$root.canDisplay(32)">{{project.name_format}}</label><br />
+                  <label ng-if="$root.canDisplay(32)">
+                    Titre Lantern: {{project.name_format}}<br />
+                    Vrai titre: {{project.name ? project.name :  _T["fj98qsz4"]}}<br />
+                    <strong>Titre original</strong>: {{project.original_name ? project.original_name :  _T["fj98qsz4"] }}<br />
+                  </label>
+                </div>
+                <div class="col-md-6">
+                  <span ng-repeat="subproject in project.ownSubproject | orderBy:subproject.season:true" ng-if="subproject.tableausuivi_id != NULL || (subproject.tableausuivi_id == NULL && subproject.tmdb_id == NULL)">
+                    <a class="btn btn-default" ng-if="subproject.nature.name == 'serie'" ui-sref="app.suiviProd({id : subproject.id})">
+                      {{_T["6vwtywcc"] + " " + subproject.season}}
+                    </a>
+                    <a class="btn btn-default" ng-if="subproject.nature.name != 'serie'" ui-sref="app.suiviProd({id : subproject.id})">
+                      {{subproject.nature.value}}
+                    </a>
+                  </span>
+                </div>
+                <div class="col-md-2 text-center">
+                  <div class="actions-container">
+                    <a ui-sref="app.timeTracking({idProject : project.id})"  data-toggle="tooltip" title="{{ _T['9jd32u2m'] }}" type="button" class="btn btn-lg btn-primary">
+                      <i class="c-icon c-icon-timer"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+          <ul uib-pagination previous-text="{{ _T['0u030qx5'] }}" next-text="{{ _T['im19ajy6'] }}" items-per-page="10" total-items="filteredItemsPjt.length"
+            ng-model="currentPjt" max-size="10" class="pagination-sm" boundary-link-numbers="true" ng-change=""></ul>
+        </div>
+    </div>
+    <!-- /tous les projets -->
+  </div>
+</div>

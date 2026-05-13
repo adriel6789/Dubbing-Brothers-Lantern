@@ -1,0 +1,86 @@
+variables:
+  BUILD_FOLDER: "./"
+  PREPROD_IP: 10.0.1.28
+  PROD_IP: 10.0.1.32
+  PREPROD_FOLDER: "/var/www/lantern"
+  PROD_FOLDER: "/var/www/lantern"
+
+.deploy:
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+build-preprod:
+  image: node:10
+  stage: build
+  script:
+    - cp app/js/config.preprod.js app/js/config.js
+    - npm install --progress=false
+    - npm run gulp
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - "$BUILD_FOLDER"
+  only:
+    - develop
+
+deploy-preprod:
+  image: uilicious/alpine-openssh-rsync
+  extends: .deploy
+  stage: deploy
+  script:
+    - ssh -t deploy@"$PREPROD_IP" cd "$PREPROD_FOLDER" && rm -rf "$PREPROD_FOLDER"/*
+    - rsync -avzqP "$BUILD_FOLDER"* deploy@"$PREPROD_IP":"$PREPROD_FOLDER"/
+  environment:
+    name: preproduction
+    url: http://10.0.1.28/lantern/app/
+  only:
+    - develop
+
+build-prod:
+  image: node:10
+  stage: build
+  script:
+    - cp app/js/config.prod.js app/js/config.js
+    - npm install --progress=false
+    - npm run gulp
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - "$BUILD_FOLDER"
+  only:
+    - master
+
+deploy-prod:
+  image: uilicious/alpine-openssh-rsync
+  extends: .deploy
+  stage: deploy
+  script:
+    - ssh -t deploy@"$PROD_IP" rm -rf "$PROD_FOLDER".new
+    - ssh -t deploy@"$PROD_IP" mkdir "$PROD_FOLDER".new
+    - rsync -avzqP "$BUILD_FOLDER"* deploy@"$PROD_IP":"$PROD_FOLDER".new/
+    - ssh -t deploy@"$PROD_IP" "mv $PROD_FOLDER $PROD_FOLDER.old && mv $PROD_FOLDER.new $PROD_FOLDER && rm -rf $PROD_FOLDER.old"
+  environment:
+    name: production
+    url: https://lantern.dubbing-brothers.com/app/
+  only:
+    - master
+
+deploy-vega-prod:
+  image: uilicious/alpine-openssh-rsync
+  extends: .deploy
+  stage: deploy
+  variables:
+    PROD_FOLDER: "/var/www/lantern-vega"
+  script:
+    - ssh -t deploy@"$PROD_IP" rm -rf "$PROD_FOLDER".new
+    - ssh -t deploy@"$PROD_IP" mkdir "$PROD_FOLDER".new
+    - rsync -avzqP "$BUILD_FOLDER"* deploy@"$PROD_IP":"$PROD_FOLDER".new/
+    - ssh -t deploy@"$PROD_IP" "mv $PROD_FOLDER $PROD_FOLDER.old && mv $PROD_FOLDER.new $PROD_FOLDER && rm -rf $PROD_FOLDER.old"
+  environment:
+    name: production-vega
+    url: http://lantern-vega.france.dubbing-brothers.com/app/
+  only:
+    - master

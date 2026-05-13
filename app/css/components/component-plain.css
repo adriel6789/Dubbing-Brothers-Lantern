@@ -1,0 +1,19 @@
+.component-plain .box-design-request {
+    cursor: pointer;
+    min-height: 20px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 0;
+    box-shadow: none;
+	position: relative;
+}
+.component-plain .box-design-request:hover {
+	background:none;
+}
+
+.component-plain .add-comment {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: #3570E1;
+}

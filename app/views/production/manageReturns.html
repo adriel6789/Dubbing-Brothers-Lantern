@@ -1,0 +1,584 @@
+<header class="header-with-tabs">
+  <div class="container-fluid container-fixed-nav-aside">
+    <div class="col-sm-12">
+      <p>{{ _T["gdql55u7"] }}  {{::product.subproject.project.client.name}} - {{::product.human_description}} ({{::product.subproject.nature.value}})</p>
+    </div>
+  </div>
+</header>
+
+<div class="container-fluid container-fixed-nav-aside">
+  <h2 class="sub-header">
+    <div class="btn-group btn-big-shadow btn-group-vertical pull-right">
+      <a class="btn btn-default btn-text-primary text-left" href="#/products/{{product.id}}?workflow_id={{selectedWorkflowId}}">
+        <i class="fa fa-file-text-o"></i> {{ _T["ahx7gvs6"] }}
+      </a>
+      <a class="btn btn-default btn-text-primary text-left" ui-sref="app.suiviProd({id: product.subproject.id})">
+        <i class="fa fa-shield fa-rotate-270"></i> {{ _T["05yr3l8v"] }}
+      </a>
+    </div>
+  </h2>
+  <div class="row text-center">
+    <div class="btn-group" ng-repeat="workflow in product.sharedWorkflow">
+      <button class="btn btn-sm"
+              ng-click="selectWorkflow(workflow)"
+              ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+','+workflow.color.o+')', 'font-weight':'bold', 'color': workflow.color.font}"
+              ng-class="{'workflowUnselect': !workflow.isSelected}"
+              data-toggle="tooltip" tooltip-placement="bottom" uib-tooltip-html="workflow.description">
+              <span ng-if="workflow.workflow_type_id == 1">
+                <span class="fa fa-microphone"></span>
+                {{ _T["i5tk31xb"] }}
+              </span>
+              <span ng-if="workflow.workflow_type_id == 2">
+                <span class="fa fa-archive"></span>
+                {{ _T["z20ge21k"] }}
+              </span>
+              <span ng-if="workflow.workflow_type_id == 3">
+                <span class="fa fa-briefcase"></span>
+                {{ _T["1egq4x9k"] }}
+              </span>
+              <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                -
+                {{workflow.doublage_type.value}}
+              </span>
+              <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                -
+                {{workflow.language.value}}
+              </span>
+              <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                -
+                {{workflow.norme_mix.value}}
+              </span>
+              <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                -
+                {{workflow.servicing_type.value}}
+              </span>
+              <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                -
+                {{workflow.resolution.value}}
+              </span>
+              <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                -
+                {{workflow.diffuseur.name}}
+              </span>
+              <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                - {{workflow.speed.value}}
+              </span>
+              <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                - {{workflow.resolution.value}}
+              </span>
+              <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                - {{workflow.prod_version}}
+              </span>
+              <span class="badge" style="background-color: #2A2A2A;">
+                {{countReturns(workflow.returns)}} / {{workflow.returns.length}}
+              </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="row mt-30">
+    <div class="col-md-12" ng-repeat="workflow in product.sharedWorkflow" ng-show="workflow.isSelected">
+      <div class="panel panel-default">
+        <div class="mt-10" ng-if="workflow.returns.length != 0">
+          <span class="col-md-12 form-inline">
+            <!-- origine dynamique there -->
+            <select class="form-control input-sm" ng-model="workflow.filterOrigin" ng-change="cancelSelect(workflow)">
+              <option value="">{{ _T["9wy1maz6"] }}</option>
+              <option value="QC 5.1">{{ _T["kovcojn4"] }}</option>
+              <option value="QC Atmos">{{ _T["fyevst9p"] }}</option>
+              <option value="QC 20">{{ _T["xfhtwd8v"] }}</option>
+              <option value="Client">{{ _T["mdj3gnlm"] }}</option>
+              <option value="Diffuseur">{{ _T["irlv7lue"] }}</option>
+              <option value="Distributeur">{{ _T["m9dhu6hl"] }}</option>
+              <option value="Interne">{{ _T["sgnstmtu"] }}</option>
+              <option value="Refus">{{ _T["ckttefin"] }}</option>
+              <option ng-repeat="(key, value) in dynamicOriginWithDate" value="{{value}}">{{ key }}</option>
+            </select>
+
+            <select class="form-control input-sm" ng-model="workflow.filterTypeCorrection" ng-change="cancelSelect(workflow)">
+              <option value="">{{ _T["ny7t5dra"] }}</option>
+              <option value="RTK">{{ _T["hfjksadk"] }}</option>
+              <option value="Auteur">{{ _T["molt2u27"] }}</option>
+              <option value="Montage">{{ _T["wit1j843"] }}</option>
+              <option value="Mix">{{ _T["ri4arulz"] }}</option>
+              <option value="Regie">{{ _T["nmurk1pl"] }}</option>
+              <option value="Video">{{ _T["dch3ktan"] }}</option>
+            </select>
+
+            <select class="form-control input-sm" ng-model="workflow.filterAction" ng-change="cancelSelect(workflow)">
+              <option value="">{{ _T["3tizb55u"] }}</option>
+              <option value="is_ignored">{{ _T["tsxooyog"] }}</option>
+              <option value="is_not_done">{{ _T["jcrng616"] }}</option>
+              <option value="to_review">{{ _T["16ulek0s"] }}</option>
+              <option value="to_mix">{{ _T["22v97waz"] }}</option>
+              <option value="is_resolved">{{ _T["dslgoxok"] }}</option>
+              <option value="none">{{ _T["p1tvjcv9"] }}</option>
+            </select>
+
+            <input class="form-control input-sm mb-0" style="min-width: 200px;" type="text" placeholder="{{ _T['tl79kzou'] }}" ng-model="workflow.filterAuthor" ng-change="cancelSelect(workflow)">
+            <span class="btn btn-default" style="cursor: default; height: 40px;">
+              <span style="cursor:pointer" class="onoffswitch">
+                <input type="checkbox" ng-model="workflow.hideResolved" ng-click="cancelSelect(workflow)" name="onoffswitch" class="ios8-switch" id="onoffswitchHideResolved{{workflow.id}}">
+                <label class="onoffswitch-label cursor-pointer" for="onoffswitchHideResolved{{workflow.id}}">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </span>
+              <span style="vertical-align: middle">{{ _T["f7lfhjt0"] }}</span>
+            </span>
+            <button class="btn btn-primary pull-right" style="margin: 0 5px;" ng-click="exportQCInfos(workflow)"><i class="fa fa-file-excel-o"></i>{{ _T["y17e086y"] }}</button>
+
+            <button type="button" class="btn btn-primary dropdown-toggle pull-right" style="margin: 0 5px;" ng-disabled="!(workflow.returns.length != 0 && isReturnSelected(workflow.returns))" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ _T["bmo21r1k"] }} <i class="fa fa-caret-down"></i>
+            </button>
+
+
+            <ul class="dropdown-menu pull-right">
+              <li>
+                <a href="" ng-click="newRequestFromReturn(workflow)">{{ _T["9m7y0f38"] }}</a>
+              </li>
+              <li>
+                <a href="" ng-click="addReturnsToRequest(workflow)">{{ _T["ywzu49qr"] }}</a>
+              </li>
+              <li>
+                <a href="" ng-click="deleteSelectedReturns(workflow.returns)">{{ _T["58og51px"] }}</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li ng-repeat="action in actions">
+                <a href="" ng-click="actionClick(action.id, workflow.returns, true)">{{action.value}}</a>
+              </li>
+            </ul>
+
+
+            <button class="btn btn-primary pull-right" style="margin: 0 5px;" ng-disabled="workflow.returns.length == 0" ng-click="exportReturns('exportable_' + workflow.id)"><i class="fa fa-file-excel-o"></i> {{ _T["o3r3a9mw"] }}</button>
+            <span class="alert alert-info pull-right" ng-if="workflow.filterOrigin || workflow.filterTypeCorrection || workflow.filterAuthor || workflow.hideResolved || workflow.filterAction" style="margin: 0 5px; padding: 6px;"><i class="fa fa-exclamation-circle"></i> {{ _T["945d6eyo"] }}</span>
+            <span ng-if="workflow.filterOrigin">[{{workflow.filterOrigin}}]</span>
+          </div>
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th><input ng-click="selectAll(workflow)" ng-model="workflow.master" type="checkbox" id="workflow_{{workflow.id}}"><label for="workflow_{{workflow.id}}" class="mb-0"></label></th>
+                <th>{{ _T["czxyx2v6"] }}</th>
+                <th>{{ _T["ge5s26ms"] }}</th>
+                <th>{{ _T["k82q1zyu"] }}</th>
+                <th>{{ _T["6nhvzrz1"] }}</th>
+                <th>{{ _T["dkpnpeak"] }}</th>
+                <th>{{ _T["nxwlcy7f"] }}</th>
+                <th>{{ _T["km6j87uy"] }}</th>
+                <th>{{ _T["c4lldgy9"] }}</th>
+                <th>{{ _T["qv06knmc"] }}</th>
+                <th>{{ _T["hq73hg2l"] }}</th>
+                <th>{{ _T["fg48ejds"] }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-class="{
+                returnResolved: aReturn.action_id == 10,
+                returnMix: aReturn.action_id == 9,
+                returnIgnored: aReturn.action_id == 1 || aReturn.action_id == 2 || aReturn.action_id == 3 || aReturn.action_id == 4 || aReturn.action_id == 5 || aReturn.action_id == 6,
+                returnNotDone: aReturn.action_id == 7,
+                returnToReview: aReturn.action_id == 8}"
+                ng-repeat="aReturn in workflow.returns | orderBy : ['tc_in', 'tc_out'] | filter : {originWithDate:workflow.filterOrigin, type_correction:workflow.filterTypeCorrection} | magicFilterReturnUsername : workflow.filterAuthor | filterReturnsResolved : workflow.hideResolved | filterReturnsAction : workflow.filterAction">
+                <td><input ng-model="aReturn.selected" id="{{aReturn.id}}" type="checkbox"/><label for="{{aReturn.id}}"></label></td>
+                <td>
+                  <label class="f-13">
+                    
+                    <span ng-if="aReturn.tc_global == 1">{{ _T["g442q024"] }}</span>
+                    <span ng-if="aReturn.tc_global != 1">
+                      <a href="#" blur="ignore" editable-text="aReturn.tc_in" onbeforesave="validateTC($data)" onaftersave="doneEditing('tc_in', aReturn)" ng-if="aReturn.tc_in != null">
+                        {{ ( aReturn.tc_in && "TC IN : " + aReturn.tc_in) || "TC IN : ..." }}
+                      </a>
+                      <a href="#" blur="ignore" editable-text="aReturn.tc_in" onbeforesave="validateTC($data)" onaftersave="doneEditing('tc_in', aReturn)" ng-if="aReturn.tc_in == null">
+                       TC IN :  {{qcInfosTc.program_start}}
+                      </a>
+                      <br><br>
+                      <a href="#" blur="ignore" editable-text="aReturn.tc_out" onbeforesave="validateTC($data)" onaftersave="doneEditing('tc_out', aReturn)" ng-if="aReturn.tc_out != null">
+                        {{ ( aReturn.tc_out && "TC OUT : " + aReturn.tc_out) || "TC OUT : ..." }}
+                      </a>
+                      <a href="#" blur="ignore" editable-text="aReturn.tc_out" onbeforesave="validateTC($data)" onaftersave="doneEditing('tc_out', aReturn)" ng-if="aReturn.tc_out == null">
+                        TC OUT :  {{qcInfosTc.program_end}}
+                      </a>
+                    </span>
+                  </label>
+                </td>
+                <td>
+                  <label class="f-13">
+                    {{aReturn.type}}
+                  </label>
+                </td>
+                <td>
+                  <p>{{aReturn.severity}}</p>
+                </td>
+                <td>
+                    <pre style="white-space: pre-wrap; word-break: keep-all; width: 350px;">{{aReturn.comment}}</pre>
+                </td>
+                <td class="text-center">
+                  <div >
+                    <button class="btn btn-xs btn-link" ng-click="aReturn.show_comments = !aReturn.show_comments" ng-if="count(aReturn.ownComment) > 1 && !aReturn.show_comments">
+                      <i class="glyphicon glyphicon-eye-open"></i>
+                      {{ _T["sz1mg3i9"] }} ({{count(aReturn.ownComment)}})
+                    </button>
+                    <button class="btn btn-xs btn-link" ng-click="aReturn.show_comments = !aReturn.show_comments" ng-if="count(aReturn.ownComment) > 1 && aReturn.show_comments">
+                      <i class="glyphicon glyphicon-eye-close"></i>
+                      {{ _T["dzxrbmvs"] }}
+                    </button>
+                  </div>
+
+                  <div style="margin-bottom:5px" ng-if="aReturn.show_comments && !$last" ng-repeat="returnComment in aReturn.ownComment">
+                    <strong>{{returnComment.user.person.firstname}}
+                      {{returnComment.user.person.lastname}}</strong>
+                    -
+                    <small>
+                      <i>{{ _T["z0t6p7pd"] }}
+                        {{returnComment.date_creation | asDate | date:"dd/MM HH:mm"}}</i>
+                      ({{returnComment.context}}) :</small>
+                    {{returnComment.text}}
+                  </div>
+                  <div style="margin-bottom:5px" ng-if="$last" ng-repeat="returnComment in aReturn.ownComment">
+                    <strong>{{returnComment.user.person.firstname}}
+                      {{returnComment.user.person.lastname}}</strong>
+                    -
+                    <small>
+                      <i>{{ _T["z0t6p7pd"] }}
+                        {{returnComment.date_creation | asDate | date:"dd/MM HH:mm"}}</i>
+                      ({{returnComment.context}}) :</small>
+                    {{returnComment.text}}
+                  </div>
+                  <form ng-submit="addCommentOnReturn(aReturn)">
+                      <input class="form-control" placeholder="{{ _T['8m4tsidm'] }}" ng-model="aReturn.newComment" ng-change="aReturn.showSubmitComment = true"/>
+                      <input ng-if="aReturn.showSubmitComment" type="submit" class="btn btn-xs btn-success btn-block" value="{{ _T['3iaza590'] }}">
+                  </form>
+
+                </td>
+                <td>
+                  <form ng-submit="addTypeCorrectionOnReturn(aReturn)">
+                    <select class="form-control input-sm mb-10" ng-model="aReturn.type_correction" ng-change="aReturn.showSubmitTypeCorrection = true">
+                      <option value="">{{ _T["4lpinuyd"] }}</option>
+                      <option value="RTK">{{ _T["hfjksadk"] }}</option>
+                      <option value="Auteur">{{ _T["molt2u27"] }}</option>
+                      <option value="Montage">{{ _T["wit1j843"] }}</option>
+                      <option value="Mix">{{ _T["ri4arulz"] }}</option>
+                      <option value="Regie">{{ _T["nmurk1pl"] }}</option>
+                      <option value="Video">{{ _T["dch3ktan"] }}</option>
+                      <option value="Prod">{{ _T["h5zmx5wz"] }}</option>
+                    </select>
+                    <input ng-if="aReturn.showSubmitTypeCorrection || aReturn.type_correction_comment" class="form-control" placeholder="{{ _T['eq9spk3x'] }}" ng-model="aReturn.type_correction_comment" ng-change="aReturn.showSubmitTypeCorrection = true"/>
+                    <input ng-if="aReturn.showSubmitTypeCorrection" type="submit" class="btn btn-xs btn-success btn-block" value="{{ _T['cbz281u2'] }}">
+                  </form>
+                </td>
+                <td>
+                  <div class="dropdown">
+                    <!--Ce bouton permet d'afficher la valeur de l'action selon l'id de l'action
+                    du retour et donne une couleur spécifique au bouton-->
+                    <button id="actionButton" type="button" class="dropdown-toggle"
+                    ng-class="{'btn btn-warning': aReturn.action_id == 1 || aReturn.action_id == 2 ||
+                    aReturn.action_id == 3 || aReturn.action_id == 4 || aReturn.action_id == 5 ||
+                    aReturn.action_id == 6, 'btn btn-danger': aReturn.action_id == 7,
+                    'btn btn-yellow': aReturn.action_id == 8, 'btn btn-primary': aReturn.action_id == 9,
+                    'btn btn-success': aReturn.action_id == 10, 'btn btn-default': aReturn.action_id != 1 &&
+                    aReturn.action_id != 2 && aReturn.action_id != 3 && aReturn.action_id != 4 &&
+                    aReturn.action_id != 5 && aReturn.action_id != 6 && aReturn.action_id != 7 &&
+                    aReturn.action_id != 8 && aReturn.action_id != 9 && aReturn.action_id != 10 &&
+                    aReturn.action_id != 11}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span ng-if="aReturn.action_id == 1">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 2">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 3">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 4">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 5">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 6">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 7">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 8">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 9">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id == 10">{{actions[aReturn.action_id-1].value}}</span>
+                      <span ng-if="aReturn.action_id != 1 && aReturn.action_id != 2 &&
+                      aReturn.action_id != 3 && aReturn.action_id != 4 && aReturn.action_id != 5 &&
+                      aReturn.action_id != 6 && aReturn.action_id != 7 && aReturn.action_id != 8 &&
+                      aReturn.action_id != 9 && aReturn.action_id != 10">
+                        {{ _T["r48ex2km"] }}
+                      </span>
+                      <i class="fa fa-caret-down"></i>
+                    </button>
+                    
+                    <ul class="dropdown-menu">
+                      <li ng-repeat="action in actions">
+                        <a href="" ng-click="actionClick(action.id, [aReturn])">{{action.value}}</a>
+                      </li>
+                    </ul>
+                    
+                  </div>
+                </td>
+                <td>
+                  <form ng-submit="addProdReturn(aReturn)">
+                    <input class="form-control" placeholder="{{ _T['grqqmljc'] }}" ng-model="aReturn.prod_comment" ng-change="aReturn.showSubmitProdReturn = true"/>
+                    <input ng-model="aReturn.return_of_return" ng-checked="aReturn.return_of_return == 1" id="returnOfReturn_{{aReturn.id}}" type="checkbox" ng-change="aReturn.showSubmitProdReturn = true"/><label for="returnOfReturn_{{aReturn.id}}"> {{ _T["l1hs1c4s"] }}</label>
+                    <select ng-model="aReturn.return_of_return_value" class="form-control input-sm" ng-show="aReturn.return_of_return" ng-change="aReturn.showSubmitProdReturn = true">
+                      <option value="">{{ _T["li8ucrmv"] }}</option>
+                      <option value="Modif/erreur client">{{ _T["vtocav8a"] }}</option>
+                      <option value="Erreur interne">{{ _T["6ol4ment"] }}</option>
+                      <option value="Nouveau point">{{ _T["8tqv34o8"] }}</option>
+                    </select>
+                    <input ng-if="aReturn.showSubmitProdReturn" type="submit" class="btn btn-xs btn-success btn-block" value="{{ _T['t1tdhr09'] }}">
+                  </form>
+                </td>
+                <td>
+                  <div ng-repeat="request in aReturn.sharedRequest">
+                    <a href="#/requests/detail/{{request.id}}">
+                      #{{request.id}}
+                      :
+                      {{request.action_type.etape_type.value}}
+                      -
+                      {{request.action_type.value}}
+                    </a>
+                  </div>
+                  <span ng-if="aReturn.new_requests.length == 0">{{ _T["adoyhyi2"] }}</span>
+                </td>
+                <td class="f-13">
+                  <i>{{aReturn.originWithDate}}</i>
+                </td>
+                <td class="f-13">
+                  
+                  {{aReturn.date_creation | asDate| date:"dd/MM/yyyy"}}<br>
+                  À
+                  {{aReturn.date_creation | asDate | date:"HH'h'mm"}}<br>
+                  <span ng-if="aReturn.fullname">{{ _T["6qfau07l"] }} {{aReturn.fullname}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div ng-if="workflow.returns.length >= 10" class="col-md-12 mt-10">
+            <button type="button" class="btn btn-primary dropdown-toggle pull-right" style="margin: 0 5px;" ng-disabled="!(workflow.returns.length != 0 && isReturnSelected(workflow.returns))" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ _T["bmo21r1k"] }} <i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right">
+              <li>
+                <a href="" ng-click="newRequestFromReturn(workflow)">{{ _T["9m7y0f38"] }}</a>
+              </li>
+              <li>
+                <a href="" ng-click="addReturnsToRequest(workflow)">{{ _T["ywzu49qr"] }}</a>
+              </li>
+              <li>
+                <a href="" ng-click="deleteSelectedReturns(workflow.returns)">{{ _T["58og51px"] }}</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li ng-repeat="action in actions">
+                <a href="" ng-click="actionClick(action.id, workflow.returns, true)">{{action.value}}</a>
+              </li>
+            </ul>
+            <button class="btn btn-primary pull-right" style="margin: 0 5px;" ng-disabled="workflow.returns.length == 0" ng-click="exportReturns('exportable_' + workflow.id)"><i class="fa fa-file-excel-o"></i> {{ _T["o3r3a9mw"] }}</button>
+            <span class="alert alert-info pull-right" ng-if="workflow.filterOrigin || workflow.filterTypeCorrection || workflow.filterAuthor || workflow.hideResolved || workflow.filterAction" style="margin: 0 5px; padding: 6px;"><i class="fa fa-exclamation-circle"></i> {{ _T["945d6eyo"] }}</span>
+          </div>
+        </div>
+        <div class="panel-body" ng-if="workflow.returns.length == 0">
+          <span>
+            <strong>{{ _T["p1mdj3gn"] }}</strong>
+          </span>
+          <button class="btn btn-primary pull-right" style="margin: 0 5px;" ng-click="exportQCInfos(workflow)"><i class="fa fa-file-excel-o"></i>{{ _T["y17e086y"] }}</button>
+        </div>
+        <div ng-if="workflow.workflow_type.name == 'doublage'">
+          <table width="100%" class="table table-bordered">
+            <tr>
+              <th width="50%" style="background-color:aliceblue" >
+                {{ _T["fc3544zm"] }}
+              </th>
+              <th style="background-color:aliceblue">
+                <div style = "display: flex; float: right;">
+                  <div class="dropdown">
+                    <!--Ce bouton permet d'afficher la valeur de l'action selon l'id de l'action
+                    du retour et donne une couleur spécifique au bouton-->
+                    <button id="actionButton" type="button" class="dropdown-toggle btn btn-default"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span>{{screenerBranch.value}}</span>
+                      
+                      <i class="fa fa-caret-down"></i>
+                    </button>
+                    
+                    <ul class="dropdown-menu">
+                      <li ng-repeat="branch in screenerBranches">
+                        <a href="" ng-click="setScreenerBranch(branch)">{{branch.value}}</a>
+                      </li>
+                    </ul>
+                    
+                  </div>
+                  <div>
+                    {{ _T["1ik0h5q6"] }}
+                  </div>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <td><h4><b ng-show="product.screener_name"><span class="ui-select-match-close" style="cursor: pointer;" ng-click="deassociateScreenerProduct()" title="{{ _T['qq1rwf1t'] }}">&nbsp;×</span> {{ product.screener_name }} | {{product.screener_branch_name}}</b></h4></td>
+              <td>{{screenerProduct}}
+              <ui-select close-on-select="true" ng-model="screenerProduct" style="width: 100%" theme="bootstrap" on-select="updateScreenerProduct($item)">
+                <ui-select-match placeholder="Product">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="product in screenerProducts" refresh="searchScreenerProducts($select.search)">
+                  <div ng-bind-html="product.name"></div>
+                </ui-select-choices>
+              </ui-select>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <ul class="nav nav-tabs">
+          <li ng-repeat="lang in workflow.screenerLangs" ng-class="{'active' : lang == workflow.selectedScreenerLang}"><a data-toggle="tab" href="#lang_{{lang}}" target="_self" role="tab" style="cursor:pointer" ng-click="changeScreenerSelectedLang(workflow, lang)">{{lang}}</a></li>
+        </ul>
+        <div class="tab-content">
+          <div  ng-repeat="lang in workflow.screenerLangs" id="lang_{{lang}}" class="tab-pane " ng-class="{'active' : lang == workflow.selectedScreenerLang}">
+              <table class="table table-condensed table-striped">
+                  <thead>
+                    <tr>
+                      <th>{{ _T["czxyx2v6"] }}</th>
+                      <th>{{ _T["lmwlyuq5"] }}</th>
+                      <th>{{ _T["eq9spk3x"] }}</th>
+                      <th>{{ _T["jvieoza0"] }}</th>
+                      <th>{{ _T["k82q1zyu"] }}</th>
+                      <th>{{ _T["hq73hg2l"] }}</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat='return in workflow.myReturns[lang]'>
+                      <td>
+                        
+                        <div ng-if="return.screener_comment_id == null" class="form-inline">
+                          {{ _T["g442q024"] }} ?
+                          <input ng-checked="return.tc_global == 1" ng-model="return.tc_global" type="checkbox" id="return_{{return.workflow_id}}_{{$index}}"/><label for="return_{{return.workflow_id}}_{{$index}}"></label>
+                          <input class="form-control input-sm" id="tc_in" name="tc_in" ng-blur="fillTCin(return)" ng-if="return.tc_global != 1" ng-model-options="{ debounce: 800 }" ng-model="return.tc_in" pattern="\d{2}:\d{2}:\d{2}(:\d{2})?" placeholder="Timecode IN" timecode-input="" type="text" title="{{ _T['2x7fn7q0'] }}"/>
+                          <input class="form-control input-sm" id="tc_out" name="tc_out" ng-blur="fillTCout(return)"  ng-focus="checkTCOut(return)" ng-if="return.tc_global != 1" ng-model-options="{ debounce: 1000 }" ng-model="return.tc_out" pattern="\d{2}:\d{2}:\d{2}(:\d{2})?" placeholder="Timecode OUT" timecode-input="" type="text" title="{{ _T['2x7fn7q0'] }}"/>
+                          <p class="alert alert-danger mr-15" ng-if="errors.tc">{{ errors.tc }}</p>
+                        </div>
+                        <div ng-if="return.screener_comment_id != null">
+                          {{return.tc_in}}
+                          <span ng-show="!return.tc_in">{{ _T["g442q024"] }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <ui-select ng-model="return.typeElement" on-select="selectReturnType(return, $select)" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['r6tdef7w'] }}">{{$select.selected.value}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="typeReturn in typesReturnForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="typeReturn.value | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </td>
+                      <td>
+                          <input type="text" ng-disabled="canEnableComment()" style="width: 100%; height: 39px;" list="comments" ng-model="return.comment" comment-input="{{typesCommentForSelect}}" />
+                          <p class="alert alert-danger mr-15" ng-if="errors.comments">{{ errors.comments }}</p>
+                      </td>
+                      <td> <!-- affiche si qc est choisi-->
+                        <ui-select ng-model="return.channel" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['jvieoza0'] }}">{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="channel in channelsForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="channel | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <p class="alert alert-danger mr-15" ng-if="errors.channel">{{ errors.channel }}</p>
+                      </td>
+                      <td>
+                        <ui-select ng-model="return.severity" class="w-100" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['k82q1zyu'] }}">{{$select.selected}}</ui-select-match>
+                          <ui-select-choices group-by="'type'" repeat="severity in severityForSelect | magicFilter: $select.search">
+                            <div ng-bind-html="severity | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <p class="alert alert-danger mr-15" ng-if="errors.severity">{{ errors.severity }}</p>
+                      </td>  
+                      <td>
+                        <div ng-if="return.id == null">
+                          <select class="form-control input-sm" ng-model="return.origin">
+                            <option selected="selected" value="Client">{{ _T["mdj3gnlm"] }}</option>
+                            <option value="Diffuseur">{{ _T["irlv7lue"] }}</option>
+                            <option value="Distributeur">{{ _T["m9dhu6hl"] }}</option>
+                            <option value="Interne">{{ _T["sgnstmtu"] }}</option>
+                            <option value="Refus">{{ _T["ckttefin"] }}</option>
+                            <option ng-repeat="(key, value) in dynamicOrigin" value="{{value}}">{{ key }}</option>
+                            <!-- origine dynamique there -->
+                          </select>
+                        </div>
+                        <div ng-if="return.id != null">
+                          {{return.origin}}
+                        </div>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-danger btn-outline" ng-click="deleteThisRet($index, workflow)">
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+        </div>
+        <div class="panel-body">
+          <button class="btn btn-sm btn-primary" ng-click='addReturns(product.id, workflow);'>
+            <span class="glyphicon glyphicon-plus"></span>
+            {{ _T["w5x8562w"] }}
+          </button>
+          <button ng-if="workflow.myReturns && workflow.myReturns[workflow.selectedScreenerLang] &&  workflow.myReturns[workflow.selectedScreenerLang].length > 0" class="btn btn-success pull-right" ng-click="publishRet(workflow);">
+            <span class="glyphicon glyphicon-send"></span>
+            {{ _T["dgjyo57d"] }}
+          </button>
+          <div class="clearfix"></div>
+          <div id="exportable_{{workflow.id}}" ng-if="workflow.returns.length != 0" ng-show="false">
+            <div>{{product.human_description}}</div>
+            <div>
+              <span>
+                {{ _T["hbtvjrk1"] }} :
+                <strong>{{workflow.exploitation.value}}</strong>
+              </span>
+              <span>
+                 - {{ _T["awbb7v9i"] }} :
+                <strong>{{workflow.language.value}}</strong>
+              </span>
+              <span>
+                 - {{ _T["vob2snrb"] }} :
+                <strong>{{workflow.format_mix.value}}</strong>
+              </span>
+              <span>
+                 - {{ _T["fvmwlcji"] }} :
+                <strong>{{workflow.norme_mix.value}}</strong>
+              </span>
+              <span>
+                 - {{ _T["cq02isiz"] }} :
+                <strong>{{workflow.prod_version}}</strong>
+              </span>
+            </div>
+            <div>&nbsp;</div>
+            <table style="border: thin solid;">
+              <thead>
+                <th style="border: thin solid; background-color: #7ca2ec;">{{ _T["czxyx2v6"] }}</th>
+                <th style="border: thin solid; background-color: #7ca2ec;">{{ _T["6nhvzrz1"] }}</th>
+                <th style="border: thin solid; background-color: #7ca2ec;">{{ _T["g5m05520"] }}</th>
+                <th style="border: thin solid; background-color: #7ca2ec;">{{ _T["nxwlcy7f"] }}</th>
+              </thead>
+              <tbody>
+                <tr ng-repeat="aReturn in workflow.returns | orderBy : ['tc_global', 'tc_in', 'tc_out'] | filter : {origin:workflow.filterOrigin, type_correction:workflow.filterTypeCorrection} | magicFilterReturnUsername : workflow.filterAuthor | filterReturnsResolved : workflow.hideResolved | filterReturnsAction : workflow.filterAction">
+                  <td ng-if="aReturn.tc_global == 1" style="border: thin solid;" ng-style="{'background-color': $odd ? '#f4f6f9' : ''}">{{ _T["g442q024"] }}</td>
+                  <td ng-if="aReturn.tc_global != 1" style="border: thin solid;" ng-style="{'background-color': $odd ? '#f4f6f9' : ''}">
+                    {{ aReturn.tc_in != null && ("IN : " + aReturn.tc_in) || ""}}
+                    <br style="mso-data-placement:same-cell;">
+                    {{aReturn.tc_out!= null && ("OUT : " + aReturn.tc_out) || ""}}
+                  </td>
+                  <td style="border: thin solid;" ng-style="{'background-color': $odd ? '#f4f6f9' : ''}">{{aReturn.comment || _T["j5k6rc0g"] }}</td>
+                  <td style="border: thin solid;" ng-style="{'background-color': $odd ? '#f4f6f9' : ''}">
+                    <span ng-repeat="returnComment in aReturn.ownComment">
+                      {{returnComment.user.person.firstname}} {{returnComment.user.person.lastname}} - {{ _T["z0t6p7pd"] }} {{returnComment.date_creation | asDate | date:"dd/MM HH:mm"}} ({{returnComment.context}}) : {{returnComment.text}}
+                      <br style="mso-data-placement:same-cell;" ng-if="!$last">
+                    </span>
+                  </td>
+                  <td style="border: thin solid;" ng-style="{'background-color': $odd ? '#f4f6f9' : ''}">
+                    {{aReturn.type_correction}}
+                    <br style="mso-data-placement:same-cell;">
+                    {{aReturn.type_correction_comment}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <datalist id="comments">
+    <option ng-repeat="comments in typesCommentForSelect" value="{{ comments.element ? comments.element + ':  ' : '   &nbsp; [' + comments.value + ']' }}" {{comments.value ? 'disabled' : ''}}>
+    </option>
+  </datalist>
+</div>

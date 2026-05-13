@@ -1,0 +1,23 @@
+<div>
+  <span ng-repeat="date in allDates | orderBy:'timestamp'" class="message">
+
+    <div class="icon calendar" ng-class="getClasses(date, 1)"
+    ng-style="{'background-color':date.badge}" uib-tooltip-html="date.tooltip" tooltip-placement="bottom" id="{{request.id}}-{{date.farmer_id}}">
+      <span class="month">{{date.timestamp | date:"MMM"}}</span>
+      <span class="day">{{date.timestamp | date:"dd"}}</span>
+    </div>
+  </span>
+  <small ng-if="$root.canDisplay(5)" class="message">
+    <div ng-if="oneOrMoreDateAreFarmer && allFarmerDatesAreDone">
+      <i class="fa fa-check"></i> <i>{{ $root._T["d7jpgj46"] }}</i>
+    </div>
+    <div ng-if="oneOrMoreDateAreFarmer && !allFarmerDatesAreDone && nextDate">
+      <i class="fa fa-arrow-right"></i><span> {{ $root._T["6gs99cy1"] }} {{nextDate.day}} {{nextDate.month}}</span>
+    </div>
+  </small>
+  <small class="message">
+    <div ng-if="noDate">
+      <i class="fa fa-calendar-times-o"></i><span> {{ $root._T["03xzf0ab"] }}</span>
+    </div>
+  </small>
+</div>

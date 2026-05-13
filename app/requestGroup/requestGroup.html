@@ -1,0 +1,824 @@
+<div class="page-popup show-requests-demand dragresize " data-x=0 data-y=0>
+  <div class="row">
+    <div ng-class="{'col-md-8': !getExpand() && !getRightPanelToggle(), 'col-md-12': getExpand() && !getRightPanelToggle(), 'col-md-6': getRightPanelToggle()}">
+      <div class="step">
+        <div ng-if="!getLoading() && !getErrorLoading()">
+            <div class="row">
+                <div class="col-md-10">
+                    <h2 class="poignee">
+                        {{ _T["l3wvsov5"] }} {{requests.length}} {{ _T["ba0heyvu"] }}
+                        <small>
+                            <a href="" ng-click="init()">
+                                - <i class="fa fa-refresh"></i> {{ _T["z4g4fmal"] }}
+                            </a>
+                        </small>
+                    </h2>
+                </div>
+                <div class="col-md-2">
+                    <a ui-sref="app.suiviProd({id: getMainRequest().product.subproject.id})" class="btn btn-text-primary btn-big-shadow btn-default btn-xs pull-right">
+                        <i class="fa fa-shield fa-rotate-270"></i> {{ _T["05yr3l8v"] }}
+                    </a>
+                </div>
+
+                <div class="col-md-12">
+                    <strong style="font-size: 1.3em;">
+                        <img alt="12x12" width="40" style="display:inline;" class="media-object img-circle" ng-src="{{clients[getMainRequest().product.subproject.project.client.id].url || '../app/img/no-customer.png'}}" data-holder-rendered="true">
+                         {{getMainRequest().product.subproject.project.name}} {{getSeason(getMainRequest().product.subproject)}} - {{getMainRequest().product.subproject.nature.value}} |
+                        <workflow style="display: inline-block;" data="requests[0].workflow"></workflow>
+                        <i class="fa fa-tags"></i> {{getMainRequest().action_type.etape_type.value}} - {{getMainRequest().action_type.value}} 
+                        {{getMainRequest().action_type.etape_type.loc_value ? $root.dubPlacesByLocValue[getMainRequest().action_type.branch_id][getMainRequest().action_type.etape_type.loc_value].value : ''}}
+                    </strong>
+                </div>
+            </div>
+            <div class="body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <date-wish data="getMainRequest()" small="true" hide="false"></date-wish>
+                    </div>
+                </div>
+
+                <div class="panel-container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info text-center" role="alert" ng-if="!isAllRequestPlanned(requests) && $root.canDisplay(5)">{{ _T["x0n3vuaj"] }}</div>
+                            <div class="alert alert-danger text-center" role="alert" ng-if="getSelectedRequests(requests).length < 1">{{ _T["dl48b6kf"] }}</div>
+                        </div>
+
+                        <div class="col-md-12" ng-if="getSelectedRequests(requests).length > 0 && getMainRequest().ownFarmerbookings.length > 0">
+                            <farmerbookings-table-popup 
+                                manage-several-products="true"
+                                request="getSelectedRequests(requests)[0]" 
+                                farmers="farmers" 
+                                get-ratio-rooms="getRatioRooms(day)" 
+                                user-role="getUserRole()" 
+                                requests="requests" 
+                                noselect=false
+                                init-popup="init()"
+                                get-selected-requests="getSelectedRequests(requests)" set-alert-message="setAlertMessage(message, isError)" />
+                        </div>
+                    </div>
+                    <div class="section-product" ng-repeat="request in requests | orderBy:'product.episode_number'">
+                        <div class="box" ng-if="request.is_canceled == false && request.is_done == true">
+                            <div class="ribbon success">
+                                <span>{{ _T["46z910du"] }}</span>
+                                <!-- Terminée -->
+                            </div>
+                        </div>
+                        <div class="box" ng-if="request.is_planned == false &&  request.is_done == false">
+                            <div class="ribbon info">
+                                <span>{{ _T["5j1nv2tu"] }}</span>
+                                    <!-- Non planifiée -->
+                            </div>
+                        </div>
+                        <div class="box" ng-if="request.is_planned == true && request.is_done == false">
+                            <div class="ribbon primary">
+                                <span>{{ _T["5dd4lerz"] }}</span>
+                                <!-- Planifiée -->
+                            </div>
+                        </div>
+                        <div class="box" ng-if="request.is_not_done == true">
+                            <div class="ribbon warning">
+                                <span>{{ _T["c08s0qxq"] }}</span>
+                                    <!-- A replanifier -->
+                            </div>
+                        </div>
+                        <div class="box" ng-if="request.is_canceled == true">
+                            <div class="ribbon danger">
+                                <span>{{ _T["fotidtc6"] }}</span>
+                                    <!-- Annulée -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 title-container">
+                                <h3 style="margin:0; padding:5px 0;">
+                                    <a ui-sref="app.products({id:request.product_id})" ng-class="{'text-white' : request.isSelected}" style="color: black; font-size:1.1em;">
+                                        <i class="fa fa-film"></i> {{productName(request)}}
+                                    </a>
+                                    <small>
+                                        <i>({{::request.user.person.firstname}} {{::request.user.person.lastname[0]}}.)</i>
+                                        <span style="margin:0px;">
+                                            {{ _T["k1t6im8d"] }} :
+                                            <i>
+                                                <span ng-if="request.product.duration">{{ request.product.duration }}  min</span>
+                                                <span ng-if="!request.product.duration">N/A</span>
+                                            </i>
+                                        </span>
+                                        <span ng-if="request.product.subproject.nature.name == 'film'" style="margin:0px;">
+                                            | {{ _T["36tkwfhb"] }} :
+                                            <i>
+                                                <span>{{ request.product.number_reel || "N/A" }}</span>
+                                            </i>
+                                        </span>
+
+                                        <span ng-if="request.important == true" class="label label-danger pull-right">{{ _T["4orz1fdr"] }}</span>
+                                        <span ng-if="request.on_hold == true" class="label label-blue pull-right">{{ _T["2ctuc541"] }}</span>
+                                    </small>
+                                </h3>
+
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <a ui-sref="app.requestsDetail({id : request.id})">
+                                        <div class="col-md-12">
+                                            {{ _T["covy1uvf"] }} <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                        </div>
+                                    </a>
+                                    <a href="#/manageReturns/{{request.product.id}}/{{request.workflow_id}}">
+                                        <div class="col-md-12">
+                                            {{ _T["roonbheq"] }} <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                        </div>
+                                    </a>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div id="productDetail{{request.id}}" ng-class="{'col-md-12':!getExpand(),'col-md-8':getExpand()}">
+                                    <ul class="nav nav-tabs" role="tablist" ng-class="{'col-md-12':!getExpand(),'col-md-12':getExpand()}">
+                                        <li role="presentation" class="active"><a href="#general{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab">Rem. & disc.</a></li>
+                                        <li role="presentation"><a href="#link_requests{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="badge">{{request.linked_requests.length}}</span> {{ _T["nsxzn71k"] }}</a></li>
+                                        <li role="presentation"><a href="#elements{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="badge">{{request.media_items.length || "0"}}</span> {{ _T["0to1cmv6"] }}</a></li>
+                                        <li role="presentation"><a href="#attachments{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="badge">{{getUploader(request.id).queue.length || "0"}}</span> {{ _T["qg7rqxc7"] }}</a></li>
+                                        <li role="presentation"><a href="#returns{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{request.sharedReturn.length}}</span> {{ _T["udvvijhg"] }}</a></li>
+                                        <li role="presentation" style="width: auto;" ng-if="request.ownReturn.length > 0"><a href="#retoursOnDemand{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="notifs notifs-urgence">{{request.ownReturn.length}}</span> {{ _T["b0srx0g3"] }}</a></li>
+                                        <li role="presentation" ng-if="request.ownObservation.length > 0"><a href="#ownObservation{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="badge">{{request.ownObservation.length}}</span> {{ _T["3j35hqts"] }}</a></li>
+                                        <li role="presentation"><a href="#farmerbookings{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab"><span class="badge">{{countBookings(request)}}</span>{{ _T["240labxx"] }}</a></li>
+                                        <li role="presentation" ng-if="request.action_type.etape_type.name == 'prepa_audio' || request.action_type.name == 'montage_synchro_dial_confo'"><a  href="#rapports{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["j2uv8lq8"] }} </a></li>
+                                        <li role="presentation" ng-if="$root.check_valid_workflow_values_phelix([request.product.record_job_id], request.workflow.workflow_type_id, request.workflow.doublage_type_id, request.workflow.format_mix_id, request.product.subproject.project.client_id, request.action_type_id)" ><a href="#jobAlula{{request.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["ghb0zv8h"] }}</a></li>
+                                    </ul>
+                                    <div class="col-md-12 tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="general{{request.id}}">
+                                            <div class="col-md-12">
+                                                <div class="col-md-3 p-0">
+                                                    <a ng-if="request.techspec_id != null" class="btn btn-primary btn-light-shadow btn-sm" ng-click="showTechnicalSpecModal(request.techspec_id)">
+                                                        <i class="glyphicon glyphicon-list-alt"></i>
+                                                        {{ _T["gbtguz3q"] }}
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-8 p-0" ng-show="request.action_type.etape_type.name == 'enregistrement'" style="display: inline-flex;">
+                                                    <div class="col-md-4 p-0" ng-show="!is_song" style="display: inline-flex;">
+                                                    <div class="f-18" style="margin-top: 8px;"><i class="fa fa-bullhorn"></i> {{artistic_director.firstname }} {{artistic_director.lastname }} </div>
+                                                    </div>
+                                                    <div class="col-md-4 p-0" ng-show="is_song" style="display: inline-flex;">
+                                                        <div class="f-18" style="margin-top: 8px;"><i class="fa fa-bullhorn"></i> {{song_director.firstname }} {{song_director.lastname }} </div>
+                                                    </div>
+                                                    <div class="col-md-4 p-0" ng-show="stage_manager" style="display: inline-flex;">
+                                                        <div class="f-18" style="margin-top: 8px;"><i class="fa fa-binoculars"></i> {{stage_manager.firstname }} {{stage_manager.lastname }} </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="chat-max-height" ng-class="{'col-md-6':!getExpand(),'col-md-12':getExpand()}">
+                                                <div class="separator">
+                                                    <p class="separator-label" style="background: white">{{ _T["7vofm7gg"] }}
+                                                        <button type="button" class="btn btn-xs btn-link text-gray" ng-show="showPanelInfoTech != 1" ng-click="showPanelInfoTech = 1; showEditInfoForTech(request);">
+                                                            <i class="fa fa-edit"></i> {{ _T["3xoocd81"] }}</button>
+                                                        <button type="button" class="btn btn-xs btn-link text-gray" style="color:gray" ng-show="showPanelInfoTech == 1" ng-click="setGeneralRemark(request); showPanelInfoTech = 0">
+                                                            {{ _T["hvzykhtg"] }}</button>
+                                                    </p>
+                                                    <hr>
+                                                </div>
+                                                <textarea id="infoForTech{{request.id}}"></textarea>
+                                            </div>
+
+                                            <div class="col-md-6 chat-max-height" ng-hide="getExpand()">
+                                                <div class="separator">
+                                                    <p class="separator-label" style="background: white">{{ _T["qlr1dxpa"] }}
+                                                        <button type="button" class="btn btn-xs btn-link text-gray">{{(request.ownComment | userComment).length}} {{ _T["r1ovyn43"] }}</button>
+                                                    </p>
+                                                    <hr>
+                                                </div>
+                                                <div class="row" ng-repeat="comment in request.ownComment | userComment | orderBy:'date_creation':true ">
+                                                    <div ng-if="comment.user.id == user_entity.id || comment.user_id == user_entity.id" style="margin-right: 15px">
+                                                        <!-- Moi -->
+                                                        <div class="from-me-text">
+                                                            <span ng-if="comment.show_tech == true" uib-popover-template="'popover-change-visibility.html'" popover-trigger="'outsideClick'" popover-placement="left" style="cursor: pointer;"><i class="fa fa-cog"></i> {{ _T["4nb6u63i"] }}</span>
+                                                            <span ng-if="comment.show_tech != true" uib-popover-template="'popover-change-visibility.html'" popover-trigger="'outsideClick'" popover-placement="left" style="cursor: pointer;"><i class="fa fa-cog"></i> {{ _T["aza590it"] }}</span>
+                                                            <script type="text/ng-template" id="popover-change-visibility.html">
+                                                                <button class="btn btn-xs btn-default btn-block btn-text-primary btn-light-shadow" ng-click="changeVisibility(comment)"> {{ _T["1bi8uy2u"] }} <span ng-if="comment.show_tech == true">{{ _T["nb6ghb0z"] }}</span> {{ _T["4nb6u63i"] }}</button>
+                                                            </script>
+                                                        </div>
+                                                        <div class="bubbledRight" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+                                                            <span class="save-text-p">{{comment.text}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div ng-if="comment.user.id != user_entity.id && comment.user_id != user_entity.id">
+                                                        <!-- Eux -->
+                                                        <div class="from-them-text">
+                                                            {{comment.user.person.firstname}} {{comment.user.person.lastname}}
+                                                            <span ng-if="comment.show_tech == true"> - {{ _T["4nb6u63i"] }}</span>
+                                                            <span ng-if="comment.show_tech != true"> - {{ _T["aza590it"] }}</span>
+                                                        </div>
+                                                        <div class="bubbledLeft" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+                                                            <span class="save-text-p">{{comment.text}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-if="(request.ownComment | userComment).length <= 0" class="text-center">
+                                                    {{ _T["hg37xeub"] }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="link_requests{{request.id}}">
+                                            <linked-requests data="request"></linked-requests>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="elements{{request.id}}" style="overflow-x: auto;">
+
+                                            <ul class="nav nav-tabs" role="tablist" ng-class="{'col-md-12':!getExpand(),'col-md-12':getExpand()}">
+                                                <li role="presentation" class="active"><a href="#elementsProduct{{request.product.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["21ych6jx"] }}</a></li>
+                                                <li role="presentation"><a href="#elementsProject{{request.product.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["92j73lb0"] }}</a></li>
+                                            </ul>
+                                            <div class="col-md-12 tab-content">
+                                                <div role="tabpanel" class="tab-pane active" id="elementsProduct{{request.product.id}}">
+                                                    <div class="container-fluid header-input-text">
+                                                        <div class="col-sm-7">
+                                                            <form>
+                                                                <div class="search-form">
+                                                                    <input type="text" ng-model="elementsReceiveFilter" class="form-control-sm input-search" id="" placeholder="{{ _T['21cfygcc'] }}">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <table class="table table-striped table-responsive">
+                                                        <thead>
+                                                          <tr>
+                                                            <th style="vertical-align:middle;">{{ _T["0kckbj84"] }}</th>
+                                                            <th style="vertical-align:middle;">{{ _T["h5bglkgi"] }}</th>
+                                                            <th style="vertical-align:middle;">{{ _T["06djaui5"] }}</th>
+                                                            <th style="vertical-align:middle;padding-right: 0;">{{ _T["9oraeeid"] }}</th>
+                                                            <th style="vertical-align:middle;padding-right: 0">{{ _T["26suhfgm"] }}</th>
+                                                            <th style="vertical-align:middle;padding-right: 0">{{ _T["9wii0lxr"] }}</th>
+                                                            <th style="vertical-align:middle;">{{ _T["eq9spk3x"] }}</th>
+                                                            <th style="vertical-align:middle;"></th>
+                                                            <th class="text-left" style="vertical-align:middle;">{{ _T["b3p6r9on"] }}</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng-repeat="item in request.product.media_items | orderBy:'date_creation':true | magicFilter:elementsReceiveFilter" ng-class="{'farmer-selected' : getItemIndexInRequestAndProduct(request, item) >= 0}">
+                                                          <td>
+                                                            <input ng-checked="getItemIndexInRequestAndProduct(request, item) >= 0" ng-click="setMediaItemToRequest(request, item)" name="product-item-{{request.product.id}}-{{item.id}}" type="checkbox" id="product-item-{{request.product.id}}-{{item.id}}">
+                                                            <label for="product-item-{{request.product.id}}-{{item.id}}"><span class="label label-info">{{item.nature}}</span></label>
+                                                            <br>{{item.workflow}}
+                                                          </td>
+                                                          <td>
+                                                            <div class="f-12">
+                                                              {{item.support}}
+                                                            </div>
+                                                          </td>
+                                                          <td>
+                                                            <div class="f-13">
+                                                              <a ui-sref="app.products({id : item.product_id})" class="pointer">
+                                                                {{(item.product.episode_number != null) && (item.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + item.product.episode_number || item.product.description.value || item.product.description_text}}
+                                                              </a>
+                                                            </div>
+                                                          </td>
+                                                          <td style="">
+                                                            <label ng-show="item.path" class="f-13 text-primary cursor-pointer path" clipboard text="item.path">{{item.path}}</label>
+                                                          </td>
+                                                          <td style="text-align: center;">
+                                                            <span ng-if="item.media_seal_security_code">
+                                                                <span style="color: #3570E1;" class="glyphicon glyphicon-lock"></span>
+                                                            </span>
+                                                          </td>
+                                                          <td style="text-align: center;">
+                                                              <span ng-if="item.media_seal_security_version" style="color: #3570E1;">
+                                                                  {{item.media_seal_security_version}}
+                                                              </span>
+                                                          </td>
+                                                          <td>
+                                                              <p class="save-text-p">{{item.comment}}</p>
+                                                          </td>
+                                                          <td>
+                                                            <i class="c-icon c-icon-infos c-icon-shadow" style="font-size:2em; color:#3570E1;" tooltip-placement="bottom" uib-tooltip-html="item.description"></i>
+                                                            <div class="infobull normal-infobull" ng-show="item.comment != null">
+                                                              <i class="c-icon c-icon-comment c-icon-shadow " style="color:#3570E1;" tooltip-placement="bottom"  data-toggle="tooltip" title="{{item.comment}}"></i>
+                                                              <span class="infobull-text" style="top: 4px;">1</span>
+                                                            </div>
+                                                          </td>
+                                                          <td>
+                                                            {{(item.date_creation | amDateFormat:"DD MMM YYYY").toUpperCase()}}
+                                                          </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <a ui-sref="app.productsMedia({id:request.product_id})" class="btn btn-xs btn-default btn-text-primary btn-big-shadow">{{ _T["i6ptlwq0"] }}</a>
+                                                </div>
+                                                <div role="tabpanel"  class="tab-pane" id="elementsProject{{request.product.id}}">
+                                                    <span class="label label-default label-primary" ng-click="popupElementsProject(request)" style="cursor: pointer;">{{ _T["3xwfog0i"] }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="attachments{{request.id}}">
+                                            <div ng-if="getUploader(request.id) != null">
+                                                <div nv-file-drop="" uploader="getUploader(request.id)">
+                                                    <div class="col-md-12">
+                                                        <h2 class="text-center" ng-show="getUploader(request.id).queue.length == 0">
+                                                            {{ _T["3qh7nk7a"] }}
+                                                        </h2>
+
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item" style="padding-bottom:0;" ng-repeat="item in getUploader(request.id).queue">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        {{item.file.name}}
+                                                                        <span class="pull-right">
+                                                                            <span ng-if="item.isError" style="color:red">
+                                                                              <strong>
+                                                                                <i class="fa fa-warning"></i> {{ _T["phj00hfk"] }}</strong>
+                                                                            </span> {{ item.file.size / 1024 / 1024|number:2 }}MB
+
+                                                                            <button class="btn btn-primary btn-xs" ng-click="download(item)" ng-disabled="item.isUploading" type="button" data-toggle="tooltip" data-placement="bottom"
+                                                                                    title="{{ _T['0kyhuafp'] }}">
+                                                                              <span class="glyphicon glyphicon-download"></span>
+                                                                            </button>
+                                                                            <button class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-if="item.isUploading" type="button" data-toggle="tooltip" data-placement="bottom"
+                                                                                    title="{{ _T['t5lz1qb1'] }}">
+                                                                              <span class="glyphicon glyphicon-ban-circle"></span>
+                                                                            </button>
+                                                                            <button class="btn btn-danger btn-xs" ng-click="remove(item)" ng-if="!item.isUploading" type="button" data-toggle="tooltip" data-placement="bottom"
+                                                                                    title="{{ _T['tc6j8t46'] }}">
+                                                                              <span class="glyphicon glyphicon-trash"></span>
+                                                                            </button>
+                                                                      </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="margin-bottom: 0;">
+                                                                    <div class="progress-upload" style="margin-bottom: 0;">
+                                                                        <div class="progress-bar-upload" ng-style="{ 'width': item.progress + '%' }" role="progressbar"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div ng-show="getUploader(request.id).isHTML5">
+                                                            <div class="upload-text-box text-center" nv-file-over="" uploader="getUploader(request.id)">
+                                                                {{ _T["ob68vuzl"] }}
+                                                                <br>
+                                                                <br>
+                                                                <div class="btn btn-primary upload-file-container">
+                                                                    <input multiple nv-file-select="" type="file" uploader="getUploader(request.id)" /> {{ _T["6q8stqsy"] }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="returns{{request.id}}">
+                                            <table class="table table-striped table-responsive retoursTable">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 250px;">{{ _T["94dkwmv6"] }}</th>
+                                                    <th>{{ _T["6nhvzrz1"] }}</th>
+                                                    <th>{{ _T["nxwlcy7f"] }}</th>
+                                                    <th>{{ _T["dkpnpeak"] }}</th>
+                                                    <th class="text-left">{{ _T["r48ex2km"] }}</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="aReturn in request.sharedReturn | orderBy : ['tc_global', 'tc_in', 'tc_out']">
+                                                    <td>
+                                                        <div>
+                                                            <div ng-if="aReturn.tc_global != 1">
+                                                                <span class="label label-default" ng-if="aReturn.tc_in">IN {{aReturn.tc_in}}</span>
+                                                                <span class="label label-default" ng-if="aReturn.tc_out">OUT {{aReturn.tc_out}}</span>
+                                                            </div>
+                                                            <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <div>
+                                                                <span class="label label-info">{{aReturn.type}}</span>
+                                                                <span class="label label-warning special">
+                                                                    {{aReturn.element}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <p class="save-text-p">{{aReturn.comment}}</p>
+                                                    </td>
+                                                    <td>
+                                                      {{aReturn.type_correction}}
+                                                      <br>
+                                                      {{aReturn.type_correction_comment}}
+                                                    </td>
+                                                    <td>
+                                                        <div ng-if="aReturn.ownComment.length > 0">
+                                                            <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                                                                <strong>{{returnComment.user.person.firstname}} {{returnComment.user.person.lastname}}
+                                                                    <i class="fa fa-clock-o" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i>
+                                                                </strong> - {{returnComment.text}}
+                                                            </div>
+                                                            <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["y498pkdo"] }} ({{aReturn.ownComment.length-1}})</button>
+                                                            <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-close"></i> {{ _T["clfsvr5x"] }}</button>
+                                                            <div>
+                                                                <strong>{{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}} {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                                                                    <i class="fa fa-clock-o" data-toggle="tooltip" data-placement="bottom" title="Le {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i>
+                                                                </strong> - {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                                                            </div>
+                                                        </div>
+                                                        <div ng-if="aReturn.ownComment.length == 0">
+                                                            <i>{{ _T["q7rxwhz5"] }}</i>
+                                                        </div>
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                      <div class="dropdown">
+                                                        <button type="button" class="dropdown-toggle" ng-class="{'btn btn-warning': aReturn.is_ignored == 1, 'btn btn-danger': aReturn.is_not_done == 1, 'btn btn-yellow': aReturn.to_review == 1, 'btn btn-primary': aReturn.to_mix == 1, 'btn btn-success': aReturn.is_resolved == 1, 'btn btn-default': aReturn.is_ignored != 1 && aReturn.is_not_done != 1 && aReturn.to_review != 1 && aReturn.to_mix != 1 && aReturn.is_resolved != 1}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          <span ng-if="aReturn.is_ignored == 1">{{ _T["tsxooyog"] }}</span>
+                                                          <span ng-if="aReturn.is_not_done == 1">{{ _T["jcrng616"] }}</span>
+                                                          <span ng-if="aReturn.to_review == 1">{{ _T["16ulek0s"] }}</span>
+                                                          <span ng-if="aReturn.to_mix == 1">{{ _T["22v97waz"] }}</span>
+                                                          <span ng-if="aReturn.is_resolved == 1">{{ _T["dslgoxok"] }}</span>
+                                                          <span ng-if="aReturn.is_ignored != 1 && aReturn.is_not_done != 1 && aReturn.to_review != 1 && aReturn.to_mix != 1 && aReturn.is_resolved != 1">{{ _T["r48ex2km"] }}</span>
+                                                          <i class="fa fa-caret-down"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                          <li>
+                                                            <a href="" ng-click="doNothing([aReturn])">{{ _T["tsxooyog"] }}</a>
+                                                          </li>
+                                                          <li>
+                                                            <a href="" ng-click="notDone([aReturn])">{{ _T["jcrng616"] }}</a>
+                                                          </li>
+                                                          <li>
+                                                            <a href="" ng-click="toReview([aReturn])">{{ _T["16ulek0s"] }}</a>
+                                                          </li>
+                                                          <li>
+                                                            <a href="" ng-click="toMix([aReturn])">{{ _T["22v97waz"] }}</a>
+                                                          </li>
+                                                          <li>
+                                                            <a href="" ng-click="doResolve([aReturn])">{{ _T["dslgoxok"] }}</a>
+                                                          </li>
+                                                        </ul>
+                                                      </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="retoursOnDemand{{request.id}}">
+                                            <table class="table table-striped table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width:160px">{{ _T["94dkwmv6"] }}</th>
+                                                    <th style="width:50%">{{ _T["6nhvzrz1"] }}</th>
+                                                    <th class="text-left">{{ _T["dkpnpeak"] }}</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="aReturn in request.ownReturn | orderBy : ['tc_global', 'tc_in', 'tc_out']">
+                                                    <td>
+                                                        <div class="col-md-12">
+                                                            <div ng-if="aReturn.tc_global != 1">
+                                                                <span class="label label-default" ng-if="aReturn.tc_in">IN {{aReturn.tc_in}}</span>
+                                                                <span class="label label-default" ng-if="aReturn.tc_out">OUT {{aReturn.tc_out}}</span>
+                                                            </div>
+                                                            <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="">
+                                                                <span class="label label-info">{{aReturn.type}}</span>
+                                                                <span class="label label-warning">{{aReturn.element}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <p class="save-text-p">{{aReturn.comment}}</p>
+                                                    </td>
+                                                    <td class="text-left">
+                                                        <div ng-if="aReturn.ownComment.length > 0">
+                                                            <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                                                                <strong>{{returnComment.user.person.firstname}} {{returnComment.user.person.lastname}}
+                                                                    <i class="fa fa-clock-o" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i>
+                                                                </strong> - {{returnComment.text}}
+                                                            </div>
+                                                            <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-open"></i> {{ _T["y498pkdo"] }} ({{aReturn.ownComment.length-1}})</button>
+                                                            <button ng-if="aReturn.ownComment.length > 1" class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn"><i class="glyphicon glyphicon-eye-close"></i> {{ _T["clfsvr5x"] }}</button>
+                                                            <div>
+                                                                <strong>{{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}} {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                                                                    <i class="fa fa-clock-o" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i>
+                                                                </strong> - {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                                                            </div>
+                                                        </div>
+                                                        <div ng-if="aReturn.ownComment.length == 0">
+                                                            <i>{{ _T["q7rxwhz5"] }}</i>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="ownObservation{{request.id}}">
+                                          <div class="panel panel-primary" style="margin: 2px; width:400px; float:left;" ng-repeat="observation in request.ownObservation">
+                                            <div class="panel-body">
+                                              <label class="col-md-12">{{observation.categorie}}
+                                              {{ _T["mc051ilq"] }} {{observation.date_creation | asDate | date:"dd/MM/yyyy"}}</label>
+                                              <label class="col-md-12">{{ _T["eq9spk3x"] }}</label>
+                                              <div class="col-md-12 save-text-p">{{observation.comment}}</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="farmerbookings{{request.id}}">
+                                            <farmerbookings-table-popup 
+                                                request="request" farmers="farmers" 
+                                                get-ratio-rooms="getRatioRooms(day)" 
+                                                user-role="getUserRole()" rooms="rooms" requests="requests" 
+                                                get-selected-requests="getSelectedRequests(requests)" 
+                                                init-popup="init()"
+                                                noselect=true
+                                                requests="requests" 
+                                                set-alert-message="setAlertMessage(message, isError)" />
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="rapports{{request.id}}">
+                                            <a style="display:inline;" class="btn btn-default btn-text-primary btn-big-shadow"
+                                                href="{{getUrlAPI()}}/export/exportrapportvi?request_id={{request.id}}&isVI={{request.action_type.etape_type.name == 'prepa_audio'}}" target="_blank" >
+                                                <img style="width: 20px;" src="img/word.png" alt="" /> {{ _T["3eq6rndf"] }}
+                                            </a>
+                                            <tabset type="pills" style="margin-top:10px">
+                                                <tab heading="Informations générales">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <form class="padd-15" style="margin-top: 30px">
+                                                                <div class="text-center"><h4><span class="label label-default text-center"> {{ _T["w5x1jq2i"] }} </span></h4></div>
+                                                                <div class="form-group col-xs-3">
+                                                                    <label>{{ _T["ljuqvitg"] }}</label>
+                                                                    <p class="text-underline"><i>{{showSelect(varispeeds, request.report.varispeed)}}</i></p>
+                                                                </div>
+                                                                <div class="form-group col-xs-3">
+                                                                    <label>{{ _T["q45v0edp"] }}</label>
+                                                                    <p class="text-underline"><i>{{showSelect(point_montages, request.report.point_montages)}}</i></p>
+                                                                </div>
+                                                                <div class="form-group col-xs-6">
+                                                                    <label>{{ _T["eq9spk3x"] }}</label>
+                                                                    <p class="text-underline save-text-p"><i>{{ request.report.comment || _T["lqqqfh8u"] }}</i></p>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <form class="padd-15">
+                                                                <div class="form-group col-xs-12">
+                                                                    <label>{{ _T["2ql6r5f0"] }}</label>
+                                                                    <p class="text-underline save-text-p"><i>{{ request.report.remarks || _T["ryjvnejr"] }}</i></p>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <div class="text-center">
+                                                    </div>
+                                                </tab>
+                                                <tab ng-repeat="bobine in request.report.bobines" heading="Bobine {{bobine[0].bobine || $index+1}}" active="bobine.active">
+                                                    <table class="table table-striped table-custom">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>{{ _T["d2yetir4"] }}</th>
+                                                            <th>{{ _T["ewybz84r"] }}</th>
+                                                            <th>{{ _T["st4hqe2m"] }}</th>
+                                                            <th>{{ _T["5sdilxx7"] }}</th>
+                                                            <th>{{ _T["9yonx6b0"] }}</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tr ng-repeat="error in bobine">
+                                                            <td>
+                                                                {{ "IN : " + error.tc_in || _T["vbuon1j5"] }} - {{ "OUT : " + error.tc_out || _T["dkbcmohr"] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ error.description || _T["jivcnvvm"] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ error.vo && _T["st4hqe2m"] || _T["3w9hfdgg"] }}
+                                                            </td>
+                                                            <td>
+                                                                {{ error.track || _T["sg9hrx01"] }}
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn-group">
+                                                                    <button type="button" class="btn btn-default btn-change">
+                                                                        <span ng-if="error.level == null"><span class="type type-default"></span> {{ _T["fj98qsz4"] }}</span>
+                                                                        <span  ng-if="error.level == 1"><span class="type type-success"></span> {{ _T["eyk4c9a4"] }}</span>
+                                                                        <span  ng-if="error.level == 2"><span class="type type-primary"></span> {{ _T["n4z3y60g"] }}</span>
+                                                                        <span  ng-if="error.level == 3"><span class="type type-warning"></span> {{ _T["ap87beys"] }}</span>
+                                                                        <span ng-if="error.level == 4"><span class="type type-danger"></span> {{ _T["3h268ovu"] }}</span>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </tab>
+                                            </tabset>
+                                            <div class="panel-footer panel-footer-neutral" ng-if="request.report.level == null">{{ _T["s78rerhe"] }}</div>
+                                            <div class="panel-footer panel-footer-success" ng-if="request.report.level == 1">{{ _T["5lhpmej6"] }}</div>
+                                            <div class="panel-footer panel-footer-primary" ng-if="request.report.level == 2">{{ _T["wekslbuz"] }}</div>
+                                            <div class="panel-footer panel-footer-warning" ng-if="request.report.level == 3">{{ _T["se8q3b3i"] }}</div>
+                                            <div class="panel-footer panel-footer-danger" ng-if="request.report.level == 4">{{ _T["kb8au41i"] }}</div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="jobAlula{{request.id}}">
+                                           <div class="row" style="margin-bottom: 0;" >
+                                            <!-- Module LinkJob with Phelix API -->
+                                              <joblines-phelix-api ng-if="request.product.record_job_id"
+                                                 client-id="request.product.subproject.project.client_id"
+                                                 action-type-id ="request.action_type_id"
+                                                 request-id="request.id"
+                                                 content-product="request.product" params-workflow='{ record_id:request.product.record_job_id, workflow_type_id:request.workflow.workflow_type_id, doublage_type_id:request.workflow.doublage_type_id, format_mix_id:request.workflow.format_mix_id ,language_id:request.workflow.language_id}'></joblines-phelix-api>
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <div class="col-md-4 chat-max-height" ng-style="{'max-height':getHeightOfRow(request.id)}" style="left:-18px" ng-hide="!getExpand()">
+                                        <div class="separator">
+                                            <p class="separator-label" style="background: white">{{ _T["qlr1dxpa"] }}
+                                                <button type="button" class="btn btn-xs btn-link text-gray">{{(request.ownComment | userComment).length}} {{ _T["r1ovyn43"] }}</button>
+                                            </p>
+                                            <hr>
+                                        </div>
+                                        <div class="row" ng-repeat="comment in request.ownComment | userComment | orderBy:'date_creation':true ">
+                                            <div ng-if="comment.user.id == user_entity.id || comment.user_id == user_entity.id" style="margin-right: 15px">
+                                                <!-- Moi -->
+                                                <div class="from-me-text">
+                                                    <span ng-if="comment.show_tech == true" uib-popover-template="'popover-change-visibility.html'" popover-trigger="'outsideClick'" popover-placement="left" style="cursor: pointer;"><i class="fa fa-cog"></i> {{ _T["4nb6u63i"] }}</span>
+                                                    <span ng-if="comment.show_tech != true" uib-popover-template="'popover-change-visibility.html'" popover-trigger="'outsideClick'" popover-placement="left" style="cursor: pointer;"><i class="fa fa-cog"></i> {{ _T["aza590it"] }}</span>
+                                                    <script type="text/ng-template" id="popover-change-visibility.html">
+                                                        <button class="btn btn-xs btn-default btn-block btn-text-primary btn-light-shadow" ng-click="changeVisibility(comment)"> {{ _T["1bi8uy2u"] }} <span ng-if="comment.show_tech == true">{{ _T["nb6ghb0z"] }}</span> {{ _T["4nb6u63i"] }}</button>
+                                                    </script>
+                                                </div>
+                                                <div class="bubbledRight" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+                                                    <span class="save-text-p">{{comment.text}}</span>
+                                                </div>
+                                            </div>
+                                            <div ng-if="comment.user.id != user_entity.id && comment.user_id != user_entity.id">
+                                                <!-- Eux -->
+                                                <div class="from-them-text">
+                                                    {{comment.user.person.firstname}} {{comment.user.person.lastname}}
+                                                    <span ng-if="comment.show_tech == true"> - Visible</span>
+                                                    <span ng-if="comment.show_tech != true"> - Non visible</span>
+                                                </div>
+                                                <div class="bubbledLeft" data-toggle="tooltip" data-placement="bottom" title="{{ _T['z0t6p7pd'] }} {{comment.date_creation | asDate | date:'dd MMMM à HH\'h\'mm'}}">
+                                                    <span class="save-text-p">{{comment.text}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-if="(request.ownComment | userComment).length <= 0" class="text-center">
+                                            {{ _T["hg37xeub"] }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="btn-group ">
+                            <button class="btn btn-danger " ng-click="closeThisDialog('close'); hideSendSeances();"">
+                                {{ _T["y0tzlw7g"] }}</button>
+                            <button class="btn btn-default " ng-click="cleanTable(); closeThisDialog('close&reload');" title="{{ _T['y4zh1oa9'] }}"><span class="fa fa-refresh"></span></button>
+                        </div>
+                        <!--<button class="btn btn-danger btn-block" ng-click="closeThisDialog('close');">-->
+                            <!--Fermer</button>-->
+                    </div>
+                    <div class="col-md-offset-6 col-md-3">
+                        <span class="pull-right">
+                            <a ng-click="setExpand(!getExpand())"><i class="fa-2x" ng-class="{'fa fa-arrow-right': !getExpand(), 'fa fa-arrow-left':getExpand()}" ng-if="!getRightPanelToggle()"></i></a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+          <div class="text-center" ng-if="getLoading() && !getErrorLoading()">
+              <br>
+              <br> {{ _T["712zniei"] }}
+              <br>
+              <br>
+              <div ng-if="!$root.aprilFoolsDay" style="position: relative; font-size: 10em;" class="fa fa-ship">
+                  <i style="position: absolute; font-size: 35px; top: 50px; left: 57px; color:white;" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+              </div>
+              <div ng-if="$root.aprilFoolsDay">
+                <img src="img/fish.gif">
+              </div>
+          </div>
+          <div class="text-center" ng-if="getErrorLoading()">
+              <br>
+              <br> {{ _T["79gq16rf"] }}
+              <br><a ui-sref="app.requestsDetail({id:getMainRequestId()})">{{ _T["6oa6d1k1"] }}</a>
+              <br>{{ _T["ad22z8bh"] }}
+              <br>
+              <br>
+
+              <div style="position: relative; font-size: 10em;" class="fa fa-ship">
+                <i style="position: absolute; font-size: 35px; top: 50px; left: 57px; color:red;" class="fa fa-times fa-fw"></i>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div ng-hide="getExpand()" ng-if="!getLoading()">
+        <div class="action-container" ng-if="requests != null">
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="alert white-space:pre-wrap" dismiss-on-timeout="3000" ng-class="{'alert-success' : !getAlertMessage().isError, 'alert-danger' : getAlertMessage().isError}" role="alert" ng-if="getAlertMessage().showPopup">{{getAlertMessage().message}}</div>
+                </div>
+            </div>
+
+            <h2>
+              {{ _T["guh8rsuy"] }} 
+              <small>({{getSelectedRequests(requests).length}} {{ _T["c0nis89u"] }})</small>
+              <span ng-if="$root.canDisplay(5)">
+                <span style="cursor:pointer" title="{{ _T['18kle9ux'] }}" class="onoffswitch">
+                  <input type="checkbox" ng-click="setRightPanelToggle()" name="onoffswitch" class="ios8-switch" id="onoffswitchNotFarmer">
+                  <label class="onoffswitch-label cursor-pointer" for="onoffswitchNotFarmer">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </span>
+              </span>
+            </h2>
+            <!-- Vue planifiée-->
+            <farmer-id-request-popup ng-if="!getRightPanelToggle()" 
+                is-all-request-planned="isAllRequestPlanned(requests)" 
+                set-alert-message="setAlertMessage(message, isError)" 
+                requests="requests" 
+                get-selected-requests="getSelectedRequests(requests)" 
+                init-sync="init()"></farmer-id-request-popup>
+            <status-request-popup ng-if="!getRightPanelToggle()" 
+                set-alert-message="setAlertMessage(message, isError)" 
+                user-role="getUserRole()" requests="requests" 
+                init-popup="init()"
+                get-selected-requests="getSelectedRequests(requests)"></status-request-popup>
+            <select-tech-request-popup ng-if="$root.canDisplay(5) && isAllRequestPlanned(requests) && !getRightPanelToggle()" 
+                set-alert-message="setAlertMessage(message, isError)" 
+                requests="requests" 
+                get-selected-requests="getSelectedRequests(requests)" 
+                ></select-tech-request-popup>
+            <date-request-popup 
+                ng-if="!getRightPanelToggle('dateRequest') && (!specialRequestForm || $root.canDisplay(3))" 
+                set-alert-message="setAlertMessage(message, isError)" 
+                requests="requests" 
+                get-selected-requests="getSelectedRequests(requests)"
+                init-popup="init()"
+                ></date-request-popup>
+            <date-request-popup-new 
+                ng-if="!getRightPanelToggle('dateRequest') && specialRequestForm && $root.canDisplay(5)" 
+                set-alert-message="setAlertMessage(message, isError)" 
+                requests="requests" 
+                get-selected-requests="getSelectedRequests(requests)"
+                init-popup="init()"
+                ></date-request-popup-new>                
+            <comment-request-popup ng-if="!getRightPanelToggle()" 
+                set-alert-message="setAlertMessage(message, isError)" requests="requests" get-selected-requests="getSelectedRequests(requests)"></comment-request-popup>
+            
+            <!-- Vue à planifier -->
+            <plan-not-farmer-popup ng-if="$root.canDisplay(5) && getRightPanelToggle() && !specialRequestForm" 
+                rooms="rooms" 
+                get-requests-without-room="getRequestsWithoutRoom()"
+                get-artistic-directors="getArtisticDirectors()" 
+                get-contributors="getContributors()"
+                get-all-contributors="getAllContributors()"
+                set-alert-message="setAlertMessage(message, isError)" 
+                requests="requests" 
+                get-selected-requests="getSelectedRequests(requests)" 
+                init-popup="init()"></plan-not-farmer-popup>
+            <advanced-planning-popup ng-if="$root.canDisplay(5) && getRightPanelToggle() && specialRequestForm" 
+                rooms="rooms" 
+                get-requests-without-room="getRequestsWithoutRoom()"
+                get-artistic-directors="getArtisticDirectors()" 
+                get-contributors="getContributors()"
+                get-all-contributors="getAllContributors()"
+                set-alert-message="setAlertMessage(message, isError)" 
+                requests="requests" 
+                get-selected-requests="getSelectedRequests(requests)" 
+                init-popup="init()"></advanced-planning-popup>                
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="alert" dismiss-on-timeout="3000" ng-class="{'alert-success' : !getAlertMessage().isError, 'alert-danger' : getAlertMessage().isError}" role="alert" ng-if="getAlertMessage().showPopup">{{getAlertMessage().message}}</div>
+                </div>
+            </div>                    
+        </div>
+
+    </div>
+  </div>
+</div>
+<style>
+    .dragresize {
+      resize:both;
+      overflow: auto;
+      max-height: 900px !important;
+      min-height: 400px !important;   
+      min-width: 400px !important;   
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);  
+    }
+    </style>  
+    <script>
+      let position = { x: 0, y: 0 }
+      let edges = { left: true, right: true,   bottom: true,  top: true }
+      let attributes = {x:'data-x',y:'data-y'}
+      let IJS = Object.create(interactJS);
+      IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+    </script>

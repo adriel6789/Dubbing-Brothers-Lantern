@@ -1,0 +1,233 @@
+<section ng-if="!isMobile()">
+    <header>
+        <div class="container-fluid container-fixed-nav-aside">
+            <div class="col-sm-12">
+                <p>
+                    {{ _T["2ngk5obz"] }} {{user_entity.firstname}}, {{ _T["vcng5ull"] }}
+                </p>
+            </div>
+        </div>
+        <div class="container-fluid container-fixed-nav-aside header-input-text">
+            <div class="col-sm-12">
+                <form>
+                    <div class="form-group search-form">
+                        <input type="text" class="form-control input-search" id="" placeholder="{{ _T['6gsgvszf'] }}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid container-fixed-nav-aside" ng-if="$root.canDisplay(5)">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>{{ _T["pydaoing"] }}</h2>
+            </div>
+        </div>
+        <div class="alert alert-danger text-center" ng-if="noPlanningSelected == true">
+          {{ _T["9q24h1kx"] }}
+          <button class="btn btn-sm btn-default" ng-click="openPanelSettings()" type="button">
+            <span class="glyphicon glyphicon-cog"></span>
+            {{ _T["o5l2ejoq"] }}
+          </button>
+          !
+        </div>
+            <div ng-repeat="planning in planningsHome" ng-if="countUnplanned[planning.id] != null" class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="dashboard-stat {{planning.color}}" >
+                    <div class="visual">
+                        <span>{{planning.name}}</span>
+                        <i class="fa fa-calendar"></i>
+                    </div>
+
+                    <a class="details top" href="#/requestsUnplanned" ng-click="setCookiePlanning(planning.id, planning.main_location, false)">
+                        <div class="number">
+                            {{countUnplanned[planning.id] != 0 && countUnplanned[planning.id] || _T["fafp4vby"] }}
+                        </div>
+                        <div class="desc">
+                            {{ _T["gd5w8vn0"] }}
+                        </div>
+                    </a>
+
+                    <a class="details bottom" href="#/requestsPlanned" ng-click="setCookiePlanning(planning.id, planning.main_location, true)">
+                        <div class="number">
+                            {{countPlanned[planning.id] != 0 && countPlanned[planning.id] || _T["fafp4vby"] }}
+                        </div>
+                        <div class="desc">
+                            {{ _T["9l3qdreg"] }}
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+
+    </div>
+
+    <div class="container-fluid container-fixed-nav-aside">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>{{ _T["j4shoay5"] }}
+                  <small><a href="#/returns" style="margin-left: 20px;"><i class="glyphicon glyphicon-pencil"></i> {{ _T["xao8xsci"] }}</a></small>
+                </h2>
+            </div>
+        </div>
+        <div class="panel panel-default col-sm-3" ng-repeat="notif in allNotifs | filter:{'has_return':1}  | dateSectionFilter:date_section.date | orderBy:'date_creation':true" ng-if="notif.archived != 1">
+            <div class="panel-body">
+                <span class="label label-danger">{{ _T["f7du1if8"] }}</span>
+                <span class="text-label pull-right">{{notif.date_moment.format("DD MMM YYYY - HH:mm")}}
+                    <span class="btn-circle c-icon c-icon-close" ng-click="dismissNotif(notif.id)" title="{{ _T['dtmxtf41'] }}" role="button"></span>
+                </span>
+                <h3 class="card-title"><i class="fa fa-film"></i> {{notif.product_desc}}</h3>
+                <p class="card-description">
+                    <i class="fa fa-tags"></i>
+                    <a href="#/requests/detail/{{notif.request_id}}">
+                      {{notif.etape_action}}
+                    </a>
+                </p>
+            </div>
+            <div class="panel-footer  panel-footer-danger" ng-click="goManageReturns(notif.product_id, notif.request_id)" ng-if="!$root.canDisplay(4)">
+                <span class="glyphicon glyphicon-pencil"></span><p>{{ _T["p3n8deff"] }}</p>
+            </div>
+            <div class="panel-footer  panel-footer-danger" ng-if="$root.canDisplay(4)">
+                <a href="#/requests/detail/{{notif.request_id}}" >
+                    <span class="glyphicon glyphicon-pencil"></span><p>{{ _T["p3n8deff"] }}</p>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>{{ _T["hf2i7fdg"] }} : {{countNotifications()}} {{ _T["ym8ug09i"] }}
+                <a ng-click="dismissAllFinished()" role="button" class="btn btn-default btn-rounded btn-text-gray btn-light-shadow pull-right"><i class="c-icon c-icon-checked"></i> {{ _T["icvzvc94"] }}</a></h2>
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid container-fixed-nav-aside">
+        <span ng-repeat="date_section in dates_sections">
+            <div class="separator">
+                <p class="separator-label">{{date_section.desc}}</p>
+                <hr>
+            </div>
+            <div class="panel panel-default" ng-repeat="notif in allNotifs | dateSectionFilter:date_section.date | orderBy:'date_creation':true" ng-if="notif.archived != 1">
+                <table class="table table-no-border">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>
+                                    <i class="fa fa-film"></i>
+                                    <a href="#/products/{{notif.product_id}}" ng-if="notif.group != 1">
+                                        {{notif.product_desc}}
+                                    </a>
+                                    <span ng-if="notif.group == 1">
+                                        <span>{{notif.request.projectName.name}} 
+                                            -</span>
+                                        <span ng-if="notif.request.subproject_detail.nature_id == 2">
+                                            {{ _T["6vwtywcc"] }}
+                                            {{notif.request.subproject_detail.season}} ({{notif.request.subproject_nature}})
+                                            -
+                                        </span>
+                                        <span ng-if="notif.request.subproject_detail.nature_id != 2">
+                                            {{notif.request.subproject_nature}}
+                                            -
+                                        </span>
+                                        <i>
+                                            {{ _T["5sar2sqw"] }}
+                                            {{notif.requests.length}}
+                                            {{ _T["ba0heyvu"] }}
+                                        </i>
+                                    </span>
+                                    <span class="label label-success" ng-if="notif.request.is_done == 1 || (notif.is_done == 1 && notif.group == 1)">{{ _T["9jk38nyp"] }}</span>
+                                    <span class="label label-danger" ng-if="notif.has_return == 1">{{ _T["ibk9lmos"] }}</span>
+                                    <span class="label label-warning" ng-if="notif.request.is_not_done == 1 || (notif.replan == 1 && notif.group == 1)">{{ _T["yxdfq1zn"] }}</span>
+                                    <span class="label label-info" ng-if=" notif.request.is_in_progress == 1 || (notif.in_progress == 1 && notif.group == 1)">{{ _T["xvyyayrz"] }}</span>
+                                    <a href="#/manageReturns/{{notif.product_id}}/{{notif.request.workflow_id}}" class="label label-danger" ng-if="notif.group != 1 && notif.hasReturnToCorrect == 1">{{ _T["weczjvfs"] }}</a>
+                                    <span class="label label-danger" ng-if="notif.group == 1 && notif.hasReturnToCorrect == 1">{{ _T["weczjvfs"] }}</span>
+                                </label>
+                                <p ng-if="notif.group != 1">
+                                  <workflow-reviewed data="notif.request.workflow" style="display:inline-block; margin-right: 10px"></workflow-reviewed>
+                                  <label>
+                                        <i class="fa fa-tags"></i>
+                                        <a href="#/requests/detail/{{notif.request.id}}">
+                                          {{notif.etape_action}}
+                                        </a>
+                                  </label>
+                            </p>
+                            <p ng-if="notif.group == 1">
+                              <workflow-reviewed data="notif.request.workflow" style="display:inline-block; margin-right: 10px"></workflow-reviewed>
+                              <label>
+                                    <i class="fa fa-tags"></i>
+                                      {{notif.etape_action}}
+                              </label>
+                            </p>
+                            </td>
+                            <td class="table-cell-valign-middle">
+                                <small><small><span class="glyphicon glyphicon-time"></span> {{notif.date_moment.calendar()}}</small></small>
+                                <br>
+                                <span ng-if="notif.group != 1">
+                                    <a ng-click="showObservations(notif.observations)" ng-if="notif.observations && notif.observations.length != 0">
+                                        <div class="infobull small-infobull"><i class="c-icon c-icon-comment c-icon-shadow "></i><span class="infobull-text">{{notif.observations.length}}</span>
+                                        {{ _T["3j35hqts"] }}</div> </a>
+
+                                    <a role="button" ng-if="$root.canDisplay(7) && (notif.replan == 1 || notif.is_done == 1 || notif.has_return == 1)" ng-click="replanRequest(notif, $index)" class="btn btn-primary btn-light-shadow "><i class="glyphicon glyphicon glyphicon-calendar"></i> {{ _T["h1ga3xzt"] }} </a>
+                                    <a role="button" ng-click="newRequestFromNotif(notif.request_id)" ng-if="$root.canDisplay(3) && notif.is_done == 1" class="btn btn-primary btn-light-shadow "><i class="c-icon c-icon-add"></i> {{ _T["p2tqdnu1"] }} </a>
+                                </span>
+                                <span ng-if="notif.group == 1">
+                                    <a role="button" ng-click="replanGroupRequest(notif)" ng-if="$root.canDisplay(7) && (notif.replan == 1 || notif.is_done == 1 || notif.has_return == 1)" class="btn btn-primary btn-light-shadow "><i class="glyphicon glyphicon glyphicon-calendar"></i> {{ _T["ped6tka5"] }} </a>
+
+                                    <a role="button" ng-click="newRequestGroupFromNotif(notif.requests)" ng-if="$root.canDisplay(3) && notif.is_done == 1" class="btn btn-primary btn-light-shadow "><i class="c-icon c-icon-add"></i> {{ _T["2rbpmaso"] }} </a>
+                                </span>
+
+                                <span ng-if="notif.group == 1" class="btn-circle glyphicon glyphicon-menu-down btn-collapse" role="button" data-toggle="collapse" href="#collapseExample{{notif.id}}" aria-expanded="false" aria-controls="collapseExample{{notif.id}}"></span>
+                                <span class="btn-circle c-icon c-icon-close" ng-click="dismissNotif(notif.id)" role="button"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="collapse" id="collapseExample{{notif.id}}">
+                    <table class="table table-striped table-hover table-cell-small">
+                        <tbody>
+                            <tr ng-repeat = "request_id in notif.requests">
+                                <td>
+                                    <a href="#/products/{{requests[request_id].product_id}}">
+                                        {{request.product.human_description}}
+                                    </a>                                    <a class="btn btn-info btn-xs btn-light-shadow" href="#/requests/detail/{{request_id}}">
+                                      {{ _T["u5gb76mh"] }}
+                                    </a>
+                                    <a role="button" ng-click="newRequestFromNotif(request_id)" ng-if="$root.canDisplay(3) && notif.is_done == 1" class="btn btn-xs btn-primary btn-light-shadow "><i class="c-icon c-icon-add"></i> {{ _T["p2tqdnu1"] }} </a>
+                                    <a href="#/manageReturns/{{requests[request_id].product_id}}/{{requests[request_id].workflow_id}}" class="label label-danger" ng-if="request.hasReturnToCorrect == 1">{{ _T["weczjvfs"] }}</a>
+                                </td>
+                                <td>
+                                    <a ng-click="showObservations(observations[request_id])" ng-if="observations[request_id] && observations[request_id].length != 0"> 
+                                        <div class="infobull small-infobull"><i class="c-icon c-icon-comment c-icon-shadow "></i><span class="infobull-text">{{observations[request_id].length}}</span>
+                                        {{ _T["3j35hqts"] }}</div> </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <script type="text/javascript">
+                $('.collapse').on('show.bs.collapse', function () {
+                    var ariaControls = $(this).attr('id');
+
+                    $('.btn-collapse[aria-controls=' + ariaControls + ']').addClass('rotate180');
+
+                    });
+
+                    $('.collapse').on('hide.bs.collapse', function () {
+                    var ariaControls = $(this).attr('id');
+
+                    $('.btn-collapse[aria-controls=' + ariaControls + ']').removeClass('rotate180');
+                    });
+                </script>
+            </div>
+            <div class="clearfix"></div>
+        </span>
+
+    </div>
+</section>
+<div class="" scrolly="infiniteScrollNotificationHome($index)">
+  </div>

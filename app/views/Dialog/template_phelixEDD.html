@@ -1,0 +1,19 @@
+<div class="page-popup phelix-popup">
+   <h2 ng-if="isAdLight">{{ $root._T["3g2d4gz2"] }}</h2>
+   <!-- <h2 ng-if="!isAdLight">{{ $root._T["ok8uxofd"] }}</h2> -->
+    <div class="panel-container frame-scroll" style="height: 95%; min-height: 97%;border:solid #504d4d52 1px; border-radius: 8px;">
+        <!-- // TODO  client-id="66" to fix-->
+        <joblines-phelix-api ng-if="$ctrl.product && $ctrl.cell && $ctrl.cell.action.id" 
+                            is-ad-light="isAdLight"
+                            client-id="66"
+                            action-type-id ="$ctrl.cell.action.id"
+                            content-product ="$ctrl.product"
+                            content-cell="$ctrl.cell" 
+                            params-workflow='buildParamWorkflow($ctrl.product, $ctrl.cell.workflow_id, isAdLight)'></joblines-phelix-api>
+    </div>
+    <div class="col-md-3">
+        <div class="btn-group ">
+            <button class="btn btn-danger  ng-binding" ng-click="closeThisDialog('close'); "> {{ $root._T["y0tzlw7g"] }}</button>
+        </div>
+    </div>
+</div>

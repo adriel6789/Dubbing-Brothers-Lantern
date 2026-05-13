@@ -1,0 +1,17 @@
+<!--UNUSED Note 20211110 -->
+<div class="container-fluid">
+    <h3>{{notif.title}} : {{request.product.human_description}}</h3>
+    <div class="row">
+        <p>{{ _T["eq9spk3x"] }} : </p>
+        <pre>{{notif.comment || _T["zj219353"] }}</pre>
+    </div>
+    <div class="row">
+        <div class="form-horizontal">
+            <div ng-include="'partials/Dialog/edit-field.html'"></div>
+        </div>
+    </div>
+    <div class="row">
+        <button ng-click="doneEditing();" class="btn btn-default btn-block"><span class="glyphicon glyphicon-edit"></span> {{ _T["opvj8nm5"] }}</button>
+        <button ng-click="goToRequest(notif.request_id)" class="btn btn-default btn-block"><span class="glyphicon glyphicon-eye-open"></span> {{ _T["u5gb76mh"] }}</button>
+    </div>
+</div>

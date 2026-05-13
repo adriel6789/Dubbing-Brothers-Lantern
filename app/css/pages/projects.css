@@ -1,0 +1,74 @@
+.page-projects .projects {
+
+}
+
+.page-projects .no-projects {
+    height: 200px;
+    background: #fff;
+    border: 1px solid #D5DEEC;
+    color: #444;
+    position: relative;
+}
+
+.page-projects .projects.no-projects p {
+    line-height: 200px;
+    text-align: center;
+    color: #3570E1;
+}
+
+.page-projects .panel-body img {
+    border: 1px solid;
+    max-width: 50px;
+    max-height: 50px;
+    cursor: pointer;
+    font-size: 1.5em;
+    border-color: #000000;
+    top: 0px;
+    position: relative;
+}
+
+.page-projects .panel-body {
+    padding: 8px;
+}
+
+.page-projects .icon-style {
+    top: 12px;
+    position: relative;
+}
+
+.page-projects .icon-style.full, .page-projects .fa-star-o:hover {
+    color: #f77c04;
+}
+
+.page-projects small {
+    padding: 5px;
+    display: block;
+    color: #3570E1;
+}
+
+.page-projects .panel-head {
+    background: #fff;
+    border: 1px solid #D5DEEC;
+    padding: 7px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.page-projects .actions-container {
+    top: 3px;
+    position: relative;
+}
+
+.page-projects .company {
+    background: grey;
+    border-radius: 5px;
+    padding: 4px 11px;
+    color: #fff;
+    font-size: 12px;
+}
+
+.page-projects .code-name {
+    color: grey;
+    font-size: 13px;
+}

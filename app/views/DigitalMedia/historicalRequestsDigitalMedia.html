@@ -1,0 +1,136 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["amhwsnnk"] }}
+            </p>
+        </div>
+    </div>
+</header>
+<div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+        <div ng-include="'views/partials/nav-requests.html'"></div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="">
+
+              <div class="well well-sm col-md-12" style="background-color:white">
+                  <div class="col-md-3 text-center">
+                      <div class="col-md-12">
+                          <i class="fa fa-search fa-2x"></i>
+                          <strong>{{ _T["dnu9bvek"] }}</strong>
+                      </div>
+                      <div class="col-md-12">
+                        <input type="text" class="form-control input-search input-search-tabs large-input" aria-label="Rechercher parmi les demandes" placeholder="{{ _T['wqfkzdw6'] }}" ng-model="textFilter">
+                      </div>
+                  </div>
+                  <div class="col-md-6 text-center">
+                      <div class="col-md-12">
+                          <i class="fa fa-calendar fa-2x"></i>
+                          <strong>{{ _T["v870gpf0"] }}</strong>
+                      </div>
+                      <div class="col-md-12">
+                          <div class="input-group">
+                              <span class="input-group-btn">
+                                  <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(true)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['pmi0fz3q'] }}">
+                                     << </button> </span>
+                                      <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span>
+                                      <input ng-model="dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">
+                                      <span class="input-group-addon" id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span>
+                                      <input ng-model="dateEnd" style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}">
+                                      <span class="input-group-btn">
+                                      <button class="btn btn-default btn-lg" type="button" ng-click="moveMonth(false)" data-placement="bottom" data-toggle="tooltip" title="{{ _T['z98e8ejr'] }}"> >>
+                                  </button>
+                              </span>
+                          </div>
+                          <script ng-if="products.length!=0">
+                              $('input.calendar').datepicker({
+                                  format: "dd-mm-yyyy",
+                                  todayBtn: true,
+                                  language: $.cookie("language"),
+                                  orientation: "top",
+                                  multidateSeparator: " - ",
+                                  calendarWeeks: true,
+                                  todayHighlight: true
+                              });
+
+                                $(function() {
+                                  $('[data-toggle="tooltip"]').tooltip({html: true})
+                                });
+                          </script>
+                      </div>
+                  </div>
+                  <div class="col-md-3 text-center">
+                      <section ng-if="calculInProgress > 0">
+                          <div class="col-md-12">
+                              <i class="fa fa-spinner fa-spin fa-2x"></i>
+                          </div>
+                          <div class="col-md-12">
+                              <strong>{{ _T["y9uiclqq"] }}</strong>
+                          </div>
+                      </section>
+                  </div>
+              </div>
+
+              <div class="col-md-12" ng-if="requests.length > 0 && calculInProgress <= 0">
+                  <table class="table table-hover">
+                      <thead>
+                          <th class="text-center">
+                              {{ _T["r82ct91x"] }}
+                          </th>
+                          <th class="text-center">
+                              {{ _T["0rvv41bf"] }}
+                          </th>
+                          <th class="text-center">
+                              {{ _T["hbtvjrk1"] }}
+                          </th>
+                          <th class="text-center">
+                              {{ _T["awbb7v9i"] }}
+                          </th>
+                          <th class="text-center">
+                              {{ _T["994zv55k"] }}
+                          </th>
+                          <th class="text-center">
+                              {{ _T["uhm2vkrg"] }}
+                          </th>
+                          <th class="text-center"></th>
+                      </thead>
+                      <tbody>
+                          <tr ng-repeat="request in requests | magicFilterRequest:textFilter | orderBy: 'closing_date'">
+                              <td class="text-center">
+                                <i>{{request.product.subproject.project.client.name}}</i> - {{request.product.human_description}}
+                              </td>
+                              <td class="text-center">
+                                  {{request.action_type.etape_type.value}}/{{request.action_type.value}}
+                              </td>
+                              <td class="text-center">
+                                  {{request.workflow.exploitation.value}}
+                              </td>
+                              <td class="text-center">
+                                  {{request.workflow.language.value}}
+                              </td>
+                              <td class="text-center">
+                                  {{request.tech_writer_user.person.firstname}}
+                                  {{request.tech_writer_user.person.lastname}}
+                              </td>
+                              <td class="text-center">
+                                  {{request.closing_date | asDate | date : "dd/MM/yyyy"}}
+                              </td>
+                              <td class="text-center">
+                                <a class="btn btn-default btn-xs btn-text-primary btn-light-shadow" href="#/requests/detail/{{request.id}}" target="_blank">
+                                  {{ _T["u5gb76mh"] }}
+                                </a>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+              <div class="no-data" ng-if="requests.length == 0 && calculInProgress <= 0">
+                {{ _T["vlv38116"] }}
+              </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

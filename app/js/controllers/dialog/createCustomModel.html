@@ -1,0 +1,53 @@
+<div class="page-popup page-custom-template">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="step">
+                <form class="ng-pristine ng-valid">
+                    <div class="body">
+                        <h2>{{ _T["v5yugfkl"] }}</h2>
+                        <label class="title">
+                            {{ _T["nm5xfvts"] }}
+                        </label>
+                        <div class="form-group">
+                        <input type="text" name="title" ng-model="customTemplate.name" />
+                    </div>
+                    <hr>
+                    <div ng-show="templateSelected">
+                        <label class="title">{{ _T["beggzkkz"] }}</label>
+                        <ul class="list">
+                            <li ng-repeat="template in templateSelected.list">{{template.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+            <div class="footer">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button ng-click="closeThisDialog();" type="button" class="btn btn-danger btn-block">
+                        {{ _T["ficbz281"] }}
+                        </button>
+                    </div>
+                    <div class="col-md-3 col-md-offset-3">
+                        <button ng-click="createCustomModel()" type="button" class="btn btn-primary btn-block" >
+                        {{ _T["d9rdcah4"] }}
+                        </button>
+                    </div>
+                    <div class="col-md-3" ng-class="{'col-md-offset-3' : step < (5 + productsChoosen.length)}">
+                        <button ng-click="save(templateSelected)" type="button" class="btn btn-success btn-block" >
+                        {{ _T["d32u2mga"] }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h1>
+        {{ _T["rtnnq02w"] }} <span ng-if="isEditProject">{{ _T["1znba7zf"] }}</span> <span ng-if="!isEditProject">{{ _T["7ah85p8w"] }}</span>
+        </h1>
+        <ul class="step-container" ng-repeat="nav in steps">
+            <li ng-class="{'unchecked' : step < $index+1, 'bt-0' : $index > 0}">{{ _T["dfuet0tp"] }} {{nav.step}} - {{nav.title}}</li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<a tabindex="0" href="" style="color: #fff;" popover-placement="bottom"
+    uib-popover-template="'popover-charge-prod.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"
+    data-toggle="tooltip" title="{{$root._T['le2qlr1d'] }}">
+    <i class="fa fa-users" style="font-size:20px;"></i>
+</a>
+<script type="text/ng-template" id="popover-charge-prod.html">
+    <div class="row mb-0" style="color: #2A2A2A;">
+        <div class="col-md-12 f-18">
+            <b>{{$root._T["le2qlr1d"] }}</b>
+            <hr class="mt-5 mb-5">
+        </div>
+        <div class="col-md-12" ng-repeat="chargeProd in $ctrl.chargeprod">
+            <i class="fa fa-user"></i> 
+            <span ng-show="chargeProd.is_referent" style="background-color: #b7e4b4;"><strong>{{chargeProd.name}}</strong></span>
+            <span ng-show="!chargeProd.is_referent">{{chargeProd.name}}</span>
+        </div>
+    </div>
+</script>

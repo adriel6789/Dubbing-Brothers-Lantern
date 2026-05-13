@@ -1,0 +1,31 @@
+<div ng-repeat="(key, value) in dateByMonth" style="margin-bottom:3px" >
+  <span class="request_dates {{requestStatus.status.class}}" ng-if="request.ownFarmerbookings != null && request.ownFarmerbookings.length > 0 && request.is_canceled != 1">
+    <i class="fa fa-pause" ng-if="request.on_hold == 1"></i>
+    <span ng-repeat="date in value | orderBy: 'day'" uib-tooltip-html="date.tooltip" tooltip-placement="bottom">
+      <span style="text-decoration: underline;">{{date.day}}</span>
+      <span ng-if="$index < value.length - 1">/</span>
+    </span>
+    {{key}}
+  </span>
+  <div class="request_dates {{requestStatus.status.class}}" ng-if="request.ownFarmerbookings == null || request.ownFarmerbookings.length == 0 && request.is_canceled != 1">
+    <i class="fa fa-pause" ng-if="request.on_hold == 1"></i>
+    <span ng-repeat="date in value | orderBy: 'day'">
+      {{date.day}}
+      <span ng-if="$index < value.length - 1">/</span>
+    </span>
+    {{key}}
+  </div>
+</div>
+<small ng-if="$root.canDisplay(5)">
+  <div ng-if="allFarmerDatesAreDone">
+    <i class="fa fa-check"></i> <i>{{ $root._T["d7jpgj46"] }}</i>
+  </div>
+  <div ng-if="!allFarmerDatesAreDone && nextDate">
+    <i class="fa fa-arrow-right"></i><span> {{ $root._T["6gs99cy1"] }} {{nextDate.day}} {{nextDate.month}}</span>
+  </div>
+</small>
+<small>
+  <div ng-if="noDate">
+    <i class="fa fa-calendar-times-o"></i><span> {{ $root._T["eakg442q"] }}</span>
+  </div>
+</small>

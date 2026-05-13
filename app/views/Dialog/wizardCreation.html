@@ -1,0 +1,703 @@
+<div class="page-popup dragresize" data-x=0 data-y=0>
+  <div class="row">
+    <div class="col-md-9">
+      <form role="form" name="createProject">
+        <div ng-switch="step" class="step">
+          <div ng-switch-when="1">
+            <div class="row m-0">
+              <div class="col-md-12">
+                <h2 class="poignee">{{steps[0].title}}</h2>
+                <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
+                <div class="body" style="max-height: 685px; min-height: 658px; height: 685px;">
+                  <div class="row" style="margin-bottom: 0;">
+                    <div class="col-md-12">
+                      <h5>{{ _T["4h1kxgd5"] }} :</h5>
+                      <div class="btn-group btn-group-justified">
+                        <div class="btn btn-xs"
+                             ng-class="{'btn-primary': searchFilm, 'btn-default': !restricted_edit}"
+                             ng-click="restricted_edit || initSearch('film')"
+                        >{{ _T["73epkgfv"] }}</div>
+                        <div class="btn btn-xs btn-default"
+                             ng-class="{'btn-primary': searchSerie, 'btn-default': !restricted_edit}"
+                             ng-click="restricted_edit || initSearch('series')"
+                        >{{ _T["uls5lkcy"] }}</div>
+                      </div>
+
+                      <!--INFORMATION PANEL-->
+                      <div class="col-md-12 alert alert-info text-center" ng-if="loadingProject > 0">
+                        {{$root.user_entity.firstname}}, {{ _T["ngkryjhy"] }}
+                      </div>
+                      <div class="col-md-12 alert alert-info text-center" ng-if="projectsList.length == 0 && loadingProject == 0">
+                        {{ _T["w8vn0faf"] }} {{$root.user_entity.firstname}}.<br>
+                        {{ _T["m1glgw4f"] }}
+                        <br />
+                        <span class="btn btn-xs btn-warning" ng-click="newProject.name = ''">{{ _T["tlimj49x"] }}</span>
+                         {{ _T["p4vbyxao"] }}
+                      </div>
+                      <div class="col-md-12 alert alert-info text-center" ng-if="projectsList.length > 0 && loadingProject == 0">
+                        {{ _T["ywgkyyp9"] }} {{projectsList.length}} {{ _T["8xscip3n"] }} {{$select.search}}, {{$root.user_entity.firstname}} ! <br>
+                        {{ _T["8deffhf2"] }}, <span class="btn btn-xs btn-default" ng-click="newProject.name = ''">{{ _T["tlimj49x"] }}</span>
+                      </div>
+
+                      <div class="clearfix"></div>
+
+                      <!--MAIN PRODUCT SELECTOR-->
+                      <ui-select ng-show="!restricted_edit && (searchFilm || searchSerie)"
+                                 ng-model="selectedProject"
+                                 on-select="addProjectName($item,$model);"
+                                 style="width: 100%;"
+                                 theme="bootstrap"
+                                 focus-on="projectSearch"
+                      >
+                        <ui-select-match placeholder="{{ _T['9ajcwhe1'] }} {{searchFilm ? 'un film' : 'une série'}}">
+                          {{$select.selected.original_title}}
+                        </ui-select-match>
+                        <ui-select-choices style="width: 100%;max-height:400px;"
+                                           group-by="'project_type'"
+                                           refresh="searchProjects($select.search, searchFilm, searchSerie)"
+                                           refresh-delay="500"
+                                           repeat="project in projectsList | orderBy:'-source'| magicFilter: $select.search"
+                        >
+                          <div class="row">
+                            <div class="col-md-1">
+                              <img ng-if="project.poster_path"
+                                   ng-src="http://image.tmdb.org/t/p/w45{{project.poster_path}}"
+                              />
+                              <div ng-if="!project.poster_path"
+                                   style="display:block;height:63px;width:45px;content:'';background:#ccc;border:1px solid rgba(0,0,0,0.1);"
+                              ></div>
+                            </div>
+                            <div class="col-md-11">
+                              <span class="badge" style="float:right;">{{project.source | uppercase}}</span>
+                              <span ng-bind-html="project.original_title | highlight: $select.search"></span>
+                              <small>
+                                <i>({{project.title}} - {{project.release_date | date : 'yyyy'}}) - ({{project.source}} id: {{project.imdb_id !== undefined ? project.imdb_id : project.id }})</i>
+                                <p ng-bind-html="project.overview.trunc(250)"></p>
+                              </small>
+                            </div>
+                          </div>
+                          <div class="clearfix"></div>
+                        </ui-select-choices>
+                      </ui-select>
+
+
+                      <div class="form-group" ng-show="selectedProject != null || ( newProject.name || newProject.code_name || newProject.code_name_2 || newProject.code_name_3 )">
+                        <h5>{{ _T["i7fdg23o"] }} <small>({{ _T["r6nvd5sa"] }})</small> : </h5>
+                        <input class="form-control capitalize"
+                               ng-class="{'alert-danger' : newProject.name && (newProject.name == newProject.code_name || newProject.name == newProject.code_name_2 || newProject.name == newProject.code_name_3)}"
+                               ng-model="newProject.name"
+                               ng-readonly="restricted_edit"
+                               placeholder="{{ _T['r2sqwibk'] }}">
+                      </div>
+                    </div>
+
+                    <div class="col-md-12" ng-show="searchFilm || searchSerie || isEditProject">
+                        <div class="form-group">
+                            <h5><i title="{{ _T['36mql18i'] }}" class="fa fa-lg fa-warning" style="color: #E13535"></i> IMDB ID :</h5>
+                            <input class="form-control"
+                                   ng-model="newProject.imdb_id"
+                                   ng-change="searchMovieByImdbId()"
+                                   ng-model-options="{ debounce: 500 }"
+                                   ng-disabled="loadingProject"
+                                   ng-readonly="restricted_edit"
+                                   placeholder="IMDB ID">
+                        </div>
+                        <p style="color:red" ng-show="imdbSearchError == true">{{ _T["m0b0kafq"] }}</p>
+                    </div>
+
+                    <div class="col-md-12" ng-show="searchFilm || searchSerie || isEditProject">
+                      <div class="form-group">
+                        <h5>{{ _T["9lmoswec"] }} :</h5>
+                        <input class="form-control capitalize"
+                               ng-class="{'alert-danger' : newProject.code_name && (newProject.code_name == newProject.name || newProject.code_name == newProject.code_name_2 || newProject.code_name == newProject.code_name_3)}"
+                               ng-model="newProject.code_name"
+                               ng-readonly="restricted_edit"
+                               placeholder="{{ _T['9lmoswec'] }}">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-show="newProject.code_name">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <h5>{{ _T["9lmoswec"] }} 2 :</h5>
+                        <input class="form-control capitalize"
+                               ng-class="{'alert-danger' : newProject.code_name_2 && (newProject.code_name_2 == newProject.name || newProject.code_name_2 == newProject.code_name || newProject.code_name_2 == newProject.code_name_3)}"
+                               ng-model="newProject.code_name_2"
+                               ng-readonly="restricted_edit"
+                               placeholder="{{ _T['9lmoswec'] }} 2">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-show="newProject.code_name_2">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <h5>{{ _T["9lmoswec"] }} 3 :</h5>
+                        <input class="form-control capitalize"
+                               ng-class="{'alert-danger' : newProject.code_name_3 && (newProject.code_name_3 == newProject.name || newProject.code_name_3 == newProject.code_name || newProject.code_name_3 == newProject.code_name_2)}"
+                               ng-model="newProject.code_name_3"
+                               ng-readonly="restricted_edit"
+                               placeholder="{{ _T['9lmoswec'] }} 3">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-show="newProject.name || newProject.code_name">
+                    <div class="col-md-12">
+                      <h5>{{ _T["tp27g555"] }} :</h5>
+                      <div class="form-group">
+                        <ui-select ng-disabled="disabled" ng-model="newProject.display_name" style="width: 100%" theme="bootstrap" required>
+                          <ui-select-match placeholder="{{ _T['5r2ashdc'] }}">{{$select.selected.name}}</ui-select-match>
+                          <ui-select-choices repeat="display.value as display in display_names | propsFilter: {name: $select.search, id: $select.search}">
+                            <div ng-bind-html="display.name | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-show="newProject.name || newProject.code_name">
+                    <div class="col-md-12">
+                      <h5>{{ _T["os7jpo4k"] }} :</h5>
+                      <div class="form-group">
+                        <ui-select ng-disabled="disabled" ng-model="newProject.client_id" style="width: 100%" theme="bootstrap" required>
+                          <ui-select-match placeholder="{{ _T['zjvfs2rb'] }}">{{$select.selected.name}}</ui-select-match>
+                          <ui-select-choices repeat="client.id as client in clients | propsFilter: {name: $select.search, id: $select.search}">
+                            <div ng-bind-html="client.name | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-if="newProject.client_id == 66 && !searchFilm" >
+                    <!-- Module Link Titles Serie Phelix API -->
+                     <module-phelix-api title-params ="{ phelix_choice: 0}" element-type="'project'" element-data="newProject" on-update="newProject.title_phelix=selectedItem.Title;newProject.record_job_id=selectedItem.Record_ID" ></module-phelix-api>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-show="newProject.name || newProject.code_name">
+                    <div class="col-md-12">
+                      <h5>{{ _T["fd9chzc6"] }} :</h5>
+                      <div class="form-group">
+                        <ui-select ng-disabled="disabled" multiple close-on-select="true" ng-model="$parent.$parent.users_of_client_selected"
+                          style="width: 100%" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['x7xb3tjl'] }}">{{$item.name}}</ui-select-match>
+                          <ui-select-choices repeat="user in users_of_client track by user.user_id">
+                            <div ng-bind-html="user.name"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" style="margin-bottom: 0;" ng-show="newProject.name || newProject.code_name">
+                    <div class="col-md-12">
+                      <h5>{{ _T["6k8pyh5m"] }} :</h5>
+                      <div class="form-group">
+                        <ui-select ng-disabled="disabled" multiple close-on-select="true" ng-model="global.favoritePersons"
+                          style="width: 100%" theme="bootstrap">
+                          <ui-select-match placeholder="{{ _T['pmasor78'] }}">{{$item.name}}</ui-select-match>
+                          <ui-select-choices repeat="user.id as user in users | propsFilter: {name: $select.search, id: $select.search}">
+                            <div ng-bind-html="user.name | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <h5>{{ _T['jn6iod1m'] }}: </h5>
+                      <label ng-repeat="option in projectTypes">
+                        {{option.name}}
+                        <input  ng-if="isEditProject"type="radio" name="projectTypeId" ng-value="option.id"  ng-model="global.productTypeId" ng-init="global.productTypeId=newProject.type_id"> &nbsp;
+                        <input ng-if="!isEditProject" type="radio" name="projectTypeId" ng-value="option.id"  ng-model="newProject.type_id"> &nbsp;
+                      </label>
+                    <select-product-managers listpmanager="ctrl.users" element-id="newProject.id" element-type="'project'"  on-update="setReferentProductManager(selectedItem)" single-item="true"></select-product-managers>
+                    <div class="col-md-12">
+                      <div class="alert alert-info text-center">
+                        {{ _T["euxkbn68"] }}
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <h5>{{ _T["6lnh6qfw"] }} <small>{{ _T["48pa1p70"] }}</small> :</h5>
+                      <div class="form-group">
+                        <input id="vip" ng-model="newProject.is_vip" type="checkbox" />
+                        <label for="vip"></label> {{ _T["w7redrmn"] }}
+                      </div>
+                    </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--STEP 2-->
+          <div ng-switch-when="2">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="poignee">{{steps[1].title}}</h2>
+                <div class="body" style="max-height: 685px; min-height: 658px; height: 685px;">
+                  <div class="row mb-0" ng-if="subProjectLantern.length > 0 && subproject_id == null">
+                    <div class="col-md-12">
+                      <div class="subtitle">{{ _T["tw9wqf69"] }}</div>
+                    </div>
+                    <div class="col-md-12 p-0">
+                      <div class="col-md-2 pb-10" ng-repeat="subproject in subProjectLantern">
+                        <div class="btn" style="cursor: default; width: 100%;">
+                          <div class="col-md-12 p-0">
+                            <span>{{(subproject.season) && _T["6vwtywcc"] + ' ' + subproject.season || subproject.nature.value}}</span>
+                            <br>
+                            <small>({{subproject.ownProduct.length}} {{(subproject.season) && _T["7i6i4z7a"] || _T["ba0heyvu"] }})</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-0" ng-if="subProjectVoiceMatch.length > 0 && subproject_id == null">
+                    <div class="col-md-12">
+                      <div class="subtitle">{{ _T["o6pwcfu7"] }}</div>
+                    </div>
+                    <div class="col-md-12 p-0">
+                      <div class="col-md-2 pb-10" ng-repeat="subproject in subProjectVoiceMatch">
+                        <div class="btn btn-default" style="width: 100%" ng-click="importSubproject(subproject)">
+                          <div class="col-md-12 p-0">
+                            <span>{{(subproject.season) && _T["6vwtywcc"] + ' ' + subproject.season || subproject.nature.value}}</span>
+                            <br>
+                            <small>({{subproject.ownProduct.length}} {{(subproject.season) && _T["7i6i4z7a"] || _T["ba0heyvu"] }})</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="subproject_id == null">
+                    <div class="col-md-12">
+                      <div class="subtitle" ng-if="subProjectLantern.length > 0 || subProjectVoiceMatch.length > 0">{{ _T["vc5xgg30"] }}</div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <ui-select ng-disabled="disabled" ng-model="newSubproject.nature" style="width: 100%" theme="bootstrap" required>
+                          <ui-select-match placeholder="{{ _T['0kckbj84'] }}">{{$select.selected.value}}</ui-select-match>
+                          <ui-select-choices repeat="nature as nature in subproject_natures | propsFilter: {value: $select.search, id: $select.search}">
+                            <div ng-bind-html="nature.value | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="newSubproject.nature.name == 'serie' && subproject_id == null">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <ui-select ng-disabled="disabled"
+                                   ng-model="newSubproject.season"
+                                   style="width: 100%"
+                                   theme="bootstrap"
+                                   on-select="addSeason($item, $model)"
+                                   required>
+                          <ui-select-match placeholder="{{ _T['6vwtywcc'] }}">{{$select.selected.value}}</ui-select-match>
+                          <ui-select-choices
+                              repeat="season.id as season in seasons | orderBy:id:true | propsFilter: {value: $select.search, id: $select.search}">
+                            <div ng-bind-html="season.value | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="newSubproject.nature.name == 'serie'">
+                    <div class="col-md-12">
+                      <label class="title">{{ _T["a17phaxy"] }}</label>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <label class="containerRadio">
+                            <input type="radio" name="productType" ng-model="global.productType" value="0">
+                            <span class="checkmark"></span>
+                            {{ _T["xxxzi2yb"] }}
+                          </label>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="containerRadio">
+                            <input type="radio" name="productType" ng-model="global.productType" value="1">
+                            <span class="checkmark"></span>
+                            {{ _T["h12xqsuf"] }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 0;" ng-if="newProject.client_id == 66 && newProject.title_phelix !=''" >
+                    <!-- Module Link Titles season Phelix API -->
+                    <module-phelix-api ng-if="newSubproject.nature.name == 'serie'" title-params ="{ phelix_choice: 1, phelix_season_title:newProject.title_phelix }" element-type="'subproject'" on-update="newSubproject.title_phelix=selectedItem.Title;newSubproject.record_job_id=selectedItem.Record_ID;"  ></module-phelix-api> 
+                  </div>
+                  <div ng-if="newSubproject.nature.name == 'serie' && newSubproject.season != null">
+                    <div class="row" ng-if="loadEpisodes">
+                      <div class="col-md-12 text-center">
+                        <h5>
+                          <i class="fa-spinner fa-spin fa-fw fa"></i> {{ _T["t3cecozb"] }}
+                        </h5>
+                      </div>
+                    </div>
+                    <div class="row" ng-if="!loadEpisodes && selectedProject.selectedSeason != null && selectedProject.selectedSeason.episodes != null">
+                      <div class="col-md-12 text-center">
+                        <h5>
+                          {{selectedProject.selectedSeason.episodes.length}} {{ _T["yo8cljqz"] }}
+                        </h5>
+                        <span ng-if="selectedProject.selectedSeason.episodes.length > 0">
+                          {{ _T["u7lfp491"] }} {{selectedProject.selectedSeason.episodes.length}}.
+                          <br> {{ _T["cdm445hi"] }}
+                        </span>   
+                      </div>
+                    </div>
+                    <div class="row" ng-if="selectedProject.selectedSeason != null && selectedProject.selectedSeason.episodes == null">
+                      <div class="col-md-12 text-center">
+                        <h5>
+                          {{ _T["7bechvzd"] }}
+                        </h5>
+                        {{ _T["1lrycwhm"] }}
+                      </div>
+                    </div>
+                    <div class="row" ng-if="selectedProject.selectedSeason != null && selectedProject.selectedSeason.episodes != null && selectedProject.selectedSeason.episodes.length > 0 ">
+                      <div class="col-md-6">
+                        <label class="title">{{ _T["pfls9kox"] }}</label>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="onoffswitch">
+                          <input class="onoffswitch-checkbox" id="creationauto" name="creationauto" ng-model="global.episodeAuto" ng-change="global.episodeCustom = false; global.episodeNameCustom = false;"
+                            type="checkbox">
+                          <label class="onoffswitch-label" for="creationauto">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label class="title">{{ _T["6i46sr0r"] }}</label>
+
+                      </div>
+                      <div class="col-md-6">
+                        <div class="onoffswitch">
+                          <input class="onoffswitch-checkbox" id="myonoffswitch" name="onoffswitch" ng-model="global.episodeCustom" ng-change="global.episodeAuto = false; global.episodeNameCustom = false;"
+                            type="checkbox">
+                          <label class="onoffswitch-label" for="myonoffswitch">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label class="title">{{ _T["y8xd1fz9"] }}</label>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="onoffswitch">
+                          <input class="onoffswitch-checkbox" id="creationmanual" name="creationmanual" ng-model="global.episodeNameCustom" ng-change="global.episodeAuto = false; global.episodeCustom = false;"
+                            type="checkbox">
+                          <label class="onoffswitch-label" for="creationmanual">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div ng-if="newSubproject.nature.name == 'serie' && (global.episodeNameCustom == true || global.episodeAuto == true) && newSubproject.season != null">
+                    <span ng-if="global.episodeNameCustom == true">
+                      <div class='form-group'>
+                        <input id="first" class="form-control" ng-model="global.startEpisode" placeholder="{{ _T['a9brfh09'] }}" required />
+                      </div>
+                      <div class='form-group'>
+                        <input id="last" class="form-control" ng-model="global.endEpisode" placeholder="{{ _T['ubr5qcc7'] }}" required />
+                      </div>
+                    </span>
+                    <div class="alert alert-info text-center" ng-class="{'alert-danger': calcEpisode(false).code != 0}">{{calcEpisode(false).message}}</div>
+                  </div>
+                  <div ng-if="newSubproject.nature.name == 'serie' && global.episodeCustom == true && newSubproject.season != null">
+                    <input class="form-control" ng-model="global.customName" placeholder="{{ _T['by53qoby'] }}" required/>
+                  </div>
+                  <div class="row" ng-if="newSubproject.nature.name == 'film'">
+                    <div class="col-md-12">
+                      <ui-select ng-disabled="disabled" ng-model="global.descProduct" style="width: 100%" theme="bootstrap" required>
+                        <ui-select-match placeholder="{{ _T['ewybz84r'] }}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="desc.id as desc in productDescriptions | propsFilter: {value: $select.search, id: $select.search}">
+                          <div ng-bind-html="desc.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="newSubproject.nature != null && newSubproject.nature.name != 'film' && newSubproject.nature.name != 'serie'">
+                    <div class="col-md-12">
+                      <label class="title">{{ _T["jic7n9vc"] }} {{newSubproject.nature.value}}</label>
+                      <div ng-repeat="trailer in global.trailers track by $index" ng-class="{'pt-10' : $index == 0}">
+                        <input id="first{{$index}}" class="form-control mb-10" ng-class="{'col-md-11': global.trailers.length > 1}" ng-model="trailer" focus-me="focus[global.trailers.length]" ng-change="editTrail(trailer, $index)"
+                          placeholder="Nom du {{newSubproject.nature.value}}" required/>
+                        <button class="btn btn-danger pull-right" ng-if="global.trailers.length > 1" ng-click="removeTrail($index)"><i class="fa fa-trash"></i></button>
+                      </div>
+                      <button class="btn btn-primary" ng-click="addTrailer()">{{ _T["zm0g3bdn"] }} {{newSubproject.nature.value}}</button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label class="title">{{ _T["kup2m5xn"] }}</label>
+                      <ui-select ng-model="newSubproject.artistic_director_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="{{ _T['kup2m5xn'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                          <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label class="title">Song director</label>
+                      <ui-select ng-model="newSubproject.song_director_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="{{ _T['kup2m5xn'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                          <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label class="title">{{ _T["7cww79hy"] }}</label>
+                      <ui-select ng-model="newSubproject.co_artistic_director_id" style="width: 100%" theme="bootstrap">
+                        <ui-select-match placeholder="{{ _T['7cww79hy'] }}" allow-clear="true">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                        <ui-select-choices repeat="director.id as director in artisticDirectors | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                          <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                        </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="row" ng-if="newSubproject.artistic_director_id && newSubproject.co_artistic_director_id && newSubproject.artistic_director_id == newSubproject.co_artistic_director_id">
+                    <div class="col-md-12" style="color: red;">
+                      {{ _T["24eprkqc"] }}
+                    </div>
+                  </div>
+                  <select-product-managers listpmanager="ctrl.users" on-update="setReferentProductManager(selectedItem)" single-item="true"></select-product-managers>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-switch-when="3">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="mb-0 pb-10">
+                  <i class="fa fa-check text-green" aria-hidden="true"></i> {{ _T["14m339n8"] }} {{$root.user_entity.firstname}}, {{ _T["8jhjbyqs"] }} !
+                </h2>
+                <h2 class="mb-0 pb-10" ng-if="creationFailed">
+                <i class="fa fa-times text-danger" aria-hidden="true"></i><span class="text-danger ln-text-bold" >Unable to create the project. {{ reasonFailure }}</span>
+                </h2>
+                <div class="body">
+
+                  <!--PROJECT SUMMARY-->
+                  <div class="subtitle">{{ _T["nyi54ide"] }}</div>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="row">
+                        <div class="col-md-12 text-bold pb-10">{{ _T["tdhr09p1"] }}</div>
+                        <div class="col-md-12 text-bold pb-10">{{ _T["t466uh1r"] }}</div>
+                        <div class="col-md-12 text-bold pb-10" ng-if="newProject.code_name != null || newProject.code_name_2 || newProject.code_name_3">{{ _T["9lmoswec"] }}</div>
+                        <div class="col-md-12 text-bold pb-10" ng-if="newSubproject.nature.name == 'serie'">{{ _T["6vwtywcc"] }}</div>
+                        <div class="col-md-12 text-bold pb-10" ng-if="newSubproject.nature.name == 'film'">{{ _T["06djaui5"] }}</div>
+                        <div class="col-md-12 text-bold pb-10" ng-if="newSubproject.nature.name == 'serie'">{{ _T["0n3vuajc"] }}</div>
+                        <div class="col-md-12 text-bold pb-10" ng-if="newSubproject.nature != null && newSubproject.nature.name != 'film' && newSubproject.nature.name != 'serie'">{{ _T["ukhbiwae"] }}</div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-12 pb-10">{{newSubproject.nature.value}}</div>
+                        <div class="col-md-12 pb-10">{{(newProject.name || project_name)}}</div>
+                        <div class="col-md-12 pb-10" ng-if="newProject.code_name">
+                          <span ng-if="newProject.code_name != null">{{newProject.code_name}}</span>
+                          <span ng-if="newProject.code_name_2 != null"> {{' - ' + newProject.code_name_2}}</span>
+                          <span ng-if="newProject.code_name_3 != null"> {{' - ' + newProject.code_name_3}}</span>
+                        </div>
+                        <div class="col-md-12 pb-10" ng-if="newSubproject.nature.name == 'serie'">{{newSubproject.season}}</div>
+                        <div class="col-md-12 pb-10" ng-if="newSubproject.nature.name == 'film'">{{productDescriptions[global.descProduct-1].value}}</div>
+                        <div class="col-md-12 pb-10" ng-if="newSubproject.nature.name == 'serie'">
+                          <span ng-if="!global.episodeCustom">
+                            <span class="bold">{{global.startEpisode}}</span> à
+                            <span class="bold">{{global.endEpisode}}</span>
+                          </span>
+                          <span ng-if="global.episodeCustom">{{ global.productType == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{global.customName}}</span>
+                        </div>
+                        <div ng-if="newSubproject.nature != null && newSubproject.nature.name != 'film' && newSubproject.nature.name != 'serie'">
+                          <span ng-repeat="trailer in global.trailers track by $index" ng-show="trailer != ''">
+                            - {{trailer}}
+                          </span> -
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--IMDB SUMMARY-->
+                  <div ng-if="newProject.imdb_id">
+                    <div class="subtitle">{{ _T["h9v832c4"] }}</div>
+                    <div class="alert alert-warning"
+                         role="alert"
+                         ng-if="newProject.imdb_id && selectedProject.source === 'imdb'"
+                    >
+                      <b>{{ _T["14fp8p9t"] }}</b>
+                      <p>
+                        {{ _T["7aaq5gta"] }}
+                        <a href="https://www.imdb.com/title/{{newProject.imdb_id}}" target="_blank">{{ _T["4rzyg96s"] }}</a> {{ _T["nnylixv2"] }}
+                      </p>
+                      <p>
+                        {{ _T["ej2g5g3f"] }}
+                        <span class="btn btn-xs btn-default" ng-click="unlinkImdb()">{{ _T["tlimj49x"] }}</span> {{ _T["ovy1uvf6"] }}
+                      </p>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2"
+                           ng-if="selectedProject.poster_path"
+                      >
+                        <img ng-src="https://image.tmdb.org/t/p/w185{{selectedProject.poster_path}}" style="width:100%;" />
+                      </div>
+                      <div class="col-md-3">
+                        <div class="row">
+                          <div class="col-md-12 text-bold pb-10">{{ _T["x8562wdg"] }}</div>
+                          <div class="col-md-12 text-bold pb-10">{{ _T["68li1gh7"] }}</div>
+                          <div class="col-md-12 text-bold pb-10">{{ _T["9gq16rf6"] }}</div>
+                          <div class="col-md-12 text-bold pb-10">{{ _T["oa6d1k1t"] }}</div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="row">
+                          <div class="col-md-12 pb-10" style="content:''">{{selectedProject.title || selectedProject.name}}</div>
+                          <div class="col-md-12 pb-10" style="content:''">{{selectedProject.original_title || selectedProject.name}}</div>
+                          <div class="col-md-12 pb-10" style="content:''">{{(selectedProject.release_date|dateFormat)}}</div>
+                          <div class="col-md-12 pb-10" style="content:''">
+                            <a href="https://www.imdb.com/title/{{newProject.imdb_id}}" target="_blank">{{selectedProject.title || selectedProject.name}}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-switch-when="4">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="mb-0 pb-10">{{ _T["6im8dl0v"] }}</h2>
+                <div class="subtitle">{{ _T["itufwn64"] }}</div>
+                <div class="body">
+                  <div class="row">
+                    <div class="col-md-12" ng-repeat="voiceMatchProject in voiceMatchProjects">
+                      <div class="panel panel-default">
+                        <div class="panel-body creation">
+                          <div class="col-md-12 mb-10 p-0">
+                            <div class="col-md-2">
+                              <img ng-if="voiceMatchProject.poster" ng-src="https://image.tmdb.org/t/p/w92{{voiceMatchProject.poster}}"/>
+                            </div>
+                            <div class="col-md-10">
+                              <span class="mb-10">
+                                {{voiceMatchProject.name}}
+                                <small><i>({{voiceMatchProject.original_name}} - {{voiceMatchProject.first_air_date | date : 'yyyy'}})</i></small>
+                              </span>
+                              <p>{{voiceMatchProject.overview}}</p>
+                            </div>
+                          </div>
+                          <div class="col-md-12 p-0">
+                            <div class="col-md-4" ng-repeat="subproject in voiceMatchProject.ownSubproject" ng-class="{'element-selected' : subproject.isSelected}">
+                              <div class="panel panel-default mr-0" ng-click="selectSubprojectImport(voiceMatchProject, subproject)">
+                                <div class="panel-body creation panel-export">
+                                  <div class="col-md-10">
+                                    <span>{{(subproject.season) && _T["6vwtywcc"] + ' ' + subproject.season || subproject.nature.value}}</span>
+                                    <small>({{subproject.ownProduct.length}} {{(subproject.season) && _T["7i6i4z7a"] || _T["ba0heyvu"] }})</small>
+                                  </div>
+                                  <div class="col-md-2 text-center">
+                                    <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12 text-center">
+                            <button class="btn btn-default btn-text-primary" ng-click="importProjectAndAddSubproject(voiceMatchProject)"><i class="c-icon c-icon-add"></i> {{ _T["f0loef7a"] }}</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-md-6">
+                  <button class="btn btn-danger btn-block" ng-click="closeThisDialog('cancelButton');" ng-disabled="loading">
+                    {{ _T["ficbz281"] }}</button>
+                </div>
+                <div class="col-md-6" ng-show="step > 1 && projectForSubProject == null">
+                  <button class="btn btn-default btn-block" ng-click="previousStep();" ng-disabled="loading">
+                    {{ _T["2sn506dx"] }}</button>
+                </div>
+              </div>
+              <div class="col-md-3 pull-right" >
+                <div ng-if="isEditProject">
+                  <button class="btn btn-success btn-block" ng-click="saveEditProject();" ng-disabled="createProject.$invalid || (newProject.name.length < 1 && newProject.code_name.length < 1) || errorMessage">
+                    {{ _T["hvzykhtg"] }}</button>
+                </div>
+                <div ng-if="!isEditProject" ng-show="step == 1 || step == 2">
+                  <button class="btn btn-primary pull-right btn-block" ng-click="nextStep()" ng-disabled="createProject.$invalid || (newProject.name.length < 1 && newProject.code_name.length < 1) || loading || errorMessage && step == 1">
+                    <span ng-show="!loading">{{ _T["im19ajy6"] }}</span>
+                    <span ng-show="loading">
+                      <i class="fa fa-circle-o-notch fa-spin fa-fw text-white"></i>
+                    </span>
+                  </button>
+                </div>
+                <div ng-if="!isEditProject && !loading" ng-show="step == 3">
+                  <button class="btn btn-success pull-right btn-block" ng-click="validateCreation()" ng-disabled="step3.$invalid || loading">
+                    <span ng-show="!loading">{{ _T["5ygcxbsu"] }}</span>
+                    <span ng-show="loading">
+                      <i class="fa fa-circle-o-notch fa-spin fa-fw text-white"></i>
+                    </span>
+                  </button>
+                </div>
+                <div ng-show="step == 4">
+                  <button class="btn btn-success pull-right btn-block" ng-click="importProject()" ng-disabled="disableImportButton() || loading">
+                    <span ng-show="!loading">{{ _T["otmpmow5"] }}</span>
+                    <span ng-show="loading">
+                      <i class="fa fa-circle-o-notch fa-spin fa-fw text-white"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-3">
+      <h1>
+        {{ _T["rtnnq02w"] }}
+        <span ng-if="isEditProject">{{ _T["1znba7zf"] }}</span>
+        <span ng-if="!isEditProject">{{ _T["7ah85p8w"] }}</span>
+      </h1>
+      <ul class="step-container" ng-repeat="nav in steps">
+        <li ng-class="{'unchecked' : step < $index+1, 'bt-0' : $index > 0}">{{ _T["dfuet0tp"] }} {{nav.step}} - {{nav.title}}</li>
+      </ul>
+    </div>
+  </div>
+  <style>
+    .dragresize {
+      resize:both;
+      height: 810px;
+      overflow: auto;
+      max-height: 900px !important;
+      min-height: 400px !important;   
+      min-width: 400px !important;   
+      -webkit-transform: translate(0px, 0px);
+      transform: translate(0px, 0px);  
+    }
+    </style>  
+    <script>
+      let position = { x: 0, y: 0 }
+      let edges = { left: true, right: true,   bottom: true,  top: true }
+      let attributes = {x:'data-x',y:'data-y'}
+      let IJS = Object.create(interactJS);
+      IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+    </script>

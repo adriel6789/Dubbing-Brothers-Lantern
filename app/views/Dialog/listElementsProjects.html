@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <h2>{{ _T["92j73lb0"] }}</h2>
+  <hr>
+  <div class="container-fluid header-input-text">
+    <div class="col-sm-7">
+        <form>
+            <div class="search-form">
+                <input type="text" ng-model="elementsFilter" class="form-control-sm input-search" id="" placeholder="{{ _T['q2ffbx18'] }}">
+            </div>
+        </form>
+    </div>
+</div>
+<table class="table table-striped table-responsive">
+  <thead>
+    <tr>
+        <th style="vertical-align:middle;">{{ _T["0kckbj84"] }}</th>
+        <th style="vertical-align:middle;">{{ _T["h5bglkgi"] }}</th>
+        <th style="vertical-align:middle;">{{ _T["06djaui5"] }}</th>
+        <th style="vertical-align:middle;padding-right: 0;">{{ _T["9oraeeid"] }}</th>
+        <th style="vertical-align:middle;padding-right: 0">{{ _T["26suhfgm"] }}</th>
+        <th style="vertical-align:middle;padding-right: 0">{{ _T["9wii0lxr"] }}</th>
+        <th style="vertical-align:middle;">{{ _T["eq9spk3x"] }}</th>
+        <th style="vertical-align:middle;"></th>
+        <th class="text-left" style="vertical-align:middle;">{{ _T["b3p6r9on"] }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in projectMediaItems | orderBy:'date_creation':true | magicFilter:elementsFilter" class="table-custom-bordered">
+      <td>
+        <input ng-checked="getItemIndexInRequestAndProduct(currentRequest, item) >= 0" ng-click="setMediaItemToRequest(currentRequest, item)" name="project-item-{{currentRequest.product.id}}-{{item.id}}" type="checkbox" id="project-item-{{currentRequest.product.id}}-{{item.id}}">
+        <label for="project-item-{{currentRequest.product.id}}-{{item.id}}"><span class="label label-info">{{item.nature}}</span></label>
+        <br>{{item.workflow}}
+      </td>
+      <td>
+        <div class="f-12">
+          {{item.support}}
+        </div>
+      </td>
+      <td>
+        <div class="f-13">
+          <a ui-sref="app.products({id : item.product_id})" class="pointer">
+            {{(item.product.episode_number != null) && (item.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + item.product.episode_number || item.product.description.value || item.product.description_text}}
+          </a>
+        </div>
+      </td>
+      <td style="">
+        <label ng-show="item.path" class="f-13 text-primary cursor-pointer path" clipboard text="item.path">{{item.path}}</label>
+      </td>
+      <td style="text-align: center;">
+        <span ng-if="item.media_seal_security_code">
+            <span style="color: #3570E1;" class="glyphicon glyphicon-lock"></span>
+        </span>
+      </td>
+      <td style="text-align: center;">
+          <span ng-if="item.media_seal_security_version" style="color: #3570E1;">
+              {{item.media_seal_security_version}}
+          </span>
+      </td>
+      <td>
+          <p class="save-text-p">{{item.comment}}</p>
+      </td>
+      <td>
+        <i class="c-icon c-icon-infos c-icon-shadow" style="font-size:2em; color:#3570E1;" tooltip-placement="bottom" uib-tooltip-html="item.description"></i>
+        <div class="infobull normal-infobull" ng-show="item.comment != null">
+          <i class="c-icon c-icon-comment c-icon-shadow " style="color:#3570E1;" tooltip-placement="bottom"  data-toggle="tooltip" title="{{item.comment}}"></i>
+          <span class="infobull-text" style="top: 4px;">1</span>
+        </div>
+      </td>
+      <td>
+        {{(item.date_creation | amDateFormat:"DD MMM YYYY").toUpperCase()}}
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

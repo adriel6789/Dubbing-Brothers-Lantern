@@ -1,0 +1,70 @@
+<div class="container-fluid">
+    <h3>{{ _T["oocd81nv"] }}</h3>
+
+    <div class="input-group">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+      <input type="text" class="form-control" placeholder="{{ _T['21cfygcc'] }}" aria-label="Rechercher parmi les éléments" ng-model="elementsReceiveFilter">
+    </div>
+
+    <table st-table="displayedCollection" st-safe-src="mediaItemsReceived" class="table table-striped">
+        <thead>
+        <tr>
+            <th st-sort="support">{{ _T["h5bglkgi"] }}</th>
+            <th st-sort="path">{{ _T["zh4fsex6"] }}</th>
+            <th st-sort="layout">{{ _T["8izp2is4"] }}</th>
+            <th st-sort="nature">{{ _T["0kckbj84"] }}</th>
+            <th st-sort="speed">{{ _T["34ou49b2"] }}</th>
+            <th st-sort="speed_reception">{{ _T["dz8plzyk"] }}</th>
+            <th st-sort="origin">{{ _T["hq73hg2l"] }}</th>
+            <th st-sort="comment">{{ _T["2w7jtwr8"] }}</th>
+            <th st-sort="comment">{{ _T["eq9spk3x"] }}</th>
+            <th st-sort="comment">{{ _T["06djaui5"] }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in mediaItemsReceived | magicFilter:elementsReceiveFilter">
+            <td>
+                {{item.support}}
+            </td>
+            <td>
+                {{item.path}}
+            </td>
+            <td>
+                {{item.layout}}
+            </td>
+            <td>
+                {{item.nature}}
+            </td>
+            <td>
+                {{item.speed}}
+            </td>
+            <td>
+                {{item.speed_reception}}
+            </td>
+            <td>
+                <i>{{item.origin}}</i>
+            </td>
+            <td>
+                {{item.workflow}}
+            </td>
+            <td>
+                {{item.comment}}
+            </td>
+            <td>
+              <a target="_blank" ui-sref="app.products({id : item.product_id})">
+                <i class="glyphicon glyphicon-film"></i>
+                {{(item.product.episode_number != null) && (item.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + item.product.episode_number || item.product.description.value || item.product.description_text}}
+              </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="panel panel-default" ng-if="mediaItemsReceived.length == 0">
+        <div class="panel-body">
+            <strong>{{ _T["iqh09pnx"] }}</strong>
+        </div>
+    </div>
+
+    <button ng-show="manageItem" class="btn btn-primary" ng-click="goManage()">{{ _T["oyw9ls6t"] }}</button>
+
+</div>

@@ -1,0 +1,15 @@
+<div class="searchInputGlobal btn-big-shadow" ng-if="$ctrl.isShow() && !$root.canDisplay(8)">
+    <div class="col-md-12">
+        <h1 class="control-label">{{ $root._T["td0x1uob"] }}<small><i class="fa fa-times-circle pull-right"  data-toggle="tooltip" title="[CTRL+ESPACE]" ng-click="$ctrl.setShowSearch(false);"></i></small></h1>
+        <input class="form-control col-md-12 fa-2x" ng-model="$ctrl.requestId" focus-me="true" type="text" placeholder="{{ $root._T['xqax5t6m'] }}">
+    </div>
+    <div class="col-md-12" style="padding-bottom: 10px;">
+        <h4>{{ $root._T["94nbkjyk"] }} <i><small>{{ $root._T["a7vh3p9i"] }}</small></i></h4>
+        <div ng-repeat="historicRequest in $ctrl.historicRequests | orderBy:id:true | limitTo:10" style="padding: 2px;">
+                <button class="btn btn-default btn-lg btn-block" ng-click="$ctrl.goToRequestPopup(historicRequest.requestId, true)">
+                    {{ $root._T["8wk4rg65"] }} n°{{historicRequest.requestId}}
+                </button>
+        </div>
+        <div ng-if="$ctrl.historicRequests.length == 0" class="alert alert-info text-center"><i class="fa fa-info-circle"></i> {{ $root._T["uv1ata90"] }}</div>
+    </div>
+</div>

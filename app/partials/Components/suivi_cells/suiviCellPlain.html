@@ -1,0 +1,9 @@
+<!-- Cas avec les key / value simples -->
+<div class="component-plain">
+  <div class="form-group mb-0">
+    <form name="form">
+      <textarea ng-model="$ctrl.cell.plain_value" ng-change="$ctrl.cell.change = true" rows="3" style="width:100%; resize: vertical;" class="mb-0" ng-disabled="!$root.canDisplay(3)" />
+      <button class="btn btn-xs btn-block btn-success btn-outline" ng-show="$ctrl.cell.change" ng-click="saveCellComment($ctrl.cell)" ng-disabled="$ctrl.cell.plain_value.length < 0">{{ $root._T["hvzykhtg"] }}</button>
+    </form>
+  </div>
+</div>

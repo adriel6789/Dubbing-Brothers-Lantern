@@ -1,0 +1,16 @@
+<div>
+
+    <h3 style="border-bottom: 1px solid #bbb; padding-bottom: 10px;">{{ _T["yslfhb7k"] }}</h3>
+    <br />
+    <label style='width:100px' for='horairesStart'>{{ _T["2lq5g7zj"] }}</label>
+    {{ _T["jeepc9om"] }} &nbsp; &nbsp; <input time-input="" maxlength="5" style='width:85px'  ng-model='working_time_start' type='text' placeholder="09:00" pattern="\d{2}:\d{2}" /> &nbsp; &nbsp; à &nbsp; &nbsp;
+    <input time-input="" maxlength="5" style='width:85px' ng-model='working_time_end' type='text' pattern="\d{2}:\d{2}" placeholder="18:00" />
+    <br /> <br />
+    <label style='width:100px' for='pauseStart'>{{ _T["7efqgpfl"] }}</label>
+    <input maxlength="3" style='width:70px' ng-model='break_time' placeholder="15" type='text'   /> 
+    <br /><br />
+    <input ng-click="validateLast();" style='bottom: 20px; position: absolute; right: 15px;' id='validate' name='validate' type='button' value="{{ _T['d32u2mga'] }}"   />
+
+    <i>{{ _T["b8v5cj7w"] }}</i>
+
+</div>

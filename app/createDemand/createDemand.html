@@ -1,0 +1,727 @@
+<div class="page-popup create-demand-dialog dragresize" data-x=0 data-y=0 >
+  <div class="row"  >
+    <div class="col-md-12">
+      <div class="header poignee">
+        <ul>
+          <li class="inline">{{ _T["0upjg5cn"] }}</li>
+          <li class="inline" ng-if="!isLoading()"> > {{getProject().name}}</li>
+          <li class="inline" ng-if="!isLoading()"> > {{getSubproject().nature.value}}</li>
+          <li class="inline" ng-if="!isLoading()"> > {{getProducts().length}} produit{{getProducts().length > 1 ? 's' : ''}} selectionné{{getProducts().length > 1 ? 's' : ''}}
+            (<span ng-repeat="product in getProducts()">{{product.episode_number || product.description.value || product.description_text}}<span ng-if="!$last">, </span></span>)
+          </li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="body">
+          <div ng-show="isLoading() || isCreationInProgress()" class="spinner-container">
+            <div class="spinner">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+          </div>
+          <div ng-if="!isLoading() && ! isCreationInProgress()">
+            <form>
+              <div class="row" ng-if="getStep() == 1">
+                <div class="col-md-12" style="overflow-y: auto; overflow-x: hidden; height: 710px;">
+                  <div ng-show="getAllRequestsToCreate().length > 0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label class="title">{{ _T["bln67g2s"] }}</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card-grey mb-5" style="min-height: 55px;" ng-repeat="request in getAllRequestsToCreate()">
+                          <div class="row" style="margin-bottom:-15px">
+                            <div class="col-md-8">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <workflow data="request.requestToCreate.workflowChosen" style="display:inline-block"></workflow>
+                                  <b>{{request.requestToCreate.actionChosen.etape.value}} - {{request.requestToCreate.actionChosen.value}}</b>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <date-wish data="request.requestToCreate" small="true"></date-wish>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4 text-right">
+                              <div class="btn-group" style="display: inline-block;padding:5px;">
+                                <button ng-click="editRequest(request)" class="btn btn-primary"  data-toggle="tooltip" title="{{ _T['cs11sugx'] }}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                <button ng-click="deleteRequest($index)" class="btn btn-danger"  data-toggle="tooltip" title="{{ _T['bbb82vy9'] }}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="row">
+                      <div class="col-md-8 mb-10">
+                        <label class="title">{{ _T["4anwhegx"] }}</label>
+                      </div>
+                      <div class="col-md-4 mb-10" ng-if="isMultiWorkflowAllowed()">
+                        <div class="col-md-12 card-grey m-0 p-0" style="height: 29px;">
+                          <div class="col-md-10" style="margin-top: 3px;">{{ _T["qgl2sn50"] }}</div>
+                          <div class="col-md-2">
+                            <span style="cursor:pointer" class="onoffswitch">
+                              <input type="checkbox" ng-model="isMultiWorkflow" ng-click="setMultiWorkflow(isMultiWorkflow)" name="onoffswitch" class="ios8-switch" id="onoffswitchMultiWorkflow">
+                              <label class="onoffswitch-label cursor-pointer" for="onoffswitchMultiWorkflow">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                              </label>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-8 col-md-offset-2" ng-if="getMultiWorkflow()">
+                        <div class="alert alert-danger text-center">
+                          <i class="fa fa-exclamation-triangle"></i> {{ _T["7vverzck"] }}
+                        </div>
+                      </div>
+                      <div class="col-md-12 text-center" ng-if="getWorkflows().length > 0">
+                        <div class="btn-group" ng-repeat="workflow in getWorkflows()">
+                          <button class="btn btn-sm" ng-class="{'workflowUnselect' : !isWorkflowChosen(workflow.id)}" ng-click="addWorkflowToRequest(workflow);"
+                            class="btn btn-default btn-lg" style="font-size:12px; width:100%;" tooltip-placement="bottom" uib-tooltip-html="workflow.description"
+                            ng-style="{'background-color':'rgba('+workflow.color.r+', '+workflow.color.g+', '+workflow.color.b+', '+workflow.color.o+')', 'color':workflow.color.font}">
+                            <span ng-if="workflow.workflow_type_id == 1">
+                              <span class="fa fa-microphone"></span> {{ _T["i5tk31xb"] }}
+                            </span>
+                            <span ng-if="workflow.workflow_type_id == 2">
+                              <span class="fa fa-archive"></span> {{ _T["z20ge21k"] }}
+                            </span>
+                            <span ng-if="workflow.workflow_type_id == 3">
+                              <span class="fa fa-briefcase"></span> {{ _T["1egq4x9k"] }}
+                            </span>
+                            <span ng-if="workflow.doublage_type.value != null && workflow.workflow_type_id == 1">
+                              - {{::workflow.doublage_type.value}}
+                            </span>
+                            <span ng-if="workflow.language.value != null && workflow.workflow_type_id == 1">
+                              - {{::workflow.language.value}}
+                            </span>
+                            <span ng-if="workflow.norme_mix.value != null && workflow.workflow_type_id == 1">
+                              - {{::workflow.norme_mix.value}}
+                            </span>
+                            <span ng-if="workflow.servicing_type.value != null && workflow.workflow_type_id == 3">
+                              - {{::workflow.servicing_type.value}}
+                            </span>
+                            <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 3">
+                              - {{::workflow.resolution.value}}
+                            </span>
+                            <span ng-if="workflow.diffuseur.name != null && workflow.workflow_type_id == 3">
+                              - {{::workflow.diffuseur.name}}
+                            </span>
+                            <span ng-if="workflow.speed.value != null && workflow.workflow_type_id == 2">
+                              - {{::workflow.speed.value}}
+                            </span>
+                            <span ng-if="workflow.resolution.value != null && workflow.workflow_type_id == 2">
+                              - {{::workflow.resolution.value}}
+                            </span>
+                            <span ng-if="workflow.prod_version != null && workflow.workflow_type_id == 2">
+                              - {{::workflow.prod_version}}
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-md-offset-3" ng-if="getErrorOnWorkflow()">
+                        <div class="alert alert-danger text-center">
+                          {{ _T["6dxzm0g3"] }}
+                          <br> {{ _T["qglgienb"] }}
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-md-offset-3" ng-if="getWorkflows().length == 0">
+                        <div class="alert alert-danger text-center">
+                          <div ng-if="getProducts().length > 1">
+                            {{ _T["bdny0tzl"] }}
+                          </div>
+                          <div ng-if="getProducts().length == 1">
+                            {{ _T["w7gopvj8"] }}
+                          </div>
+                          <div>
+                            {{ _T["qglgienb"] }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-0">
+                      <div class="panel panel-default mb-0" ng-if="getWorkflowsChosen().length > 0">
+                        <div class="panel-heading">
+                          <div class="row">
+                            <div class="col-md-10">
+                              <span ng-repeat="workflowChosen in getWorkflowsChosen()">
+                                <workflow data="workflowChosen"></workflow>
+                              </span>
+                            </div>
+                            <div class="col-md-2 text-right">
+                              <button class="btn btn-danger" ng-click="resetRequestToCreate()"  data-toggle="tooltip" title="{{ _T['8qp8m8sw'] }}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="panel-body pt-0 pb-0">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <label class="title">{{ _T["3lbms15c"] }}</label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <ui-select ng-model="form.action" on-select="addEtapeActionToRequest($item);" style="width: 100%;" theme="bootstrap">
+                                <ui-select-match placeholder="{{ _T['89nilim5'] }}">{{$select.selected.etape_value}} - {{$select.selected.value}}</ui-select-match>
+                                <ui-select-choices style="width: 100%;" group-by="'etape_value'" repeat="action in etapes_actions | magicFilter: $select.search">
+                                  <div ng-bind-html="action.value | highlight: $select.search"></div>
+                                </ui-select-choices>
+                              </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                              <ui-select ng-model="form.artistic_director_id" ng-show="showCreateRequestForm() && form.action.etape.name == 'enregistrement'" theme="bootstrap">
+                                <ui-select-match placeholder="{{ _T['kup2m5xn'] }}">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                                <ui-select-choices repeat="director.id as director in getArtisticDirectors() | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                                  <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                                </ui-select-choices>
+                              </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="col-md-12 card-grey mt-0" style="height: 40px;" ng-show="showCreateRequestForm()">
+                                <div class="col-md-10" style="margin-top: 3px;">{{ _T["xl162df1"] }}</div>
+                                <div class="col-md-2">
+                                  <span style="cursor:pointer" class="onoffswitch">
+                                    <input type="checkbox" ng-model="getRequestToCreate().important" ng-checked="getRequestToCreate().important" name="onoffswitch" class="ios8-switch" id="urgentDemand">
+                                    <label class="onoffswitch-label cursor-pointer" for="urgentDemand">
+                                      <span class="onoffswitch-inner"></span>
+                                      <span class="onoffswitch-switch"></span>
+                                    </label>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="col-md-4 p-0" ng-show="getRequestToCreate().planning_id != null">
+                                <i>{{ _T["vx1kcdq3"] }} {{getPlanning()}}</i>
+                              </div>
+                              <div class="col-md-4" ng-show="showCreateRequestForm() && form.artistic_director_id != null">
+                                <i>{{ _T["1dguanas"] }}</i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" ng-show="!isDuplicateRequestLoading() && getIsDuplicateRequests().duplicate">
+                            <div class="col-md-12">
+                              <div class="alert alert-danger in fade">
+                                <p class="text-center">
+                                  {{ _T["60gw0gp0"] }} :
+                                </p>
+                                <p>
+                                  <div ng-repeat="product in getIsDuplicateRequests().products" ng-if="product.requests.length > 0">
+                                    - {{ _T["06djaui5"] }} {{product.detail.episode_number || product.detail.description_text}} :
+                                    <span ng-repeat="request in product.requests | orderBy:date_creation"> - <a ui-sref="app.requestsDetail({id : request.id})" target="_blank"  data-toggle="tooltip" title="{{ _T['ax47wdc6'] }}">{{ _T["8wk4rg65"] }} #{{$index+1}}</a></span>
+                                  </div>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="container-duplicateRequests row">
+                              <div class="col-md-12 text-center">
+                                <button class="btn btn-primary" ng-click="forceCreateDuplicate()" data-dismiss="alert" aria-label="Close"> {{ _T["4bg6vo0x"] }} </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div ng-show="isDuplicateRequestLoading()">
+                            <div class="loading-container">
+                              <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                            </div>
+                          </div>
+                          <div class="row" ng-if="showCreateRequestForm()">
+                            <div class="col-md-4">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label class="title">{{ _T["fy5lo3gy"] }}</label>
+                                  <div uib-datepicker datepicker-options="options" template-url='views/Vendor/multi-datepicker.tpl.html' ng-model="dt" show-weeks="true" starting-day="1" multi-select="delai_souhaite" ng-change="changeDay(dt)"></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label class="title">{{ _T["qlr1dxpa"] }}</label>
+                                </div>
+                              </div>
+                              <textarea placeholder="{{ _T['2asv2463'] }}" ng-model="getRequestToCreate().comment_for_planning" maxlength="77523"></textarea>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="col-md-12 card-grey mt-0" style="height: 49px;">
+                                    <div class="col-md-10" style="margin-top: 6px;">{{ _T["bnv9szx1"] }}</div>
+                                    <button class="col-md-2 btn btn-success btn-h-30 p-0" ng-class="{'btn-warning': !getRequestToCreate().show_tech}" tooltip-placement="right"  data-toggle="tooltip" title="{{ _T['x3a5ryxz'] }}" ng-click="getRequestToCreate().show_tech = !getRequestToCreate().show_tech">
+                                      <span class="fa-stack ">
+                                        <i class="fa fa-users fa-stack-1x"></i>
+                                        <i class="fa fa-ban fa-stack-2x text-danger" ng-show="!getRequestToCreate().show_tech"></i>
+                                      </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div ng-if="getRequestToCreate().comment_for_planning.length > 120" class="row">
+                                <div class="col-md-12">
+                                  <div class="alert alert-danger">{{ _T["hm2vkrgv"] }}</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label class="title">{{ _T["bkckp90m"] }}</label>
+                                </div>
+                              </div>
+                              <textarea id="infoForTech" ng-click="initSimplemde();" placeholder="{{ _T['s9c3h54c'] }}" ng-model="getRequestToCreate().info_for_tech"></textarea>
+                              <div class="row" ng-if="!getMultiWorkflow()">
+                                <div class="col-md-12">
+                                  <div class="col-md-12 card-grey text-center mt-0" style="height: 49px;">
+                                    <div ng-if="getTechspec() == null" style="margin-top: 6px;">
+                                      <span class="label label-danger">{{ _T["eyspsaox"] }}</span>
+                                    </div>
+                                    <button ng-show="getTechspec() != null" class="btn btn-link btn-block" ng-click="showTechnicalSpecModal()">
+                                      <i class="glyphicon glyphicon-list-alt"></i> {{ _T["kt7wljxd"] }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div ng-if="dateStartEnd.length > 0" class="col-md-12">
+                              <label class="title">{{ _T["uw5q1ey6"] }}</label>
+                              <div class="panel panel-default">
+                                <div class="panel-heading p-10 mb-0" ng-if="dateStartEnd.length > 1">
+                                  <div class="row mb-0">
+                                    <div class="col-md-2">
+                                      <label>{{ _T["sw658azy"] }}</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <label>{{ _T["1o3j35hq"] }}</label>
+                                      <ui-select ng-disabled="disabled" ng-model="allDates.start_time_h" ng-change="setAllTimes(1)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                                        <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                                        <ui-select-choices repeat="hour in HourOptions">
+                                        <div ng-bind-html="hour.title"></div>
+                                        </ui-select-choices>
+                                      </ui-select>   
+                                      h
+                                      <input type="number" placeholder="--" ng-model="allDates.start_time_m" ng-change="setAllTimes(2)" min="0" max="45" step="15" style="width:40px">
+                                    </div>
+                                    <div class="col-md-2">
+                                      <label>{{ _T["tseq9spk"] }}</label>
+                                      <ui-select ng-disabled="disabled" ng-model="allDates.end_time_h" ng-change="$ctrl.setAllTimes(3)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                                        <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                                        <ui-select-choices repeat="hour in HourOptions">
+                                        <div ng-bind-html="hour.title"></div>
+                                        </ui-select-choices>
+                                      </ui-select>
+                                      h
+                                      <input type="number" placeholder="--" ng-model="allDates.end_time_m" ng-change="setAllTimes(4)" min="0" max="45" step="15" style="width:40px">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="btn-group">
+                                        <button  ng-repeat="(key, name) in getPresetTimes" class="btn btn-default" ng-click="setTime(allDates, key)"> {{name}}</button>
+                                        <button class="btn btn-default" ng-click="setTime(allDates)">{{ _T["f8exg9ee"] }}</button>
+                                      </div>
+                                      <i class="fa fa-chevron-up pull-right cursor-pointer"  data-toggle="tooltip" title="{{ _T['3ncefm3w'] }}" ng-if="isShowDatesDetails" ng-click="showDatesDetails()"></i>
+                                      <i class="fa fa-chevron-down pull-right cursor-pointer"  data-toggle="tooltip" title="{{ _T['2wzc2ovr'] }}" ng-if="!isShowDatesDetails" ng-click="showDatesDetails()"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="panel-body p-10" ng-show="isShowDatesDetails">
+                                  <div class="row" ng-class="{'mb-5' : !$last, 'mb-0' : $last}" ng-repeat="date in dateFiltered = (dateStartEnd | orderBy:'day') track by $index">
+                                    <div class="col-md-12" ng-if="!$first && isDifferentWeek(date.day, dateFiltered[$index-1].day)">
+                                      <hr class="col-md-6 col-md-offset-3 mt-5 mb-10">
+                                    </div>
+                                    <div class="col-md-2">
+                                      <label>{{date.day | asDate | date:'EEE d MMM yyyy'}}</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                      <label>{{ _T["1o3j35hq"] }}</label>
+                                      <ui-select ng-disabled="disabled" ng-model="date.start_time_h" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                                        <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                                        <ui-select-choices repeat="hour in HourOptions">
+                                        <div ng-bind-html="hour.title"></div>
+                                        </ui-select-choices>
+                                      </ui-select>
+                                      h
+                                      <input type="number" placeholder="--" ng-model="date.start_time_m" min="0" max="45" step="15" style="width:40px">
+                                    </div>
+                                    <div class="col-md-2">
+                                      <label>{{ _T["tseq9spk"] }}</label>
+                                      <ui-select ng-disabled="disabled" ng-model="date.end_time_h" style="font-size:.9; width:80px; display: inline-table" theme="bootstrap">
+                                        <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                                        <ui-select-choices repeat="hour in HourOptions">
+                                        <div ng-bind-html="hour.title"></div>
+                                        </ui-select-choices>
+                                      </ui-select>
+                                      h
+                                      <input type="number" placeholder="--" ng-model="date.end_time_m" min="0" max="45" step="15" style="width:40px">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="btn-group">
+                                        <button  ng-repeat="(key, name) in getPresetTimes" class="btn btn-default" ng-click="setTime(date, key )"> {{name}}</button>
+                                        <button class="btn btn-default" ng-click="setTime(date)">{{ _T["f8exg9ee"] }}</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="container-fluid" ng-if="showCreateRequestForm()" ng-repeat="product in getProducts()">
+                            <div class="row">
+                              <div class="col-md-8">
+                                <label class="title">{{ _T["06djaui5"] }} {{(product.episode_number != null) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + product.episode_number || product.description.value || product.description_text}}</label>
+                              </div>
+                            </div>
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs p-0" role="tablist">
+                              <li role="presentation" class="active"><a href="#elementsProduct{{product.id}}" target="_self" aria-controls="home" role="tab" data-toggle="tab">{{ _T["21ych6jx"] }}</a></li>
+                              <li role="presentation"><a href="#elementsProject{{product.id}}" target="_self" aria-controls="profile" role="tab" data-toggle="tab">{{ _T["92j73lb0"] }}</a></li>
+                              <li role="presentation" ng-if="!getMultiWorkflow()"><a href="#attachments{{product.id}}" target="_self" role="tab" data-toggle="tab">{{ _T["qg7rqxc7"] }}</a></li>
+                              <li role="presentation" ng-if="getReturns().length > 0"><a href="#returns{{product.id}}" target="_self" role="tab" data-toggle="tab">{{getReturns().length}} {{ _T["vvt222dj"] }}</a></li>
+                            </ul>
+                            <div class="tab-content">
+                              <div role="tabpanel" class="tab-pane active" id="elementsProduct{{product.id}}">
+                                <form>
+                                  <div class="form-group search-form form-select">
+                                    <input type="text" class="form-control input-search large-input" ng-model="elementsFilter" placeholder="{{ _T['q2ffbx18'] }}">
+                                  </div>
+                                </form>
+                                <div class="panel panel-default">
+                                  <div class="panel-body" style="display: block; max-height: 450px; overflow: hidden; padding: 10px 5px;">
+                                    <table class="table table-custom">
+                                      <tbody>
+                                        <tr ng-repeat="item in getProductMediaItems(product.id) | orderBy:'date_creation':true | magicFilter:elementsFilter" class="table-custom-bordered" ng-class="{selectedRow: getItemIndexInRequestAndProduct(item, product) >= 0}">
+                                          <td ng-click="addRemoveMediaItem(item, product);">
+                                            <i class="c-icon pointer mr-0" ng-class="{'c-icon-checkbox': getItemIndexInRequestAndProduct(item, product) < 0, 'c-icon-checkbox_checked': getItemIndexInRequestAndProduct(item, product) >= 0}"></i>
+                                            <span class="label label-info">{{item.nature}}</span>
+                                          </td>
+                                          <td>
+                                            <div class="f-12">
+                                              {{item.support}}
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="f-13">
+                                              <div>{{item.workflow}}</div>
+                                              <a ui-sref="app.products({id : item.product_id})" class="pointer">
+                                                {{(item.product.episode_number != null) && (item.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + item.product.episode_number || item.product.description.value || item.product.description_text}}
+                                              </a>
+                                            </div>
+                                          </td>
+                                          <td style="width: auto;">
+                                            <label ng-show="item.path" class="f-13 text-primary cursor-pointer path" clipboard text="item.path">{{item.path}}</label>
+                                          </td>
+                                          <td style="text-align: center;">
+                                              <span ng-if="item.media_seal_security_code">
+                                                  <span style="color: #3570E1;" class="glyphicon glyphicon-lock"></span>
+                                              </span>
+                                          </td>
+                                          <td style="text-align: center;">
+                                              <span ng-if="item.media_seal_security_version" style="color: #3570E1;">
+                                                  {{item.media_seal_security_version}}
+                                              </span>
+                                          </td>
+                                          <td>
+                                            <i class="c-icon c-icon-infos c-icon-shadow" style="font-size:2em; color:#3570E1;" tooltip-placement="bottom" uib-tooltip-html="item.description"></i>
+                                            <div class="infobull normal-infobull" ng-show="item.comment != null">
+                                              <i class="c-icon c-icon-comment c-icon-shadow " style="color:#3570E1;" tooltip-placement="bottom"  data-toggle="tooltip" title="{{item.comment}}"></i>
+                                              <span class="infobull-text" style="top: 4px;">1</span>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            {{(item.date_creation | amDateFormat:"DD MMM YYYY").toUpperCase()}}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div role="tabpanel" class="tab-pane" id="elementsProject{{product.id}}">
+                                <form>
+                                  <div class="form-group search-form form-select">
+                                    <input type="text" class="form-control input-search large-input" ng-model="elementsFilter" placeholder="{{ _T['q2ffbx18'] }}">
+                                  </div>
+                                </form>
+                                <div class="panel panel-default">
+                                  <div class="panel-body" style="display: block; max-height: 450px; overflow: hidden; padding: 10px 5px;">
+                                    <table class="table table-custom">
+                                      <tbody>
+                                        <tr ng-repeat="item in getProjectMediaItems() | orderBy:'date_creation':true | magicFilter:elementsFilter" class="table-custom-bordered" ng-class="{selectedRow: getItemIndexInRequestAndProduct(item, product) >= 0}">
+                                          <td ng-click="addRemoveMediaItem(item, product);">
+                                            <i class="c-icon pointer mr-0" ng-class="{'c-icon-checkbox': getItemIndexInRequestAndProduct(item, product) < 0, 'c-icon-checkbox_checked': getItemIndexInRequestAndProduct(item, product) >= 0}"></i>
+                                            <span class="label label-info">{{item.nature}}</span>
+                                          </td>
+                                          <td>
+                                            <div class="f-12">
+                                              {{item.support}}
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="f-13">
+                                              <div>{{item.workflow}}</div>
+                                              <a ui-sref="app.products({id : item.product_id})" class="pointer">
+                                                {{(item.product.episode_number != null) && (item.product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + item.product.episode_number || item.product.description.value || item.product.description_text}}
+                                              </a>
+                                            </div>
+                                          </td>
+                                          <td style="width: auto;">
+                                            <label ng-show="item.path" class="f-13 text-primary cursor-pointer path" clipboard text="item.path">{{item.path}}</label>
+                                          </td>
+                                          <td style="text-align: center;">
+                                            <span ng-if="item.media_seal_security_code">
+                                                <span style="color: #3570E1;" class="glyphicon glyphicon-lock"></span>
+                                            </span>
+                                          </td>
+                                          <td style="text-align: center;">
+                                              <span ng-if="item.media_seal_security_version" style="color: #3570E1;">
+                                                  {{item.media_seal_security_version}}
+                                              </span>
+                                          </td>
+                                          <td>
+                                            <i class="c-icon c-icon-infos c-icon-shadow" style="font-size:2em; color:#3570E1;" tooltip-placement="bottom" uib-tooltip-html="item.description"></i>
+                                            <div class="infobull normal-infobull" ng-show="item.comment != null">
+                                              <i class="c-icon c-icon-comment c-icon-shadow " style="color:#3570E1;" tooltip-placement="bottom"  data-toggle="tooltip" title="{{item.comment}}"></i>
+                                              <span class="infobull-text" style="top: 4px;">1</span>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            {{(item.date_creation | amDateFormat:"DD MMM YYYY").toUpperCase()}}
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div role="tabpanel" class="tab-pane" id="attachments{{product.id}}" ng-if="!getMultiWorkflow()">
+                                <div ng-if="uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id] != null" class="panel panel-default">
+                                  <div class="panel-body">
+                                    <div nv-file-drop="" uploader="uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id]">
+                                      <div class="row">
+                                        <div class="col-md-8">
+                                          <h4 class="padd-30">
+                                            <span class="glyphicon glyphicon-paperclip"></span> {{ _T["qg7rqxc7"] }}
+                                          </h4>
+                                          <h2 class="text-center" ng-show="uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id].queue.length == 0">
+                                            {{ _T["3qh7nk7a"] }}
+                                          </h2>
+                                          <ul class="list-group">
+                                            <li class="list-group-item" style="padding-bottom:0; border:none" ng-repeat="item in uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id].queue">
+                                              <div class="row">
+                                                {{item.file.name}}
+                                                <span class="pull-right">
+                                                  {{ item.file.size / 1024 / 1024|number:2 }} MB
+                                                  <button class="btn btn-danger btn-xs" ng-click="item.remove()"  type="button" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['tc6j8t46'] }}">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                  </button>
+                                                </span>
+                                              </div>
+                                              <div class="row" style="margin-bottom: 0;">
+                                                <div class="progress-upload" style="margin-bottom: 0;">
+                                                  <div class="progress-bar-upload" ng-style="{ 'width': item.progress + '%' }" role="progressbar"></div>
+                                                </div>
+                                              </div>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <div ng-show="uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id].isHTML5">
+                                                <div class="upload-text-box text-center" nv-file-over="" uploader="uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id]">
+                                                  {{ _T["ob68vuzl"] }}
+                                                  <div class="btn btn-primary btn-block upload-file-container mt-10">
+                                                    <input multiple nv-file-select="" type="file" uploader="uploader[product.id+getRequestToCreate().action_type_id+getWorkflowsChosen()[0].id]" /> {{ _T["62iv9iny"] }}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div role="tabpanel" class="tab-pane" id="returns{{product.id}}" ng-if="getReturns().length > 0">
+                                <div class="panel panel-default">
+                                  <div class="panel-body" style="display: block; max-height: 450px; overflow-y: auto;">
+                                    <table class="table">
+                                      <thead>
+                                        <th style="width:300px">{{ _T["0xc7nggs"] }}</th>
+                                        <th style="width:300px">{{ _T["6nhvzrz1"] }}</th>
+                                        <th>{{ _T["nxwlcy7f"] }}</th>
+                                        <th>{{ _T["qiqskta9"] }}</th>
+                                      </thead>
+                                      <tbody>
+                                        <tr ng-repeat="aReturn in getReturns() | orderBy : ['tc_global', 'tc_in', 'tc_out']" class="table-custom-bordered" ng-style="{'border-bottom': $last ? 'none':''}">
+                                          <td>
+                                            <div class="row">
+                                              <div ng-if="aReturn.tc_global != 1 && aReturn.tc_in && aReturn.tc_out" class="label-group">
+                                                <span class="label label-default">IN {{aReturn.tc_in}}</span>
+                                                <span class="label label-default label-group-border">OUT {{aReturn.tc_out}}</span>
+                                              </div>
+                                              <span ng-if="aReturn.tc_global != 1 && aReturn.tc_in && !aReturn.tc_out" class="label label-default">IN {{aReturn.tc_in}}</span>
+                                              <span ng-if="aReturn.tc_global != 1 && !aReturn.tc_in && aReturn.tc_out" class="label label-default">OUT {{aReturn.tc_out}}</span>
+                                              <span ng-if="aReturn.tc_global == 1" class="label label-default">{{ _T["g442q024"] }}</span>
+                                            </div>
+                                            <div class="row">
+                                              <div class="label-group">
+                                                <span class="label label-info">{{aReturn.type}}</span>
+                                                <span class="label label-warning label-group-border">{{aReturn.element}}</span>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <p class="save-text-p">{{aReturn.comment}}</p>
+                                          </td>
+                                          <td>
+                                            {{aReturn.type_correction}}
+                                            <br>
+                                            {{aReturn.type_correction_comment}}
+                                          </td>
+                                          <td>
+                                            <div ng-if="aReturn.ownComment.length > 0">
+                                              <div ng-if="aReturn.showCommentReturn == true" ng-repeat="returnComment in aReturn.ownComment" ng-show="$index != aReturn.ownComment.length - 1">
+                                                <strong>
+                                                  {{returnComment.user.person.firstname}} {{returnComment.user.person.lastname}}
+                                                  <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{returnComment.date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i>
+                                                </strong>
+                                                - {{returnComment.text}}
+                                              </div>
+                                              <button class="btn btn-xs btn-link" ng-show="!aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn">{{ _T["y498pkdo"] }}</button>
+                                              <button class="btn btn-xs btn-link" ng-show="aReturn.showCommentReturn" ng-click="aReturn.showCommentReturn = !aReturn.showCommentReturn">{{ _T["clfsvr5x"] }}</button>
+                                              <div>
+                                                <strong>
+                                                  {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.firstname}}
+                                                  {{aReturn.ownComment[aReturn.ownComment.length - 1].user.person.lastname}}
+                                                  <i class="fa fa-clock-o" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ _T['z0t6p7pd'] }} {{aReturn.ownComment[aReturn.ownComment.length - 1].date_creation | asDate | date:'dd/MM/yyyy HH:mm'}}"></i>
+                                                </strong>
+                                                - {{aReturn.ownComment[aReturn.ownComment.length - 1].text}}
+                                              </div>
+                                            </div>
+                                            <div ng-if="aReturn.ownComment.length == 0">
+                                              {{ _T["q7rxwhz5"] }}
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div ng-if="getStep() == 2">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h2 class="mb-0 pb-10"><i class="fa fa-check text-green" aria-hidden="true"></i> {{ _T["htnncbaf"] }} !</h2>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <p>{{ _T["1wii39v0"] }} {{getRequestsCreated().length}} {{ _T["a0wp0los"] }} :</p>
+                      </div>
+                    </div>
+                    <div style="height: 560px; overflow: auto;">
+                      <div ng-repeat="product in getProducts()" class="col-md-6">
+                        <div style="border-top: 5px solid #3570E1; padding-top: 10px">
+                          <b>{{(product.episode_number) && (product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"]) + " " + product.episode_number || product.description.value || product.description_text}}</b>
+                        </div>
+                        <ul class="p-0 m-0">
+                          <li ng-repeat="request in getRequestsCreated() | filter: {product_id: product.id}">
+                              <hr class="mt-5 mb-5">
+                              <div class="col-md-12 p-0">
+                                  <p>
+                                    <workflow data="request.workflow" style="display:inline-block"></workflow>
+                                    <b>{{request.action_type.etape_type.value}} - {{request.action_type.value}}</b>
+                                  </p>
+                              </div>
+                            <p class="mb-0">
+                              <date-wish data="request" hide="true" small="true"></date-wish>
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="footer" style="padding-top: 0; padding-bottom: 10px;">
+                <div class="row">
+                  <div class="col-md-2">
+                    <button ng-click="closeThisDialog('cancelButton')" type="button" class="btn btn-danger btn-block" ng-show="getStep() == 1">
+                      {{ _T["ficbz281"] }}
+                    </button>
+                  </div>
+                  <div class="col-md-4 col-md-offset-3" ng-show="getStep() == 1">
+                    <button ng-disabled="isAddMoreDisabled()" ng-click="addMoreActions()" type="button" class="btn btn-primary btn-block">
+                      <span ng-show="getEditRequest()">{{ _T["4zszxndi"] }}</span>
+                      <span ng-show="!getEditRequest()">{{ _T["akz2j7pw"] }}</span>
+                    </button>
+                  </div>
+                  <div class="col-md-3" ng-show="getStep() == 1">
+                    <button ng-disabled="!isSendRequestsEnabled()" class="btn btn-success btn-block" ng-click="sendRequests()">
+                      <span ng-show="getAllRequestsToCreate().length <= 0 || (getAllRequestsToCreate().length == 1 && !form.action)">{{ _T["hurvzyz7"] }}</span>
+                      <span ng-show="getAllRequestsToCreate().length > 1 || (getAllRequestsToCreate().length == 1 && form.action)">{{ _T["ewndpv0z"] }}</span>
+                    </button>
+                  </div>
+                  <div class="col-md-4 col-md-offset-8" ng-show="getStep() == 2">
+                    <div class="alert alert-success" ng-if="isLinkSaved()">
+                      {{ _T["gb4f3c6j"] }}
+                    </div>
+                    <div class="alert alert-danger" ng-if="isLinkError()">
+                      {{ _T["miwohyio"] }}
+                    </div>
+                    <div class="alert alert-info" ng-if="isNoLink()">
+                      {{ _T["n8qwlgs5"] }}<br>
+                      <button class="btn btn-primary btn-xs" ng-click="linkRequests(true)">{{ _T["jj6pm0gp"] }}</button>
+                    </div>
+                    <span ng-if="showLink()">
+                      <span style="color: #3570E1;" class="f-16"><i class="fa fa-link"></i> {{ _T["b8dt8mqp"] }}</span>
+                      <button class="btn btn-success btn-outline" ng-click="linkRequests(true)">{{ _T["w7redrmn"] }}</button>
+                      <button class="btn btn-danger btn-outline" ng-click="linkRequests(false)">{{ _T["adoyhyi2"] }}</button>
+                    </span>
+                    <button ng-if="!showLink()" class="btn btn-success btn-block" ng-click="cleanTable();closeThisDialog('close&reload')">
+                      {{ _T["e7bipa8p"] }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .dragresize {
+    resize:both;
+    overflow: auto;
+    max-height: 900px !important;
+    min-height: 400px !important;   
+    min-width: 400px !important;   
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);  
+  }
+  </style>  
+  <script>
+    let position = { x: 0, y: 0 }
+    let edges = { left: true, right: true,   bottom: true,  top: true }
+    let attributes = {x:'data-x',y:'data-y'}
+    let IJS = Object.create(interactJS);
+    IJS.interact_execution('.dragresize',attributes,edges,position,'.poignee');
+  </script>

@@ -1,0 +1,116 @@
+<div class="page-popup">
+    <div class="row">
+        <div class="col-md-8">
+           <div class="step">
+        <form class="ng-pristine ng-valid">
+          <div class="body">
+            <div>
+              <div ng-show="step == 1">
+                
+                  <div class="form-group search-form">
+                    <input type="text" class="form-control input-search ng-pristine ng-valid ng-empty ng-touched" aria-label="Rechercher parmi les projets" placeholder="{{ _T['lymje0lv'] }}" ng-model="projectFilter" style="">
+                  </div>
+                
+                <hr>
+                <label class="title">{{ _T["ca0oi9cr"] }}</label>
+                <div class="panel-container">
+                  <!-- ngRepeat: project in filtered = (projects | filter: projectFilter) | orderBy: ['name', 'client.name'] --><div class="panel panel-default mr-0 ng-scope" ng-repeat="project in filtered = (projects |&nbsp;filter: projectFilter) | orderBy: ['name', 'client.name']" ng-class="{'element-selected' : requestToCreate.project == project.id}" ng-click="addProjectToRequest(project);">
+                    <div class="panel-body creation">
+                      <div class="col-md-2">
+                        <img class="img-responsive img-circle" ng-src="data:image/png;base64,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" alt="Disney" width="50px" height="50px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAMAAAC8EZcfAAAAwFBMVEX8/vwAAAD///8EAgQEAAT4+fj6/Prw8vDc3tzj5OPl5+VhYWHz8/P19vXt7O35+fkqKiqUlpS6uLqzs7MhICGDhIPJy8lPUU8SEhLW1tZAQEBxcHEYGRiOjo4kJCTi4eLCw8KsqqxoaGg5Nzl8fnxVVVUaGBpKSkpeXV6ioqJSUVJ1dnUxMDHRz9EMCwyQj5CbnZsdHh1qbGo0NzRDRUPCxcKKh4p4dXgsKSwUEhRMSUy6t7olJyUIDQh8f3w+PD6lrhLSAAAKE0lEQVR4nO1Zi3aiyhK1SxGQhyKKgiKgIuILoxlNzkxu/v+vblWDj0zUmZyb11q391rGINC9u6q6aheUSgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC/+8AgKokc+iGVMVD+GpK5wAw3TCy5kPCPrOi0FVU/fuQBPPn3mu0HlmObnewGCXDnR261W/BEVxtwF5j9ThI2lbw9XYEl9i0Bg3Cr1a/MGQ5/7pL2q5cus0R4ENjVtfY3dRvhg4htFNrr8WdBpGrlMtIs/Kg2Ur1+vwANRfvVOofRdF8Zo25DQWqkmHWVNfO5lor54h/JzPLvWIiADftJY1WY5o5H8Sw3kMKi/PBc561MNt0uSEr+MfL1EsUQW97lSJoF+HHOBrkZWgvX4+Ms9UVZ7pYYTwSh/48eOVoaPJwRTvzVQzm6odYEZlcGRfja2lpuG3KxHGU1l5eJ9m0/R/wbLkwo6Z/BMFbQPJmOi0Y9rXmuRPBwb0UWzEj+z1Nd+M7xsIvSEpQDZpxEYsTSz8yAPmesY1idRmeGDqBJGM0259I8GQsAKnZQR5EMTmGK2To0qrP9wfPAlL76TMJguqcH9WimBzN2DaSchLQYqsgo5Q+4xkGnBFbKJ9IcDxpngccBGPKi2hEX+a/A27bNv7E7okVgPPMWPqJHq4nbPAi+6Cff+Upp80DEfj/aFOZ/Cu3cUf3zE80YNh6FfJgzsmIBRHwMCrxQKnVakuN8uFY/swtssYpO7/NCEB7FiNxiDYEM+bZp1VUkor1mfxKYKH3GrVXU0YLHohtA6iOFCWEfJ00byiKjyCYUXp7TbBkt7iXM17oygf12LBvm+/9uctzyswXaiv8eOLpZl2lSrzxtTiOe3/SCbpjvjdBY3+FYAnSPtlw4oA7bx9k2u3BcCnjd9YRoE6JIJbWC/NnPGXPAEgavDhJl6L0+P0esvX+VgoC6U30aXjHIzMljuO6gSq/aPFAjflG4UkIzACOd+mKu2zaTdtxlcA82zMQ4pJ2cBycJAh2uOaBMwTpXxsYSpLh/kzb20Lxc4ymVrQ8zUgyBs+NcHwI4oOCMX/ukrOma7Qn80tSTuAB9xEVnKoRLJd2mo29TjLznvPKA8vOYzGIZFRv06vKbjpODh1JjlzrbfepKh0ua/OdvMZBwwXzFEqKdo+L17N7EijV/czlN/QwJ2R1NGW7sx2dLSPi/GI25RbUl/6uadwKBdPeJ6ucHRE8+5DW0qLCJxDwiqJhFoqw80Mto1KlK3O9c4QFYGOyd6nq+JiR7rGxidhh8fzDGg4W+SFjOxrW3aGA+2VdJQhVZ9g/Ds8teDri7VN/XmQ72JKPu6hiUuz0I9CHpBq4CZ9av35tn7edTSZBfUbtDEVCE+tNP61CLc5XfzIh1FFxsB94zY9/8pTvXtP3we6JZuj2B6Ok4/GSNm/PtaTVX61YUS/QTXkU8kMbJNSDlZQ2QYV5m3aWho6i68U2hnBA6+jhcdDBC9CPINkJpYdRkiTedDNOZd7XbKCkk3G5+ujJlwnW/4PeGml+ZDdxF0ZlYlCjrrdpR3783OJe7eSCD2qcoC/pKB8wFkMc98lfqqZunKeYHcUku4tQfW9oBdzbO/zvLlRcxVHpYsxnbOuAnvLF9BcVbvJLBlz2u0PbVaV8+c4jMVCLPGgobnM+YDxmcoITOj2UTe1IcOUlM22cRc0fS0UmjoAnebGOFZBQZWA9rOJwQ7w2PaZKKUXvtKt1XuMxbvF7dFn1oqnn6jHtQnggWBxDqRphUzQ4EGzRaU1XMG6YX3WPMbWatAaj2TgNcaHLUR6Yq7ZUatLDip0B9QhTFBujV9Yhl0QYvWjZcMTr51hHgy6Wl11sJtqJOidYflHq3A6u9aWLYxkJltmuDk1tu31oNBqDyYHpXoYQt9y9hqZ7+gkuBjXrGQE2sZXDHqGAJhG8Ru9x+411UBIkeOUpRjTpnSwWrkiqnKmZ0KPW3M7zKD1xIhcbARHEvY0NdJhmme+3x8NkwaM9oiTD2lSS2MzAidHihn3axHifUapaaEDHnXF+UxfnnbCFe9mCYI7ZsHZ0MY1QPhE0omnS6dlFFqXEi9Ok4C5oXrxMbmabuDPr9Px1GLaJTQOTHgpHnVIgSwONtnFN4VuBPWJlYY+Y6HXMMb2gx5frOSWeFbxrZQ8UjWlOHoU5wcqZBY1ACeSiDnEPlyl7LclYmoqboBDWq25DWyuYVcoMUjw3NgKUZ8yzaRvHgfpAOngc2alvRSpPP2yYTrgBsbbD8oES52V+xHDK+juF78CQ33MuWE/ZA4whN+BYonzI81v4wO57ncYqZ2nT7Qw9QgSpecDE0qeV1H307so6ijQKTfZUtBF4rNC28qWL7DhcLMPbJq6M4qd8UVHTIy2f76A7lKkHC1pY0mTVwXw5WGhtO3zGn0n0EMGAKzf6bGoUkFuFP+iTa/TwbkvTUFSOHCy0CR3d6q1hucGaO40UXHalfEWwuu0uP5nlFYUTTJm3DgNdVezebN7zJkTHzAmW6vYvooAh7acV6qNlM4zW2byX1kgM8bpMD1XsHs9d4xsGRARUGrr/9DzO4ZUFUcmlXoW7/576poMFAyzzD8lUG8aj7qqcN6cSlTcfR5B9LnMwf+zoRGsYL/JY+AG4Sbj6Yd1Yu+O3za6V4gMDY+mVC7FQoRp+Tg4MNcsfvDJiRdbcFjWWZ6EDuMxIdbKgxUvKhgfM3GizcwXCmqiGugXDotjPriTBcx6KdV8oIubX5GNAy25o7yeH6ed8oaDOcoKleqidiUh0gq+TTFnlktTFEck22ZnMZCsfi+7y+agh6TbN+QM7zlByU68Q1NO5b1nWGj/+/Hl1tOzjupZfizbB7MFDNVhrJ9vMbblE4u85j2JwNve9Ja/whRakR2LY0lRTvkX4b2i/TfAX/Djc6bnkPxeJVAVmYf2wGKy3/Sg/qqqOrXXiuIO7mBQT1IZYTorrTIXiGZXCATssG/hz7+z5rGdfzBqXrdjM5TsKVXoAU3zzke5m9rkqN+TjETVDEuIguECS66XTOfqrrxNvNHr2fJP38sU0DCWopzn1NzyEByevSb/jLm7b+stx3tgwSjXXNY2iAaNWgIpcGrry256cgDKjVJb+TLPpNuf2NOtZURjc7rr+iuNpgeYTZYRu+i9eCgJ1Cg1sQSTTVAKlpihBTa+X3vdNCDZfXHL/m3dAoA6TaZ4z4Zhp3hv1DY+jmw8druJj3xDmMDwiuIo+ep5/DVSTuUz4aiLXsC6TBYf1P1/5NYAxF4Ltb2tAY8/3yFe8PvsrUMtJSeZ/zqwfhbyxx+bqq4lcQ2HB/bclWNJ71No2vy/BKonJ/ie+f3wroNlnl14WfR+g2mLxp75AeyPAyDrp7S7ziwF15d1fQb0zvrF/BQQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAS+Bv8FU9C61WPKj98AAAAASUVORK5CYII=">
+                      </div>
+                      <div class="col-md-9 ng-binding">DOUBLAGE_SERIE</div>
+                      <div class="col-md-1">
+                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div><!-- end ngRepeat: project in filtered = (projects | filter: projectFilter) | orderBy: ['name', 'client.name'] --><div class="panel panel-default mr-0 ng-scope" ng-repeat="project in filtered = (projects |&nbsp;filter: projectFilter) | orderBy: ['name', 'client.name']" ng-class="{'element-selected' : requestToCreate.project == project.id}" ng-click="addProjectToRequest(project);">
+                    <div class="panel-body creation">
+                      <div class="col-md-2">
+                        <img class="img-responsive img-circle" ng-src="data:image/png;base64,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" alt="Disney" width="50px" height="50px" src="data:image/png;base64,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">
+                      </div>
+                      <div class="col-md-9 ng-binding">PROJET_DEV</div>
+                      <div class="col-md-1">
+                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div><!-- end ngRepeat: project in filtered = (projects | filter: projectFilter) | orderBy: ['name', 'client.name'] -->
+                  <div ng-show="filtered.length <= 0" class="ng-binding ng-hide" style="">2 {{ _T["0v7ohqbx"] }}</div>
+                </div>
+                <!-- <div class="panel with-icon shadow-hover" style="float: left; width:170px; min-height:135px" ng-class="{'element-selected' : requestToCreate.project == project.id}" ng-click="addProjectToRequest(project);" ng-repeat="project in projects | orderBy: ['name', 'client.name'] | filter: projectFilter">
+                  <div class="label label-info">{{project.client.name}}</div>
+                  <br>
+                  <span class="c-icon c-icon-display" ng-if="requestToCreate.project != project.id"></span>
+                  <span class="c-icon c-icon-checked text-primary" ng-if="requestToCreate.project == project.id"></span>
+                  {{project.name}}
+                </div> -->
+              </div>
+              <div ng-show="step == 2" class="ng-hide" style="">
+                <label class="title">{{ _T["fc92xwv3"] }}</label>
+                <div class="panel-container panel-subproject">
+                  <!-- ngRepeat: subproject in projectChoosen.ownSubproject | filter: projectFilter -->
+                </div>
+                <div class="clearfix"></div>
+                <!-- ngIf: subProjectChoosen != '' -->
+              </div>
+              <div ng-show="step == 3" class="ng-hide">
+                <div class="row">
+                  <div class="col-md-7">
+                    <label class="title">{{ _T["33grjqgt"] }}</label>
+                  </div>
+                  <div class="col-md-5">
+                    <button class="btn btn-block btn-primary" ng-click="createWorkflow()" ng-show="!loadFromUrl">
+                    {{ _T["fu7h3vrj"] }}
+                    </button>
+                  </div>
+                </div>
+                <div class="alert alert-danger alert-dismissible text-center ng-hide" ng-show="errorOnWorkflow &amp;&amp; !loadFromUrl" role="alert" style="">
+                  {{ _T["07hkc16j"] }}
+                  <br>
+                  {{ _T["qglgienb"] }}
+                </div>
+                <!-- ngRepeat: workflow in workflows -->
+              </div>
+              <!-- ngIf: step == 4 -->
+              <!-- ngIf: step == 5 -->
+              <!-- ngRepeat: product in productsChoosen -->
+            </div>
+          </div></form>
+          <div class="footer">
+            <div class="row">
+              <div class="col-md-3">
+                <button ng-click="closeThisDialog();" type="button" class="btn btn-danger btn-block">
+                {{ _T["ficbz281"] }}
+                </button>
+              </div>
+              <div class="col-md-3">
+                <button ng-show="step > 1" ng-click="step = step - 1" type="button" class="btn btn-default btn-block ng-hide" style="">
+                {{ _T["0u030qx5"] }}
+                </button>
+              </div>
+              <div class="col-md-3 col-md-offset-3 ng-hide" ng-class="{'col-md-offset-3' : (projectChoosen.length <= 0 &amp;&amp; step == 1) || ((subProjectChoosen.length <= 0 || productsChoosen.length <= 0) &amp;&amp; step == 2) || step == (5 + productsChoosen.length)}" ng-show="step == (5 + productsChoosen.length)" style="">
+                <button class="btn btn-success btn-block" ng-click="createDemand()">
+                {{ _T["hurvzyz7"] }}
+                </button>
+              </div>
+              <div class="col-md-3 col-md-offset-3 ng-hide" ng-class="{'col-md-offset-3' : step < (5 + productsChoosen.length)}" ng-hide="(projectChoosen.length <= 0 &amp;&amp; step == 1) || step == (5 + productsChoosen.length)">
+                <button ng-hide="isDuplicateRequests.duplicate &amp;&amp; step == 4" ng-disabled="(projectChoosen.length <= 0 &amp;&amp; step == 1) || ((subProjectChoosen.length <= 0 || productsChoosen.length <= 0) &amp;&amp; step == 2) || step == (5 + productsChoosen.length) || workflows.length <= 0 &amp;&amp; step == 3 || actionChoosen.length <= 0 &amp;&amp; step == 4 || isDuplicateRequests.duplicate &amp;&amp; step == 4" ng-click="step = step + 1" type="button" class="btn btn-primary btn-block" disabled="disabled">
+                {{ _T["im19ajy6"] }}
+                </button>
+              </div>
+              <!-- ngIf: isDuplicateRequests.duplicate && step == 4 -->
+            </div>
+          </div>
+        
+      </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h1>
+        {{ _T["rtnnq02w"] }} <span ng-if="isEditProject">{{ _T["1znba7zf"] }}</span> <span ng-if="!isEditProject">{{ _T["7ah85p8w"] }}</span>
+        </h1>
+        <ul class="step-container" ng-repeat="nav in steps">
+            <li ng-class="{'unchecked' : step < $index+1, 'bt-0' : $index > 0}">{{ _T["dfuet0tp"] }} {{nav.step}} - {{nav.title}}</li>
+        </ul>
+    </div>
+</div>

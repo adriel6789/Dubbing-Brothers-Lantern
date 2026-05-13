@@ -1,0 +1,28 @@
+<div class="row mb-0 prod-contextualinfo">
+	<div ng-if="popoverTrick" class="col-md-2 col-md-offset-8 infobull" popover-placement="bottom" uib-popover-template="'popover-client_number.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['3xoocd81'] }}">
+		<i class="fa fa-pencil"></i>
+	</div>
+	<div ng-if="!popoverTrick" class="col-md-2 col-md-offset-8 infobull" popover-placement="bottom" uib-popover-template="'popover-client_number.html'" popover-trigger="'outsideClick'" tooltip-placement="bottom"  data-toggle="tooltip" title="{{ $root._T['3xoocd81'] }}">
+		<i class="fa fa-pencil"></i>
+	</div>
+</div>
+<div class="row mb-0">
+	<div class="col-md-12 f-13 client-number"col-md-12 f-13 ng-if="$ctrl.role!='edit' && $ctrl.cell.plain_value">
+		{{$ctrl.cell.plain_value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.role=='edit'">
+		<input type="text" name="text" class="form-control form-control-small m-0" ng-model="$ctrl.cell.plain_value" />
+	</div>
+	<div class="col-md-12 f-13" ng-if="!$ctrl.cell.plain_value" style="text-align: center;">
+		<span class="label label-info label-squared">{{ $root._T["0mzut3vy"] }}</span>
+	</div>
+</div>
+
+<script type="text/ng-template" id="popover-client_number.html">
+	<div class="row mr-0 ml-0 mb-5">
+		<div class="form-group form-group-small m-0">
+			<input type="text" name="text" class="form-control form-control-small m-0" ng-model="$ctrl.cell.plain_value" placeholder="{{ $root._T['fn4lsvg7'] }}" />
+		</div>
+	</div>
+	<button class="btn btn-block btn-success btn-outline btn-xs" ng-click="savePrepEnr($ctrl.cell, $ctrl.product)">{{ $root._T["hvzykhtg"] }}</button>
+</script>

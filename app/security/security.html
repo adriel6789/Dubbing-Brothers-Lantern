@@ -1,0 +1,100 @@
+<div class="page-requests-demands">
+    <header style="margin-bottom: 10px; background-color: #234891">
+        <div class="container-fluid container-fixed-nav-aside">
+            <div class="col-sm-12">
+                <p>
+                    {{ _T["t6im8dl0"] }} {{today}}
+                </p>
+            </div>
+        </div>
+        <div class="container-fluid container-fixed-nav-aside search-text">
+            <div class="col-sm-12">
+                <form>
+                    <div class="form-group search-form">
+                        <input type="text" class="form-control input-search" ng-model="textSearch" placeholder="{{ _T['6l5ygcxb'] }}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class="container-fluid container-fixed-nav-aside">
+        
+        <div ng-repeat="(place,stages) in getStages()">
+            <div class="row">
+                <h1 id="{{place}}" class="col-md-12 ml-15">{{ _T["o0m2z00k"] }} {{place}}</h1>
+                <div class="row">
+                    <div class="col-md-12 equal">
+                    <div ng-repeat="stage in stages | filter:textSearch | orderBy:'order'" ng-class="" class="col-md-6 ">
+                        <div  class="col-md-12 stage">
+                            <div class="stageName">{{stage.type.toUpperCase()}} {{stage.long_name ? stage.long_name.toUpperCase() : stage.name.toUpperCase()}}</div>
+                            <div class="row" ng-repeat="farmer in stage.farmers | orderBy:'start_time'">
+                                <div class="col-md-12 booking">
+                                    
+                                        <div class="hour">{{transformHourInI18nFormat(farmer.start_time)}} → {{transformHourInI18nFormat(farmer.end_time)}}</div>
+                                    <div class="m-0">
+                                        <img class="stageImg" ng-src="{{clients[farmer.client.id].url || '../app/img/no-customer.png'}}" alt="{{farmer.client.name}}">
+                                        <h2 class="ln-text-bold m-0 pt-10">{{farmer.subproject_nature.value}} « {{farmer.project_name.toUpperCase()}} » <small class="text-black">{{farmer.etape}} - {{farmer.action}}</small> <!-- <label ng-if="farmer.is_vip == '1'" class="label label-danger">Projet sensible</label> --></h2>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="text-center" ng-class="{'col-md-4':isRecord(farmer), 'col-md-6':!isRecord(farmer)}">
+                                        <div>{{ _T["kr2s4lat"] }}</div>
+                                        <div class="ln-text-bold">{{farmer.prod != null && farmer.prod.firstname + " " + farmer.prod.lastname.toUpperCase() || _T["8klsymfk"] }}</div>
+                                    </div>
+                                    <div class="text-center" ng-class="{'col-md-4':isRecord(farmer), 'col-md-6':!isRecord(farmer)}">
+                                        <div>{{ _T["vcn9kdl7"] }}</div>
+                                        <div class="col-md-12 ln-text-bold">{{farmer.tech_writer.firstname != null && farmer.tech_writer.firstname + " " + farmer.tech_writer.lastname.toUpperCase() || _T["n22kx8rp"] }}</div>
+                                        <div class="col-md-12 ln-text-bold">{{farmer.tech_reader.firstname != null && farmer.tech_reader.firstname + " " + farmer.tech_reader.lastname.toUpperCase() || ""}}</div>
+                                    </div>
+
+                                    <div class="col-md-4 text-center" ng-if="isRecord(farmer)">
+                                        <div>{{ _T["dj3924mi"] }}</div>
+                                        <div ng-if="farmer.da">
+                                            <div class="ln-text-bold mouse-link" ng-if="!getShowEditForm(farmer)" ng-mouseover="showEdit = true" ng-mouseleave="showEdit = false" ng-click="setShowEditForm(farmer, true);">{{farmer.da }}<i ng-hide="!showEdit" class="fa fa-edit"></i></div>
+                                        </div>
+                                        <div ng-if="!farmer.da">
+                                            <div class="ln-text-bold mouse-link" ng-if="!getShowEditForm(farmer)" ng-mouseover="showEdit = true" ng-mouseleave="showEdit = false" ng-click="setShowEditForm(farmer, true);">{{farmer.artistic_director != null && farmer.artistic_director.firstname + " " + farmer.artistic_director.lastname.toUpperCase() || _T["n22kx8rp"] }} <i ng-hide="!showEdit" class="fa fa-edit"></i></div>
+                                        </div>
+                                        
+                                        <div ng-if="getShowEditForm(farmer)">
+                                            <div style="width: 100%;">
+                                                <ui-select ng-model="farmer.artistic_director" on-select="" theme="bootstrap">
+                                                    <ui-select-match placeholder="Sélectionner...">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+                                                    <ui-select-choices repeat="director in getArtisticDirectors() | propsFilter: {firstname: $select.search, lastname: $select.search}">
+                                                        <div ng-bind-html="director.firstname + ' ' + director.lastname | highlight: $select.search"></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div style="width: 100%; margin-top: 6px;">
+                                                <div class="btn-group btn-group-xs btn-group-justified">
+                                                    <div class=" btn-group btn-group-xs">
+                                                    <button class="btn btn-danger btn-outline" ng-click="setShowEditForm(farmer, false)">{{ _T["ficbz281"] }}</button>
+                                                    </div>
+                                                        <div class="btn-group btn-group-xs">
+                                                    <button class="btn btn-success btn-outline" ng-click="setArtisticDirector(farmer, farmer.artistic_director);">{{ _T["6n3679ox"] }}</button>
+                                                        </div>
+                                                    </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div ng-if="$index != 0" style="margin:auto; width: 70%; border-top:1px solid #000"></div>
+                            </div>
+                            <div class="text-center p-10" ng-if="!stage.farmers || stage.farmers.length === 0">
+                                {{ _T["t15jcl4f"] }}
+                            </div>
+                        </div>
+                    </div>
+
+                        <!--<div ng-if="stage.farmers.length == 0" class="col-md-12">-->
+                            <!--<div class="name">{{stage.name}}</div>-->
+                            <!--Nous n'avons pas trouvé de séance sur ce plateau aujourd'hui.-->
+                        <!--</div>-->
+                </div>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+</div>

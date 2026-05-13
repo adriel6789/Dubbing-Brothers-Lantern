@@ -1,0 +1,239 @@
+<header style="margin-bottom:0px">
+  <div class="container-fluid">
+    <p>
+      {{ _T["45275llk"] }}
+    </p>
+  </div>
+</header>
+<div class="container-fluid descrip-dialog">
+  <div class="col-md-12">
+    <img class="mr-15 pull-left" ng-src="{{project.client.url || '../app/img/no-customer.png'}}" style="max-width:50px; max-height:50px; border-radius: 50%; border: 1px solid black;" alt="{{project.client.name}}">
+    <h3 class="mt-10" ng-show="entity.products.length == 1">{{entity.products[0].human_description}}</h3>
+  </div>
+</div>
+<div class="container-fluid" >
+  <div class="row">
+    <div class="col-md-4">
+      <div class="btn-group btn-group-vertical btn-block" ng-show="entity.products.length != 0">
+        <button type="button" class="btn btn-default" ng-class="{'btn-primary': wf_sel == 1}" ng-click="selectWorkflow(1)">
+          <i class="fa fa-microphone"></i> {{ _T["i5tk31xb"] }}
+        </button>
+        <button type="button" class="btn btn-default" ng-class="{'btn-primary': wf_sel == 2}" ng-click="selectWorkflow(2)">
+          <i class="fa fa-archive"></i> {{ _T["z20ge21k"] }}
+        </button>
+        <button type="button" class="btn btn-default" ng-class="{'btn-primary': wf_sel == 3}" ng-click="selectWorkflow(3)">
+          <i class="fa fa-briefcase"></i> {{ _T["1egq4x9k"] }}
+        </button>
+      </div>
+    </div>
+    <div ng-show="entity.products.length != 0" class="col-md-6 col-md-offset-2 form-horizontal">
+      <label class="control-label col-md-4">{{ _T["dz8plzyk"] }}</label>
+      <ui-select class="col-md-8" ng-model="globalVar.speed_reception" theme="bootstrap" ng-disabled="disabled">
+        <ui-select-match allow-clear placeholder="{{ _T['dz8plzyk'] }}">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="speed.name as speed in speeds | propsFilter: {name: $select.search, id: $select.search}">
+          <div ng-bind-html="speed.name | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+      <br>
+      <label class="control-label col-md-4">{{ _T["34ou49b2"] }}</label>
+      <ui-select class="col-md-8" ng-model="globalVar.speed" theme="bootstrap" ng-disabled="disabled">
+        <ui-select-match allow-clear placeholder="{{ _T['34ou49b2'] }}">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="speed.name as speed in speeds | propsFilter: {name: $select.search, id: $select.search}">
+          <div ng-bind-html="speed.name | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+      <div class="col-md-12 text-bold product-duration">
+        <label class="control-label col-md-4">{{ _T["j9qn7439"] }}</label>
+        <div class="col-md-8" style="padding-top:7px;">
+          <div class="row" ng-repeat="product in products">
+            <div class="col-md-4 overflow-hidden">
+              <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+              <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+              <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+            </div>
+            <div class="col-md-8">
+              <i>
+                <a href="#" blur="ignore" editable-number="product.duration" e-step="any" onaftersave="doneEditing('duration', product)">
+                  <span ng-if="product.duration">{{ product.duration }}  min</span>
+                  <span ng-if="!product.duration">{{ _T["fj98qsz4"] }}</span>
+                </a>
+              </i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-if="subproject.nature.name == 'film'" class="col-md-12 text-bold product-duration">
+        <label class="control-label col-md-4">{{ _T["498x6toq"] }}</label>
+        <div class="col-md-8" style="padding-top:7px;">
+          <div class="row" ng-repeat="product in products">
+            <div class="col-md-4 overflow-hidden">
+              <span>{{product.description.value}}</span>
+            </div>
+            <div class="col-md-8">
+              <i>
+                <a href="#" blur="ignore" editable-text="product.number_reel" onaftersave="doneEditing('number_reel', product)">
+                  {{ product.number_reel || _T["fj98qsz4"] }}
+                </a>
+              </i>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="entity.products.length != 0">
+    <div class="col-md-6" ng-show="elementVideos.length != 0">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="glyphicon glyphicon-film"></span>
+          <strong>{{ _T["dch3ktan"] }}</strong>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3">
+              <button type="button" class="btn btn-default" ng-click="checkFullMAD()">Full MAD</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3" ng-repeat="element in elementVideos">
+              <label for="myonoffswitchvideo{{$index}}" class="col-md-8 control-label">{{element.support}}</label>
+              <div class="col-md-4">
+                <div class="onoffswitch">
+                  <input type="checkbox" ng-model="elementVid[$index]" ng-change="checkElementVideo(element, elementVid[$index])" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitchvideo{{$index}}">
+                  <label class="onoffswitch-label" for="myonoffswitchvideo{{$index}}">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2" ng-repeat="product in products" ng-if="products.length > 1">
+            <div class="col-md-2 f-12 pt-10 pr-0 pl-0 overflow-hidden">
+              <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+              <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+              <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+            </div>
+            <div class="col-md-10">
+              <input placeholder="{{ _T['zh4fsex6'] }} (&#8679; + {{ _T['4o5otxov'] }} &rarr; {{ _T['20ygnwk5'] }})" ng-model="elementsPaths[product.id]" ng-change="elementsPathChange(elementsPaths[product.id], product.id)" class="form-control mb-0" type="text"/>
+            </div>
+          </div>
+          <div class="row mb-0" ng-if="products.length === 1">
+            <div class="col-md-12">
+              <input placeholder="{{ _T['zh4fsex6'] }} (&#8679; + {{ _T['4o5otxov'] }} &rarr; {{ _T['20ygnwk5'] }})" ng-model="elementsPath" ng-change="elementsPathChange(elementsPath, products[0].id)" class="form-control mb-0" type="text"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6" ng-show="elementAudios.length != 0">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="glyphicon glyphicon-music"></span>
+          <strong>{{ _T["fmsj3re9"] }}</strong>
+        </div>
+        <div class="panel-body" style="height: 154px;">
+          <div class="row mb-0">
+            <div class="col-md-6 mb-10" ng-repeat="element in elementAudios">
+              <button class="btn btn-default btn-lg btn-block btn-light-shadow" ng-click="addElementAudio(element)">
+                <i class="fa fa-plus-circle"></i>
+                {{element.support}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" ng-repeat="product in products" ng-if="hasElements()">
+    <div class="panel-heading">
+      <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+      <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+    </div>
+    <div class="panel-body row">
+      <div class="col-md-6" ng-repeat="element in elementCheckedByProduct[product.id]">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <span ng-if="element.nature == 'Video'" class="glyphicon glyphicon-film"></span>
+            <span ng-if="element.nature == 'Audio'" class="glyphicon glyphicon-music"></span>
+            {{ _T["h5bglkgi"] }} :
+            <strong>{{element.support}}</strong>
+            <button type="button" ng-if="element.nature == 'Audio'" ng-click="removeElementAudio($index)" class="btn btn-xs pull-right" name="button"><i class="glyphicon glyphicon-minus"></i></button>
+          </div>
+          <div class="panel-body">
+            <div>
+              <label class="control-label col-md-3">{{ _T["zh4fsex6"] }}
+              </label>
+              <div class="col-md-9">
+                <input placeholder="{{ _T['zh4fsex6'] }}" ng-model="element.path" class="form-control" type="text"/>
+              </div>
+              <label class="control-label col-md-3">{{ _T["eq9spk3x"] }}
+              </label>
+              <div class="col-md-9">
+                <textarea placeholder="{{ _T['eq9spk3x'] }}" ng-model="element.comment" class="form-control"></textarea>
+              </div>
+              <div ng-if="element.nature == 'Audio'">
+                <label class="control-label col-md-3">{{ _T["8izp2is4"] }}
+                </label>
+                <div class="col-md-9">
+                  <ui-select ng-model="element.layout" multiple theme="bootstrap" on-select="$select.search = ''" close-on-select="false" ng-disabled="disabled" style="width: 100%;">
+                  <ui-select-match allow-clear placeholder="{{ _T['8izp2is4'] }}">{{$item.name}}</ui-select-match>
+                  <ui-select-choices repeat="layout.name as layout in layouts | propsFilter: {name: $select.search}">
+                  <div ng-bind-html="layout.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+              <div ng-if="element.nature == 'Video'">
+                <label class="control-label col-md-3" style="margin-bottom: 1px">{{ _T["26suhfgm"] }}
+                </label>
+                <div class="col-md-9">
+                  <input class="form-control newcodesecurite" style="margin-bottom: 5px;" ng-model="element.media_seal_security_code" placeholder="{{ _T['26suhfgm'] }}" type="password" autocomplete="new-password"/>
+                </div>
+                <label class="control-label col-md-3" style="margin-top: 5px;">{{ _T["9wii0lxr"] }}
+                </label>
+                <div class="col-md-9" style="margin-top: 5px;">
+                  <ui-select ng-disabled="disabled" ng-model="element.media_seal_security_version" style="width: 100%;" theme="bootstrap">
+                    <ui-select-match placeholder="{{ _T['9wii0lxr'] }}">{{$select.selected.value}}</ui-select-match>
+                    <ui-select-choices repeat="media_seal_security_version.value as media_seal_security_version in media_seal_security_versions | propsFilter: {name: $select.search, id: $select.search}">
+                      <div style="height: 20px;" ng-bind-html="media_seal_security_version.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid footer-dialog vertical-align" style="min-height:100px"
+  ng-show="hasElements()">
+  <div class="col-md-4">
+    <label>{{ _T["zgt60yda"] }}</label>
+    <ui-select ng-model="global.recipientGroupToNotify" theme="bootstrap" ng-disabled="disabled" style="width: 100%">
+      <ui-select-match placeholder="{{ _T['68rmcxej'] }}">{{$select.selected.value}}</ui-select-match>
+      <ui-select-choices repeat="recipient.name as recipient in recipientsGroup | propsFilter: {value: $select.search}">
+        <div ng-bind-html="recipient.value | highlight: $select.search"></div>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+  <div class="col-md-1">
+    <label>{{ _T["jz0ll97b"] }}</label>
+  </div>
+  <div class="col-md-4">
+    <label>{{ _T["l23leda6"] }}</label>
+    <ui-select ng-model="global.recipientUsersToNotify" multiple theme="bootstrap" on-select="$select.search = ''" close-on-select="false"  ng-disabled="disabled" style="width: 100%">
+      <ui-select-match placeholder="{{ _T['27fykp5d'] }}">{{$item.name}}</ui-select-match>
+      <ui-select-choices repeat="recipient.id as recipient in recipientsUsers | propsFilter: {name: $select.search}">
+        <div ng-bind-html="recipient.name | highlight: $select.search"></div>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+  <div class="col-md-3" ng-show="(global.recipientGroupToNotify != null || global.recipientUsersToNotify != null)">
+    <button type="button" class="btn btn-lg btn-success pull-right" ng-click="createElements()" ng-disabled="wrongCodes.countWrongCodes > 0">
+      <i class="glyphicon glyphicon-send"></i> {{ _T["9d29kobv"] }}
+    </button>
+  </div>
+</div>

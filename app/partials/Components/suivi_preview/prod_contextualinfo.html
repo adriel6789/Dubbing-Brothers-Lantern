@@ -1,0 +1,34 @@
+
+<div class="row mb-0">
+	<div class="col-md-12 f-13" 
+		ng-if="($ctrl.cell.action.name == 'prod_due_date' || 
+				$ctrl.cell.action.name == 'prod_mastering_due_date' || 
+				$ctrl.cell.action.name == 'prod_servicing_due_date') && 
+				returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'due_date', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.action.name == 'prod_servicing_diff_date' && returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'diff_date', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 f-22 text-center" ng-if="$ctrl.cell.action.name == 'prod_ordre_diff' && returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'ordre_diff', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 break-word" ng-if="$ctrl.cell.action.name == 'prod_title_vf' && returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'title_vf', $ctrl.column.workflow).value}}
+	</div>
+	<div class="col-md-12 break-word" ng-if="($ctrl.cell.action.name == 'prod_note' || $ctrl.cell.action.name == 'prod_servicing_note' || $ctrl.cell.action.name == 'prod_mastering_note') && returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'note', $ctrl.column.workflow).value}}
+	</div>
+	<!-- <div class="col-md-12 break-word" ng-if="$ctrl.cell.action.name == 'prod_servicing_pad'">
+		<div ng-if="($ctrl.cell.prod_validation_date || $ctrl.cell.checked_date) && $ctrl.cell.checked == '1'">
+			{{ $ctrl.cell.prod_validation_date || $ctrl.cell.checked_date  | asDate | date : 'dd/MM/yyyy' }}
+		</div>
+		<div ng-if="returnContextInfo($ctrl.product, 'servicing_pad', $ctrl.column.workflow).value">
+			{{returnContextInfo($ctrl.product, 'servicing_pad', $ctrl.column.workflow).value}}
+		</div>
+	</div> -->
+	<div class="col-md-12 f-13" ng-if="$ctrl.cell.action.name == 'prod_sortie_france' && returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value">
+		{{returnContextInfo($ctrl.product, 'sortie_france', $ctrl.column.workflow).value}}
+	</div>
+</div>
+

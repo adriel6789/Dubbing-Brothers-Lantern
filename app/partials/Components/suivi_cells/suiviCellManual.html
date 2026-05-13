@@ -1,0 +1,52 @@
+<!-- Gestion des cas avec les request associées -->
+<div>
+	<div ng-switch="$ctrl.cell.etape_type.name">
+		<div ng-switch-when="prepa_enregistrement">
+			<div ng-include="'partials/Components/suivi/prep_enr.html'"></div>
+		</div>
+		<div ng-switch-when="production">
+			<!-- set here the popup to set manual phlix EDD -->
+			<div ng-if="$ctrl.cell.action.name == 'prod_edd_phelix'" ng-include="'partials/Components/suivi/prod_set_edd_phelix.html'"></div>
+			<div ng-if="hasContextInfo($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_contextualinfo.html'"></div>
+			</div>
+			<div ng-if="hasValidDate($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_valid_date.html'"></div>
+			</div>
+			<div ng-if="hasValidItem($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_valid.html'"></div>
+			</div>
+			<div ng-if="hasValidNote($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_valid_note.html'"></div>
+			</div>
+			<div ng-if="hasClientNumber($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/client_number.html'"></div>
+			</div>
+		</div>
+		<div ng-switch-when="production_mastering">
+			<div ng-if="hasContextInfo($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_contextualinfo.html'"></div>
+			</div>
+			<div ng-if="hasValidItem($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_valid.html'"></div>
+			</div>
+			<div ng-if="hasClientNumber($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/client_number.html'"></div>
+			</div>
+		</div>
+		<div ng-switch-when="production_servicing">
+			<div ng-if="hasContextInfo($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_contextualinfo.html'"></div>
+			</div>
+			<div ng-if="hasValidItem($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/prod_valid.html'"></div>
+			</div>
+			<div ng-if="hasClientNumber($ctrl.cell.action.name)">
+				<div ng-include="'partials/Components/suivi/client_number.html'"></div>
+			</div>
+		</div>
+		<div ng-switch-default>
+			<div ng-include="'partials/Components/suivi/default_action.html'"></div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <h3>{{ _T["bapj5lr2"] }} :</h3>
+    
+    <div>
+    {{ _T["peh5x5iu"] }} : <select ng-options="tech as tech.name for tech in allTechs track by tech.id" ng-model="tech_writer"></select>
+    
+    {{ _T["npaxq3f4"] }} : <select ng-options="tech as tech.name for tech in allTechs track by tech.id" ng-model="tech_reader"></select>
+    </div>
+    <br/>
+    <!--
+     <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Rôle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="tech in selectedTechs">
+                <td>
+                    <button ng-click="removeTechSelection(tech, $index)"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                </td>
+                <td>
+                    {{tech.firstname}}
+                </td>
+                <td>
+                    {{tech.lastname}}
+                </td>
+                <td>
+                    <select style="width: 85px;" ng-model="tech.role" ng-change="checkSelected(tech)">
+                        <option value="write">Editeur</option>
+                        <option value="read">Lecteur</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nom</th>
+                <th>Prénom</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="tech in allTechs">
+                <td>
+                    <button ng-click="addTechSelection(tech, $index)"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                </td>
+                <td>
+                    {{tech.firstname}}
+                </td>
+                <td>
+                    {{tech.lastname}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    -->
+    <button class="btn btn-success pull-right" ng-click="sendRequests()"><span class="glyphicon glyphicon-send"></span> {{ _T["cefm3w2w"] }}</button>
+    
+</div>

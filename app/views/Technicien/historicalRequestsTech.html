@@ -1,0 +1,99 @@
+<header class="header-with-tabs">
+    <div class="container-fluid container-fixed-nav-aside">
+        <div class="col-sm-12">
+            <p>
+                {{ _T["ts0uwud2"] }}
+            </p>
+        </div>
+    </div>
+</header>
+<div class="container-fluid container-fixed-nav-aside">
+    <div class="row">
+        <div ng-include="'views/partials/nav-requests.html'"></div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="">
+                <div class="col-md-6">
+                    <form>
+                        <div class="form-group search-form search-form-tabs form-select">
+                            <input type="text" class="form-control input-search input-search-tabs large-input" aria-label="Rechercher parmi les demandes" placeholder="{{ _T['wqfkzdw6'] }}" ng-model="textFilter">
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-12 text-center" style="margin-top:-30px;">
+                        <div class="col-md-12">
+                            <i class="fa fa-calendar fa-2x"></i>
+                            </span>
+                            <strong>{{ _T["nn8u62o3"] }}</strong>
+                            <span ng-show="rangeDateValues.dateStart || rangeDateValues.dateEnd "
+                                ng-click="rangeDateValues.dateStart = ''; rangeDateValues.dateEnd =''"">
+                                <i class=" fa fa-times fa-2x"></i>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                </span> <span class="input-group-addon" id="sizing-addon1">{{ _T["mc051ilq"] }}</span> <input
+                                    ng-model="rangeDateValues.dateStart" style="width:100%; padding-bottom: 21px; padding-top: 22px;"
+                                    type="text" class="form-control calendar" placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-addon"
+                                    id="sizing-addon2">{{ _T["f6vwmdfc"] }}</span> <input ng-model="rangeDateValues.dateEnd"
+                                    style="width:100%; padding-bottom: 21px; padding-top: 22px;" type="text" class="form-control calendar"
+                                    placeholder="{{ _T['6a062zq9'] }}"> <span class="input-group-btn">
+                                </span>
+                            </div>
+                            <script>
+                                $('input.calendar').datepicker({
+                                    format: "dd-mm-yyyy",
+                                    todayBtn: true,
+                                    language: $.cookie("language"),
+                                    orientation: "top",
+                                    multidateSeparator: " - ",
+                                    calendarWeeks: true,
+                                    todayHighlight: true
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-default" ng-repeat="request in requests | magicFilterRequest:textFilter | orderBy: ['closing_date','date_creation']:true">
+                        <table class="table table-no-border">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <i class="fa fa-film"></i> {{::request.product.human_description}}  - <span> {{ _T["d5sogua1"] }} : {{request.date_creation | asDate | date:" dd/MM/yyyy"}} </span>
+                                        </label>
+                                        <p>
+                                            <workflow data="request.workflow" style="display: inline-block;"></workflow>
+                                            <label>
+                                                <i class="fa fa-tags"></i>
+                                                <a href="#/requestsTech/{{::request.id}}" >
+                                                    {{::request.action_type.etape_type.value}} - {{::request.action_type.value}}
+                                                </a>
+                                            </label>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <h1>
+                                        <span style="font-size:large" ng-if="request.is_planned == 1
+                                            && !(request.is_done == 1 || request.is_in_progress == 1 || request.is_not_done == 1)"
+                                        class="label label-info pull-right">{{ _T["5dd4lerz"] }}</span>
+                                        <span style="font-size:large" ng-if="request.is_not_done == 1" class="label label-warning pull-right">{{ _T["9d3vvwuk"] }} {{request.closing_date | asDate | date:"'le' dd/MM/yyyy"}}</span>
+                                        <span style="font-size:large" ng-if="request.is_done == 1" class="label label-success pull-right">
+                                            {{ _T["46z910du"] }}
+                                            <span ng-show="request.closing_date != null"> {{request.closing_date | asDate | date:"'le' dd/MM/yyyy"}} </span>
+                                            <span ng-show="request.closing_date == null"> {{request.date_creation | asDate | date:"'le' dd/MM/yyyy"}} </span>
+                                        </span>
+                                        </h1>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

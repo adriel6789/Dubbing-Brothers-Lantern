@@ -1,0 +1,37 @@
+<div class="col-md-3">
+    <div class="form-group">
+        <label class="col-sm-4 control-label">{{ field.title }}<em ng-hide="!field.required">*</em></label>
+        <span ng-switch on="field.type.view">
+          <span ng-switch-when="input">
+              <div class="col-sm-8">
+                  <input ng-model="entity[field.name]" pattern="{{field.pattern}}" placeholder="{{field.placeholder}}" type="text" class="form-control" style="width: 100%;"/>
+              </div>
+          </span>
+            <span ng-switch-when="ui-select-global">
+                <div class="col-sm-8">
+                    <ui-select ng-model="entity[field.name]" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                        <ui-select-match placeholder="{{field.placeholder}}">{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="f.id as f in field.type.options | propsFilter: {value: $select.search, id: $select.search}">
+                            <div ng-bind-html="f.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </span>
+            <span ng-switch-when="ui-select-exploitation">
+                <div class="col-sm-9">
+                    <ui-select ng-model="entity[field.name]" theme="bootstrap" ng-disabled="disabled" style="width: 100%;">
+                        <ui-select-match placeholder="{{field.placeholder}}">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="f.id as f in field.type.options | propsFilter: {name: $select.search, id: $select.search}">
+                            <div ng-bind-html="f.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </span>
+          <!--You can add more custom widget types needed for your project-->
+
+            <span ng-switch-default>
+              <span>{{ _T["in5wmy49"] }}</span>
+          </span>
+        </span>
+    </div>
+    </div>

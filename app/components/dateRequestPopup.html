@@ -1,0 +1,98 @@
+{{ $root._T["57osw6qj"] }}
+<div class="row" style="margin-bottom: 25px;">
+
+    <div class="col-md-12" ng-if="true">
+        <div uib-datepicker datepicker-options="options" template-url='views/Vendor/multi-datepicker.tpl.html' style="color:black" ng-model="$ctrl.dt" show-weeks="true" starting-day="1" multi-select="$ctrl.selectedDates" ng-change="$ctrl.changeDay($ctrl.dt)"></div>
+        <div style="padding-top: 5px; width: 286px; position: relative; background: white; border-radius: 0px 0px 5px 5px;">
+            <label style="font-size: 1.1em; padding-top: 2px; margin-left: 10px; margin-bottom: 7px;"><i class="fa fa-calendar"></i> </label>
+           
+            <button class="btn btn-sm btn-default btn-text-primary" ng-if="!$ctrl.showPanelDate && dateFiltered.length > 0" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" ng-click="$ctrl.showPanelDate = true">{{ $root._T["fxrer3od"] }}</button>
+            <button class="btn btn-sm btn-default btn-text-primary pull-right" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" ng-click="$ctrl.saveNewDesiredTime($ctrl.getSelectedRequests($ctrl.requests))">{{ $root._T["hvzykhtg"] }}</button>
+        </div>
+
+        <div ng-show="$ctrl.showPanelDate && dateFiltered.length > 0" class="col-md-12 p-0" style="color: #2A2A2A;">
+          <label class="title mt-5 mb-0" style="color: #fff">{{ $root._T["uw5q1ey6"] }}</label>
+          <div class="panel panel-default">
+            <div class="panel-heading p-10 mb-0" ng-if="dateFiltered.length > 1">
+              <div class="row mb-0">
+                <div class="col-md-4">
+                  <label class="f-13">{{ $root._T["sw658azy"] }}</label>
+                </div>
+                <div class="col-md-4">
+                  <label class="f-13">{{ $root._T["1o3j35hq"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="$ctrl.allDates.start_time_h" ng-change="$ctrl.setAllTimes(1)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in $ctrl.HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" ng-model="$ctrl.allDates.start_time_m" style="font-size:.9;  width:80px; display: inline-table" ng-change="$ctrl.setAllTimes(2)" min="0" max="45" step="15">
+                </div>
+                <div class="col-md-4">
+                  <label class="f-13">{{ $root._T["tseq9spk"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="$ctrl.allDates.end_time_h" ng-change="$ctrl.setAllTimes(3)" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in $ctrl.HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" ng-model="$ctrl.allDates.end_time_m" style="font-size:.9;  width:80px; display: inline-table" ng-change="$ctrl.setAllTimes(4)" min="0" max="45" step="15">
+                  <i class="fa fa-chevron-up pull-right cursor-pointer"  data-toggle="tooltip" title="{{ $root._T['3ncefm3w'] }}" ng-if="$ctrl.isShowDatesDetails" ng-click="$ctrl.showDatesDetails()"></i>
+                  <i class="fa fa-chevron-down pull-right cursor-pointer"  data-toggle="tooltip" title="{{ $root._T['2wzc2ovr'] }}" ng-if="!$ctrl.isShowDatesDetails" ng-click="$ctrl.showDatesDetails()"></i>
+                </div>
+                <div class="col-md-8 col-md-offset-4">
+                  <div class="btn-group btn-group-xs">
+                    <button  ng-repeat="(key, name) in $ctrl.getPresetTimes" class="btn btn-default" ng-click="$ctrl.setTime($ctrl.allDates, key)"> {{name}}</button>
+                    <button class="btn btn-default btn-xs" ng-click="$ctrl.setTime($ctrl.allDates)">{{ $root._T["f8exg9ee"] }}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body p-10" ng-show="$ctrl.isShowDatesDetails">
+              <div class="row" ng-class="{'mb-5' : !$last, 'mb-0' : $last}" ng-repeat="date in dateFiltered = ($ctrl.dateStartEnd | filterDayNotPlanned:$ctrl.originalDates | orderBy:'day') track by $index">
+                <div class="col-md-12" ng-if="!$first && $ctrl.isDifferentWeek(date.day, dateFiltered[$index-1].day)">
+                  <hr class="col-md-6 col-md-offset-3 mt-5 mb-10">
+                </div>
+                <div class="col-md-4">
+                  <label class="f-13">{{date.day | asDate | date:'EEE d MMM yyyy'}}</label>
+                </div>
+                <div class="col-md-4">
+                  <label class="f-13">{{ $root._T["1o3j35hq"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="date.start_time_h" style="font-size:.9;  width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in $ctrl.HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" ng-model="date.start_time_m" style="font-size:.9;  width:80px; display: inline-table" min="0" max="45" step="15">
+                </div>
+                <div class="col-md-4">
+                  <label class="f-13">{{ $root._T["tseq9spk"] }}</label>
+                  <ui-select ng-disabled="disabled" ng-model="date.end_time_h" style="font-size:.9; width:80px; display: inline-table" theme="bootstrap">
+                    <ui-select-match placeholder="">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="hour in $ctrl.HourOptions">
+                    <div ng-bind-html="hour.title"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                  h
+                  <input type="number" placeholder="--" ng-model="date.end_time_m" style="font-size:.9;  width:80px; display: inline-table" min="0" max="45" step="15">
+                </div>
+                <div class="col-md-8 col-md-offset-4">
+                  <div class="btn-group btn-group-xs">
+                    <button  ng-repeat="(key, name) in $ctrl.getPresetTimes" class="btn btn-default" ng-click="$ctrl.setTime(date, key)"> {{name}}</button>
+                    <button class="btn btn-default btn-xs" ng-click="$ctrl.setTime(date)">{{ $root._T["f8exg9ee"] }}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+    <div class="col-md-12" ng-if="false">
+      {{ $root._T["vqt9115r"] }}
+    </div>
+</div>

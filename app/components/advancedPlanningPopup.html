@@ -1,0 +1,46 @@
+
+<div class="row" style="margin-bottom: 25px;">
+  <div class="col-md-12" style="margin-bottom: 5px;">
+    <div class="btn-group-vertical btn-block">
+      <div class="col-md-12" style="margin-bottom: 5px;">
+        <button ng-if="$root.canDisplay(5)" type="button" class="btn btn-xs btn-block btn-primary" ng-disabled="$ctrl.getSelectedRequests($ctrl.requests) < 1" clipboard text="$ctrl.getFarmersToCopy()" on-copied="$ctrl.setAlertCopy(false)" on-error="$ctrl.setAlertCopy(true)">
+            <i class="fa fa-edit"></i> {{ $root._T["9o5z6vth"] }}
+        </button>
+    </div>      
+      <button type="button" class="btn btn-default btn-xs "
+        ng-repeat="request in $ctrl.requests | orderBy:'product.human_description'"
+        ng-show="$ctrl.displayARequest(request)"
+        ng-click="$ctrl.manageSelection(request)">
+        <span class="type" ng-class="{'type-success':request.isSelected, 'type-default': !request.isSelected}"></span>
+          {{$ctrl.productName(request)}}
+        <span class="type pull-right type-info"  ng-show="request.is_planned == '0'"></span>
+      </button>  
+      
+    </div>
+  </div>
+  <div class="col-md-12" style="margin-bottom: 5px;">
+    <div class="btn-group-vertical btn-block">
+      <button class="btn btn-default btn-xs" ng-disabled="$ctrl.hasRequestToPlan()" title="planifier" ng-click="$ctrl.openDateChoiceModal('toplan')">   {{ $root._T["saljw7o7"] }}</button>
+    </div>
+    <div ng-if="true" class="btn-group-vertical btn-block">
+      <button class="btn btn-default btn-xs" title="planifier" ng-disabled="$ctrl.hasSelectedRequestsToUpdate()" ng-click="$ctrl.openDateChoiceModal('update')">  {{ $root._T["izfsrwrd"] }}  </button>
+    </div>    
+  </div>  
+
+  <div ng-show="$ctrl.project.type_id == 0" class="col-md-12 panel-popup" style="color: #2A2A2A;">
+    <div class="panel panel-default">
+      <div class="panel-body p-10">
+        <div class="row">     
+          <div class="col-md-12 label label-danger label-group-border" ng-if="$ctrl.project.type_id == 0">
+            {{ $root._T["yac8dztb"] }} 
+          </div>
+          <div class="col-md-12" ng-if="$ctrl.project.type_id == 0">
+            <label ng-repeat="option in $ctrl.projectTypes">
+              {{option.name}} <input type="radio" name="projectTypeId" ng-value="option.value" ng-change="$ctrl.changeProjectType(option)" ng-model="$ctrl.projectType.projectTypeSelected" > &nbsp;
+            </label>
+          </div>               
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>

@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <h2>{{ _T["zc2ovr1o"] }}</h2>
+  <hr>
+  <div class="row">
+    <div class="col-md-11">
+      <label>{{ _T["kj5af3fx"] }}</label>
+    </div>
+    <div class="col-md-1">
+      <div class="onoffswitch">
+        <input type="checkbox" ng-model="notificationsByMail" ng-checked="notificationsByMail" ng-change="updateNotifByMail()" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitchmail" checked>
+        <label class="onoffswitch-label" for="myonoffswitchmail">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row" ng-repeat="planning in planningFiltered" ng-if="$root.canDisplay(799)">
+    <div class="col-md-11">
+      <label>{{ _T["1rq8ahmv"] }} {{planning.name}}</label>
+    </div>
+    <div class="col-md-1">
+      <div class="onoffswitch">
+        <input type="checkbox" ng-model="viewPlanning[planning.id]" ng-checked="viewPlanning[planning.id]" ng-change="setViewPlanning();" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch{{planning.id}}" checked>
+        <label class="onoffswitch-label" for="myonoffswitch{{planning.id}}">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

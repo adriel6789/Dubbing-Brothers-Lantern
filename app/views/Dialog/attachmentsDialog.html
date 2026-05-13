@@ -1,0 +1,60 @@
+<div class="page-popup page-custom-template dragresize" data-x=0 data-y=0>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="template-h1 poignee"> {{ _T["qg7rqxc7"] }} -
+        <span ng-if="subproject.nature.name == 'serie'">{{ product.type == 0 ? _T["xxxzi2yb"] : _T["h12xqsuf"] }} {{product.episode_number}}</span>
+        <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name == 'film'">{{product.description.value}}</span>
+        <span ng-if="subproject.nature.name != 'serie' && subproject.nature.name != 'film'">{{product.description_text}}</span>
+      </h1>
+      <div class="step text-center">
+        <form class="ng-pristine ng-valid">
+          <div>
+            <div class="col-md-6 col-md-offset-3">
+              <h2><i class="fa fa-paperclip"></i> {{ _T["xfvtsbeg"] }}</h2>
+              <hr style="border-color: rgba(53, 112, 225, 0.5);">
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+              <h2 class="text-center" ng-show="product.ownAttachments.length == 0">
+                {{ _T["gzkkzo84"] }}
+              </h2>
+              <ul class="list template-list" style="height: 650px;">
+                <li ng-repeat="attachment in product.ownAttachments" class="col-md-8 col-md-offset-2">
+                  <span style="float: left; margin-left: 25px;">{{attachment.original_name}}</span>
+                  <button class="btn btn-primary btn-xs" ng-click="download(attachment)" type="button" style="float: right; margin-right: 25px;"><i class="fa fa-download"></i> {{ _T["0kyhuafp"] }}</button>
+                  <div class="clearfix"></div>
+                  <hr style="border-color: rgb(237, 8, 83);">
+                </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+        <div class="footer template-footer">
+          <div class="row">
+            <div class="col-md-3">
+              <button ng-click="closeThisDialog();" type="button" class="btn btn-default btn-block btn-text-primary btn-big-shadow">{{ _T["y0tzlw7g"] }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .dragresize {
+    resize:both;
+    overflow: auto;
+    max-height: 900px !important;
+    min-height: 400px !important;   
+    min-width: 400px !important;   
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);  
+  }
+  </style>  
+  <script>
+    let position = { x: 0, y: 0 }
+    let edges = { left: true, right: true,   bottom: true,  top: true }
+    let attributes = {x:'data-x',y:'data-y'}
+    let IJS = Object.create(interactJS);
+    IJS.interact_execution('.dragresize',attributes,edges,position);
+  </script>
